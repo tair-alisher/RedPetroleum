@@ -13,7 +13,6 @@ namespace RedPetroleum.Models.Tables
         public string Name { get; set; }
 
         public Guid? ParentId { get; set; }
-
         [ForeignKey("ParentId")]
         public Department Departments { get; set; }
 

@@ -10,22 +10,17 @@ namespace RedPetroleum.Models
     {
         public Guid TaskListId { get; set; }
 
-        public Guid ETaskId { get; set; }
-        public ETask ETask { get; set; }
-
         public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
-        public DateTime DateStart { get; set; }
+        public string TaskName { get; set; }
 
-        public DateTime DateEnd { get; set; }
+        public string TaskDuration { get; set; }
 
         public string CommentEmployer { get; set; }
 
         public string CommentEmployees { get; set; }
 
-        public double Mark { get; set; }
-
-        public bool Done { get; set; }     
+        public double Mark { get; set; }   
     }
 }

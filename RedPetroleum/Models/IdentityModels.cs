@@ -1,8 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using RedPetroleum.Models.Tables;
 
 namespace RedPetroleum.Models
 {
@@ -25,9 +27,34 @@ namespace RedPetroleum.Models
         {
         }
 
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<TaskList> TaskLists { get; set; }
+        public DbSet<ACL> ACL { get; set; }
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // configures one-to-many relationship
+            modelBuilder.Entity<Position>()
+                .HasMany<Employee>(g => g.Employees)
+                .WithRequired(s => s.Position)
+                .HasForeignKey<Guid>(s => s.PositionId);
+            modelBuilder.Entity<Department>()
+                .HasMany<Employee>(g => g.Employees)
+                .WithRequired(s => s.Department)
+                .HasForeignKey<Guid>(s => s.DepartmentId);
+            modelBuilder.Entity<Employee>()
+              .HasMany<TaskList>(g => g.TaskLists)
+              .WithRequired(s => s.Employee)
+              .HasForeignKey<Guid>(s => s.EmployeeId);
+            modelBuilder.Entity<Department>()
+                .HasOptional(x => x.Departments)
+                .WithMany()
+                .HasForeignKey(x => x.ParentId);
         }
     }
 }

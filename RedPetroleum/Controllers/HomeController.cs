@@ -9,14 +9,10 @@ namespace RedPetroleum.Controllers
 {
     public class HomeController : Controller
     {
-        PetroleumContext db = new PetroleumContext();
+       
         public ActionResult Index()
         {
-            Position p = new Position();
-            p.PositionId = Guid.NewGuid();
-            p.Name = "gg";
-            db.Positions.Add(p);
-            db.SaveChanges();
+           
             return View();
         }
 

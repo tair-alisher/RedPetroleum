@@ -10,7 +10,6 @@ namespace RedPetroleum.Models.Tables
         public Guid PositionId { get; set; }
 
         public string Name { get; set; }
-        public ICollection<Employee> Employees { get; set; }
-        
+        public ICollection<Employee> Employees { get; set; }        
     }
 }

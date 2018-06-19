@@ -205,10 +205,8 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Tables\ACL.cs" />
-    <Compile Include="Models\Tables\PetroleumContext.cs" />
     <Compile Include="Models\Tables\Department.cs" />
     <Compile Include="Models\Tables\Employee.cs" />
-    <Compile Include="Models\Tables\ETask.cs" />
     <Compile Include="Models\Tables\Position.cs" />
     <Compile Include="Models\Tables\TaskList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -276,6 +274,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\CRUD\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
