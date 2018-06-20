@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPetroleum", "RedPetroleum\RedPetroleum.csproj", "{345603F8-2E50-487B-8BA2-A88D255C1EDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{345603F8-2E50-487B-8BA2-A88D255C1EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{345603F8-2E50-487B-8BA2-A88D255C1EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{345603F8-2E50-487B-8BA2-A88D255C1EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{345603F8-2E50-487B-8BA2-A88D255C1EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE1CAF56-1A8B-4863-8D50-489F5CABD0A9}
+	EndGlobalSection
+EndGlobal
