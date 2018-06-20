@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace RedPetroleum.Models.Tables
+namespace RedPetroleum.Models.Entities
 {
     [Table("ACL")]
     public class ACL
