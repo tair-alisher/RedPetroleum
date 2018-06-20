@@ -1,0 +1,63 @@
+﻿@model IEnumerable<RedPetroleum.Models.Entities.TaskList>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.EFullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskDuration)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommentEmployer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommentEmployees)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mark)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.EFullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskDuration)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CommentEmployer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CommentEmployees)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mark)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TaskListId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.TaskListId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TaskListId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -47,6 +47,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -196,19 +199,39 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CRUD\DepartmentsController.cs" />
+    <Compile Include="Controllers\CRUD\EmployeesController.cs" />
+    <Compile Include="Controllers\CRUD\PositionsController.cs" />
+    <Compile Include="Controllers\CRUD\TaskListsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806200355403_InitialCreate.cs" />
+    <Compile Include="Migrations\201806200355403_InitialCreate.Designer.cs">
+      <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806200447139_Init.cs" />
+    <Compile Include="Migrations\201806200447139_Init.Designer.cs">
+      <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Interfaces\IRepository.cs" />
+    <Compile Include="Models\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Tables\ACL.cs" />
-    <Compile Include="Models\Tables\Department.cs" />
-    <Compile Include="Models\Tables\Employee.cs" />
-    <Compile Include="Models\Tables\Position.cs" />
-    <Compile Include="Models\Tables\TaskList.cs" />
+    <Compile Include="Models\Entities\ACL.cs" />
+    <Compile Include="Models\Entities\Department.cs" />
+    <Compile Include="Models\Entities\Employee.cs" />
+    <Compile Include="Models\Entities\Position.cs" />
+    <Compile Include="Models\Entities\TaskList.cs" />
+    <Compile Include="Models\Repositories\DepartmentRepository.cs" />
+    <Compile Include="Models\Repositories\EmployeeRepository.cs" />
+    <Compile Include="Models\Repositories\PositionRepository.cs" />
+    <Compile Include="Models\Repositories\TaskListRepository.cs" />
+    <Compile Include="Models\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -271,10 +294,29 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Positions\Index.cshtml" />
+    <Content Include="Views\Positions\Details.cshtml" />
+    <Content Include="Views\Positions\Create.cshtml" />
+    <Content Include="Views\Positions\Edit.cshtml" />
+    <Content Include="Views\Positions\Delete.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Departments\Create.cshtml" />
+    <Content Include="Views\Departments\Delete.cshtml" />
+    <Content Include="Views\Departments\Details.cshtml" />
+    <Content Include="Views\Departments\Edit.cshtml" />
+    <Content Include="Views\Departments\Index.cshtml" />
+    <Content Include="Views\TaskLists\Create.cshtml" />
+    <Content Include="Views\TaskLists\Delete.cshtml" />
+    <Content Include="Views\TaskLists\Details.cshtml" />
+    <Content Include="Views\TaskLists\Edit.cshtml" />
+    <Content Include="Views\TaskLists\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\CRUD\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -288,6 +330,14 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201806200355403_InitialCreate.resx">
+      <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806200447139_Init.resx">
+      <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

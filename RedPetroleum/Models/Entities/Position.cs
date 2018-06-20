@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace RedPetroleum.Models.Tables
+namespace RedPetroleum.Models.Entities
 {
     public class Position
     {

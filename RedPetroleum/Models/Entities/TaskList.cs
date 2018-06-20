@@ -1,10 +1,6 @@
-﻿using RedPetroleum.Models.Tables;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 
-namespace RedPetroleum.Models
+namespace RedPetroleum.Models.Entities
 {
     public class TaskList
     {
@@ -21,6 +17,6 @@ namespace RedPetroleum.Models
 
         public string CommentEmployees { get; set; }
 
-        public double Mark { get; set; }   
+        public double? Mark { get; set; }   
     }
 }
