@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -6,15 +7,18 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RedPetroleum.Models;
+using RedPetroleum.Models.Entities;
 
 namespace RedPetroleum.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -75,7 +79,7 @@ namespace RedPetroleum.Controllers
 
             // Сбои при входе не приводят к блокированию учетной записи
             // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -139,6 +143,12 @@ namespace RedPetroleum.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var employees = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            }).ToList();
+            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new MultiSelectList(employees, "EmployeeId", "EFullName");
             return View();
         }
 
@@ -147,14 +157,21 @@ namespace RedPetroleum.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, Guid[] EmployeeId, string SelectedRole)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var id = "";
+                if (EmployeeId != null)
+                {
+                    id = string.Join(",", EmployeeId);
+                }
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeIds = id};
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)
                 {
+                    await UserManager.AddToRoleAsync(user.Id, role.Name);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.

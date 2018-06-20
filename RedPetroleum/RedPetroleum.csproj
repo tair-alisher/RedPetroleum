@@ -202,6 +202,7 @@
     <Compile Include="Controllers\CRUD\DepartmentsController.cs" />
     <Compile Include="Controllers\CRUD\EmployeesController.cs" />
     <Compile Include="Controllers\CRUD\PositionsController.cs" />
+    <Compile Include="Controllers\CRUD\RolesController.cs" />
     <Compile Include="Controllers\CRUD\TaskListsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -215,6 +216,22 @@
     <Compile Include="Migrations\201806200447139_Init.cs" />
     <Compile Include="Migrations\201806200447139_Init.Designer.cs">
       <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806200730495_NewGuid.cs" />
+    <Compile Include="Migrations\201806200730495_NewGuid.Designer.cs">
+      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806200749064_deletedRelation.cs" />
+    <Compile Include="Migrations\201806200749064_deletedRelation.Designer.cs">
+      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806201048272_ad.cs" />
+    <Compile Include="Migrations\201806201048272_ad.Designer.cs">
+      <DependentUpon>201806201048272_ad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806201106321_deletedViewModel.cs" />
+    <Compile Include="Migrations\201806201106321_deletedViewModel.Designer.cs">
+      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -314,9 +331,11 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -337,6 +356,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806200447139_Init.resx">
       <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806200730495_NewGuid.resx">
+      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806200749064_deletedRelation.resx">
+      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806201048272_ad.resx">
+      <DependentUpon>201806201048272_ad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806201106321_deletedViewModel.resx">
+      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
