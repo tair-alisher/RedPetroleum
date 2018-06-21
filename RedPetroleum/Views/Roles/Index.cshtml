@@ -1,15 +1,16 @@
-﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.Position>
+﻿@model PagedList.IPagedList<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
 @using PagedList.Mvc
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Roles";
 }
 
-<h2>Index</h2>
+<h2>Roles</h2>
+
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using (Html.BeginForm("Index", "Positions", FormMethod.Get))
+@using (Html.BeginForm("Index", "Roles", FormMethod.Get))
 {
 
     @Html.AntiForgeryToken()
@@ -29,7 +30,7 @@
 <table class="table">
     <tr>
         <th>
-            Должность
+            Имя роли
         </th>
         <th></th>
     </tr>
@@ -38,12 +39,12 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(model => item.Name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PositionId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }

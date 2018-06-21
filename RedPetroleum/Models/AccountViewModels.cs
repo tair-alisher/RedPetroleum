@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using RedPetroleum.Models.Entities;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace RedPetroleum.Models
 {
@@ -49,9 +53,8 @@ namespace RedPetroleum.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Адрес электронной почты")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Логин")]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -65,6 +68,10 @@ namespace RedPetroleum.Models
     public class RegisterViewModel
     {
         [Required]
+        [StringLength(100, ErrorMessage = "Логин не может содержать больше {0} символов")]
+        [Display(Name = "Логин")]
+        public string UserName { get; set; }
+        [Required]
         [EmailAddress]
         [Display(Name = "Адрес электронной почты")]
         public string Email { get; set; }
@@ -77,9 +84,16 @@ namespace RedPetroleum.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля")]
-        [Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
+
+        public string EmployeeIds { get; set; }
+
+        [Display(Name = "Selected Role")]
+        public string SelectedRole { get; set; }
+        public IEnumerable<SelectList> Roles { get; set; }
     }
+  
 
     public class ResetPasswordViewModel
     {
@@ -96,7 +110,7 @@ namespace RedPetroleum.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля")]
-        [Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
