@@ -1,6 +1,4 @@
-﻿using RedPetroleum.Models;
-using RedPetroleum.Models.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,95 +8,52 @@ using OfficeOpenXml;
 using System.Drawing;
 using OfficeOpenXml.Style;
 
+using RedPetroleum.Models;
+using RedPetroleum.Models.Entities;
+using RedPetroleum.Models.UnitOfWork;
+using RedPetroleum.Services;
+
 namespace RedPetroleum.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        UnitOfWork unit = new UnitOfWork();
         public ActionResult Index()
         {
-            IEnumerable<Employee> emplist = db.Employees;
+            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithPositions();
+            ViewBag.Departments = new SelectList(
+                unit.Departments.GetAll(),
+                "DepartmentId",
+                "Name"
+            );
+
             return View(emplist);
         }
-        public void ExportToExcel()
+
+        public void ExportToExcel(string departmentId)
         {
-            IEnumerable<Employee> emplist = db.Employees;
-
-            ExcelPackage pck = new ExcelPackage();
-            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Report");
-
-            ws.Cells["A1:E1"].Merge = true;
-            ws.Cells["A1"].Value = "ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - " + string.Format("{0:MMMM yyyy} г.",DateTimeOffset.Now);
-            ws.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["A1"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["A1"].Style.Font.Bold = true;
-            ws.Cells["A1"].Style.Font.Size = 16;
-
-            ws.Cells["A2:E2"].Merge = true;
-            ws.Cells["A2"].Value = "Отдел";
-            ws.Cells["A2"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["A2"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["A2"].Style.Font.Bold = true;
-            ws.Cells["A2"].Style.Font.Size = 14;
-
-            ws.Cells["A3"].Value = "№";
-            ws.Cells["A3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["A3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["A3"].Style.Font.Bold = true;
-            ws.Column(1).Width = 5.69;
-
-            ws.Cells["B3"].Value = "Ф.И.О";
-            ws.Cells["B3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["B3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["B3"].Style.Font.Bold = true;
-            ws.Column(2).Width = 31.00;
-            ws.Column(2).Style.WrapText = true;
-
-            ws.Cells["C3"].Value = "Должность";
-            ws.Cells["C3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["C3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["C3"].Style.Font.Bold = true;
-            ws.Column(3).Width = 25.69;
-            ws.Column(3).Style.WrapText = true;
-
-            ws.Cells["D3"].Value = "Средний показатель";
-            ws.Cells["D3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["D3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["D3"].Style.Font.Bold = true;
-            ws.Column(4).Width = 11.00;
-            ws.Column(4).Style.WrapText = true;
-
-            ws.Cells["E3"].Value = "Подпись";
-            ws.Cells["E3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            ws.Cells["E3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            ws.Cells["E3"].Style.Font.Bold = true;
-            ws.Column(5).Width = 14.69;
-
-            int rowStart = 4;
-            int i = 1;
-            foreach (var item in emplist)
-            {
-                ws.Cells["A3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-                ws.Cells["A3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-
-                ws.Row(rowStart).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                ws.Cells[string.Format("A{0}", rowStart)].Value = i++;
-                ws.Cells[string.Format("B{0}", rowStart)].Value = item.EFullName;
-                rowStart++;
-
-                //ws.Cells.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                //ws.Cells.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                //ws.Cells.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                //ws.Cells.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            }
-           
+            Guid department = Guid.Parse(departmentId);
+            XlsReport report = new XlsReport(unit, department);
+            ExcelPackage package = report.FormReport();
 
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition","attachment: filename="+"ExcelReport.xlsx");
-            Response.BinaryWrite(pck.GetAsByteArray());
+            Response.AddHeader("content-disposition","attachment: filename=ExcelReport.xlsx");
+            Response.BinaryWrite(package.GetAsByteArray());
             Response.End();
-        }   
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GetEmployeesByDepartment(string departmentId)
+        {
+            Guid id = Guid.Parse(departmentId);
+            IEnumerable<Employee> employees = unit.Employees
+                .GetEmployeesByDepartmentId(id);
+
+            return PartialView(employees);
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
