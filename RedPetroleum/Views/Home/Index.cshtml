@@ -1,6 +1,11 @@
 ﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
 
+@{
+    ViewBag.Title = "Главная";
+}
+
 <div class="container">
+    @Html.DropDownList("Departments", null, htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable()" })
     <table class="table table-striped">
         <thead>
             <tr>
@@ -8,18 +13,29 @@
                 <th>Position</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tableContent">
             @if (Model != null)
             {
                 foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.EFullName</td>
-                       
+                        <td>@item.Position.Name</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
-    <a href="@Url.Action("ExportToExcel","Home")">Export Excel </a>
+    @Html.AntiForgeryToken()
+    @*<a href="@Url.Action("ExportToExcel", "Home")">Export Excel </a>*@
+    <button type="button" class="btn btn-success" onclick="downloadReport()">Скачать отчет</button>
+
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/app.js")
+
+    <script>
+
+    </script>
+}
