@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -55,7 +57,81 @@ namespace RedPetroleum.Controllers
                 _userManager = value;
             }
         }
+     
+        public ActionResult UserList()
+        {
+            var user = UserManager.Users.ToList();
+            return View(user);
+        }
 
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        //Edit
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ApplicationUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("UserList");
+            }
+            return View(user);
+        }
+
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            var user = UserManager.FindById(id);
+            UserManager.Delete(user);
+            return RedirectToAction("UserList");
+        }
+        
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -143,12 +219,12 @@ namespace RedPetroleum.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            var employees = db.Employees.Select(c => new {
+            var users = db.Employees.Select(c => new {
                 c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new MultiSelectList(employees, "EmployeeId", "EFullName");
+            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
             return View();
         }
 
