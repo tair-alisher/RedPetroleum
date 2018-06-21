@@ -1,5 +1,7 @@
-﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.TaskList>
-@using PagedList.Mvc
+﻿@model IEnumerable<RedPetroleum.Models.Entities.TaskList>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
 @{
     ViewBag.Title = "Index";
 }
@@ -79,5 +81,4 @@
     }
 
 </table>
-Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
