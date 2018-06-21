@@ -63,7 +63,7 @@ namespace RedPetroleum.Controllers
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var user = UserManager.Users.Where(x => x.UserName.Contains(searching) || searching == null).ToPagedList(pageNumber, pageSize);
+            var user = UserManager.Users.Where(x => x.UserName.Contains(searching) || searching == null).OrderBy(x=>x.UserName).ToPagedList(pageNumber, pageSize);
             return View(user);
         }
 

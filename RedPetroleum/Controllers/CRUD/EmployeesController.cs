@@ -23,11 +23,11 @@ namespace RedPetroleum.Controllers.CRUD
         public EmployeesController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: Employees
-        public async Task<ActionResult> Index(int? page, string searching)
+        public ActionResult Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var employees = await unitOfWork.Employees.GetAllAsync(searching);
+            var employees = unitOfWork.Employees.GetAllIndex(pageNumber, pageSize, searching);
             return View(employees.ToPagedList(pageNumber, pageSize));
         }
 

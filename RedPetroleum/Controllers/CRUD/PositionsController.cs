@@ -26,12 +26,12 @@ namespace RedPetroleum.Controllers.CRUD
             this.unitOfWork = unit;
         }
         
-        public async Task<ActionResult> Index(int? page, string searching)
+        public ActionResult Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             
-            var position = await unitOfWork.Positions.GetAllAsync(searching);
+            var position = unitOfWork.Positions.GetAllIndex(pageNumber, pageSize, searching);
             return View(position.ToPagedList(pageNumber, pageSize));
         }
         

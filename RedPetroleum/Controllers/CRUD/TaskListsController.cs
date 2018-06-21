@@ -22,11 +22,11 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        public async Task<ActionResult> Index(int? page, string searching)
+        public ActionResult Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var taskLists = await unitOfWork.TaskLists.GetAllAsync(searching);
+            var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
             return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 

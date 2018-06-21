@@ -1,5 +1,5 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.TaskList>
-
+﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.TaskList>
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Index";
 }
@@ -29,22 +29,22 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Employee.EFullName)
+            ФИО Сотрудника
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TaskName)
+            Задача
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TaskDuration)
+            Длительность
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CommentEmployer)
+            Комментарии руководителя
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CommentEmployees)
+            Комментарии сотрудника(?)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Mark)
+            Оценка
         </th>
         <th></th>
     </tr>
@@ -79,3 +79,5 @@
     }
 
 </table>
+Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

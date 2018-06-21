@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+﻿@model PagedList.IPagedList<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Roles";
 }
@@ -29,7 +30,7 @@
 <table class="table">
     <tr>
         <th>
-
+            Имя роли
         </th>
         <th></th>
     </tr>
@@ -49,3 +50,5 @@
     }
 
 </table>
+Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

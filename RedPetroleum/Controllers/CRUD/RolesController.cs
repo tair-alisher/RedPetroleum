@@ -21,7 +21,7 @@ namespace RedPetroleum.Controllers.CRUD
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var roles = db.Roles.Where(x => x.Name.Contains(searching) || searching == null);
+            var roles = db.Roles.Where(x => x.Name.Contains(searching) || searching == null).OrderBy(x=>x.Name);
             return View(roles.ToPagedList(pageNumber, pageSize));
         }
 
