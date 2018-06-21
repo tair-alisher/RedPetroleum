@@ -6,6 +6,8 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
 using X.PagedList;
+using System.Web.Security;
+using Microsoft.AspNet.Identity;
 
 namespace RedPetroleum.Models.Repositories
 {
@@ -33,5 +35,16 @@ namespace RedPetroleum.Models.Repositories
         public async Task<TaskList> GetAsync(Guid? id) => await db.TaskLists.FindAsync(id);
 
         public void Update(TaskList item) => db.Entry(item).State = EntityState.Modified;
+
+        public void GetEmployeesFromEmployeeID(ApplicationUser user)
+        {
+            var Ids = GetEmployeeIdFromUser(user.Id);
+
+        }
+
+        public ApplicationUser GetEmployeeIdFromUser(string id)
+        {
+            return db.Users.Find(id);
+        }
     }
 }

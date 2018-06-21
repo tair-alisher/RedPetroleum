@@ -24,7 +24,7 @@ namespace RedPetroleum.Controllers.CRUD
         // GET: TaskLists
         public ActionResult Index(int? page, string searching)
         {
-
+            
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
