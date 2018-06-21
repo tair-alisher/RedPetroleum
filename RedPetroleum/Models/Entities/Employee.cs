@@ -20,7 +20,6 @@ namespace RedPetroleum.Models.Entities
         public DateTime DateBorn { get; set; }
 
         public bool Dismissed { get; set; }
-
         public ICollection<TaskList> TaskLists { get; set; }
     }
 }

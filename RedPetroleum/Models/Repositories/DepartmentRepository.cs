@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Linq;
+using PagedList;
 
 namespace RedPetroleum.Models.Repositories
 {
@@ -26,6 +28,8 @@ namespace RedPetroleum.Models.Repositories
         public Department Get(Guid id) => db.Departments.Find(id);
 
         public IEnumerable<Department> GetAll() => db.Departments;
+
+        public IPagedList<Department> GetAllIndex(int pageNumber, int pageSize, string search) => db.Departments.Where(x => x.Name.Contains(search) || search == null).Include(d => d.Departments).OrderBy(x=>x.Name).ToPagedList(pageNumber, pageSize);
 
         public async Task<Department> GetAsync(Guid? id) => await db.Departments.FindAsync(id);
 

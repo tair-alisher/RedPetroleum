@@ -1,5 +1,6 @@
-﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.Position>
+﻿@model PagedList.IPagedList<Microsoft.AspNet.Identity.EntityFramework.IdentityUser>
 @using PagedList.Mvc
+
 @{
     ViewBag.Title = "Index";
 }
@@ -7,9 +8,9 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Register")
 </p>
-@using (Html.BeginForm("Index", "Positions", FormMethod.Get))
+@using (Html.BeginForm("UserList", "Account", FormMethod.Get))
 {
 
     @Html.AntiForgeryToken()
@@ -29,7 +30,7 @@
 <table class="table">
     <tr>
         <th>
-            Должность
+            UserName
         </th>
         <th></th>
     </tr>
@@ -38,16 +39,15 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PositionId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }
-
 </table>
 Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

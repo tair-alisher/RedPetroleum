@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using RedPetroleum.Models;
+using PagedList;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 
@@ -22,10 +22,12 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        public async Task<ActionResult> Index()
+        public ActionResult Index(int? page, string searching)
         {
-            var taskLists = await unitOfWork.TaskLists.GetAllAsync();
-            return View(taskLists);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
+            return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: TaskLists/Details/5
@@ -48,6 +50,18 @@ namespace RedPetroleum.Controllers.CRUD
         {
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration)
+        {
+            TaskList task = unitOfWork
+                .TaskLists
+                .CreateTask(employeeId, taskName, taskDuration);
+            ViewBag.Task = task;
+
+            return PartialView(task);
         }
 
         // POST: TaskLists/Create

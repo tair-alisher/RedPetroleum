@@ -61,6 +61,9 @@
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -221,6 +224,7 @@
     <Compile Include="Controllers\CRUD\DepartmentsController.cs" />
     <Compile Include="Controllers\CRUD\EmployeesController.cs" />
     <Compile Include="Controllers\CRUD\PositionsController.cs" />
+    <Compile Include="Controllers\CRUD\RolesController.cs" />
     <Compile Include="Controllers\CRUD\TaskListsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -234,6 +238,22 @@
     <Compile Include="Migrations\201806200447139_Init.cs" />
     <Compile Include="Migrations\201806200447139_Init.Designer.cs">
       <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806200730495_NewGuid.cs" />
+    <Compile Include="Migrations\201806200730495_NewGuid.Designer.cs">
+      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806200749064_deletedRelation.cs" />
+    <Compile Include="Migrations\201806200749064_deletedRelation.Designer.cs">
+      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806201048272_ad.cs" />
+    <Compile Include="Migrations\201806201048272_ad.Designer.cs">
+      <DependentUpon>201806201048272_ad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806201106321_deletedViewModel.cs" />
+    <Compile Include="Migrations\201806201106321_deletedViewModel.Designer.cs">
+      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -260,6 +280,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -336,6 +357,15 @@
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
     <Content Include="Views\Home\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Account\UserList.cshtml" />
+    <Content Include="Views\Account\Details.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Delete.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
+    <Content Include="Views\TaskLists\CreateTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -359,6 +389,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806200447139_Init.resx">
       <DependentUpon>201806200447139_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806200730495_NewGuid.resx">
+      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806200749064_deletedRelation.resx">
+      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806201048272_ad.resx">
+      <DependentUpon>201806201048272_ad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806201106321_deletedViewModel.resx">
+      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
