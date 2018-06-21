@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using OfficeOpenXml;
 using System.Drawing;
+using OfficeOpenXml.Style;
 
 namespace RedPetroleum.Controllers
 {
@@ -50,39 +51,48 @@ namespace RedPetroleum.Controllers
             ws.Cells["B3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             ws.Cells["B3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             ws.Cells["B3"].Style.Font.Bold = true;
-            ws.Column(2).Width = 30.29;
+            ws.Column(2).Width = 31.00;
             ws.Column(2).Style.WrapText = true;
 
             ws.Cells["C3"].Value = "Должность";
             ws.Cells["C3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             ws.Cells["C3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             ws.Cells["C3"].Style.Font.Bold = true;
-            ws.Column(3).Width = 25.00;
+            ws.Column(3).Width = 25.69;
             ws.Column(3).Style.WrapText = true;
 
             ws.Cells["D3"].Value = "Средний показатель";
             ws.Cells["D3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             ws.Cells["D3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             ws.Cells["D3"].Style.Font.Bold = true;
-            ws.Column(4).Width = 10.29;
+            ws.Column(4).Width = 11.00;
             ws.Column(4).Style.WrapText = true;
 
             ws.Cells["E3"].Value = "Подпись";
             ws.Cells["E3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             ws.Cells["E3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             ws.Cells["E3"].Style.Font.Bold = true;
-            ws.Column(5).Width = 14.00;
+            ws.Column(5).Width = 14.69;
 
             int rowStart = 4;
             int i = 1;
             foreach (var item in emplist)
             {
+                ws.Cells["A3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                ws.Cells["A3"].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+
                 ws.Row(rowStart).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 ws.Cells[string.Format("A{0}", rowStart)].Value = i++;
                 ws.Cells[string.Format("B{0}", rowStart)].Value = item.EFullName;
                 rowStart++;
-            }         
-         
+
+                //ws.Cells.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                //ws.Cells.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                //ws.Cells.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                //ws.Cells.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            }
+           
+
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             Response.AddHeader("content-disposition","attachment: filename="+"ExcelReport.xlsx");
