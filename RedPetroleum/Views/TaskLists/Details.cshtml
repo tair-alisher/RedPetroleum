@@ -1,0 +1,66 @@
+﻿@model RedPetroleum.Models.Entities.TaskList
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TaskList</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.EFullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.EFullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaskName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskDuration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaskDuration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CommentEmployer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommentEmployer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CommentEmployees)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommentEmployees)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TaskListId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
