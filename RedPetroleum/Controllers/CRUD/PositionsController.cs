@@ -26,13 +26,13 @@ namespace RedPetroleum.Controllers.CRUD
             this.unitOfWork = unit;
         }
         
-        public ActionResult Index(int? page)
+        public async Task<ActionResult> Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             
-            IPagedList<Position> position = unitOfWork.Positions.GetAll().OrderByDescending(x => x.Name).ToPagedList(pageNumber, pageSize);
-            return View(position);
+            var position = await unitOfWork.Positions.GetAllAsync(searching);
+            return View(position.ToPagedList(pageNumber, pageSize));
         }
         
         public async Task<ActionResult> Details(Guid? id)

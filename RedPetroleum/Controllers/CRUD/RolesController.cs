@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 
 namespace RedPetroleum.Controllers.CRUD
 {
@@ -16,10 +17,12 @@ namespace RedPetroleum.Controllers.CRUD
         ApplicationDbContext db = new ApplicationDbContext();
     
         // GET: Roles
-        public ActionResult Index()
+        public ActionResult Index(int? page, string searching)
         {
-            var roles = db.Roles;
-            return View(roles.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var roles = db.Roles.Where(x => x.Name.Contains(searching) || searching == null);
+            return View(roles.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Edit(string id)

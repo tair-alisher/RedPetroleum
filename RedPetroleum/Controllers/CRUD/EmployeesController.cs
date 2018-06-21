@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
+using PagedList;
 
 namespace RedPetroleum.Controllers.CRUD
 {
@@ -22,10 +23,12 @@ namespace RedPetroleum.Controllers.CRUD
         public EmployeesController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: Employees
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, string searching)
         {
-            var employees = await unitOfWork.Employees.GetAllAsync();
-            return View(employees);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var employees = await unitOfWork.Employees.GetAllAsync(searching);
+            return View(employees.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Employees/Details/5

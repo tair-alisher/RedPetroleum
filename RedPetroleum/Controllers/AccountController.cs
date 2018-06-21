@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using PagedList;
 using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 
@@ -58,9 +59,11 @@ namespace RedPetroleum.Controllers
             }
         }
      
-        public ActionResult UserList()
+        public ActionResult UserList(int? page, string searching)
         {
-            var user = UserManager.Users.ToList();
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var user = UserManager.Users.Where(x => x.UserName.Contains(searching) || searching == null).ToPagedList(pageNumber, pageSize);
             return View(user);
         }
 

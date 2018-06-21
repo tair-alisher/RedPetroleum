@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using RedPetroleum.Models;
+using PagedList;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 
@@ -22,10 +22,12 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, string searching)
         {
-            var taskLists = await unitOfWork.TaskLists.GetAllAsync();
-            return View(taskLists);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var taskLists = await unitOfWork.TaskLists.GetAllAsync(searching);
+            return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: TaskLists/Details/5

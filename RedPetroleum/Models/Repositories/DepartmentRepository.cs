@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace RedPetroleum.Models.Repositories
 {
@@ -30,6 +31,6 @@ namespace RedPetroleum.Models.Repositories
 
         public void Update(Department item) => db.Entry(item).State = EntityState.Modified;
 
-        public async Task<IEnumerable<Department>> GetAllAsync() => await db.Departments.Include(d => d.Departments).ToListAsync();
+        public async Task<IEnumerable<Department>> GetAllAsync(string search) => await db.Departments.Where(x=>x.Name.Contains(search) || search == null).Include(d => d.Departments).ToListAsync();
     }
 }
