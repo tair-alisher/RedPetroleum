@@ -30,6 +30,7 @@ namespace RedPetroleum.Models.Repositories
             };
 
             db.TaskLists.Add(task);
+            db.SaveChanges();
 
             return task;
         }
@@ -39,6 +40,7 @@ namespace RedPetroleum.Models.Repositories
             TaskList taskList = db.TaskLists.Find(id);
             if (taskList != null)
                 db.TaskLists.Remove(taskList);
+            db.SaveChanges();
         }
 
         public TaskList Get(Guid id) => db.TaskLists.Find(id);

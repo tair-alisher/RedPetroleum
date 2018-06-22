@@ -30,7 +30,7 @@ function downloadReport() {
 function addTask() {
     $("#emptyTaskList").remove();
 
-    var taskListDiv = $("#taskList");
+    var createArea = $("#createArea");
 
     if ($("#submitTask").length > 0) {
         var warningMessage = `
@@ -39,7 +39,7 @@ function addTask() {
         <strong>Сохраните задачу</strong>
     </div>
 `;
-        taskListDiv.prepend(warningMessage);
+        createArea.prepend(warningMessage);
         $("#submitTask").focus();
     }
     else {
@@ -67,7 +67,7 @@ function addTask() {
         </div>
     </div>
 `;
-        taskListDiv.append(generatedHtml);
+        createArea.append(generatedHtml);
     }
 }
 
@@ -94,6 +94,8 @@ function submitTask() {
         success: function (createdTask) {
             removeGeneratedHtml();
             $("#taskList").append(createdTask);
+            addTask();
+            $("#TaskName").focus();
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
@@ -103,9 +105,29 @@ function submitTask() {
 }
 
 function saveOnEnter() {
-    $("#taskList").keypress(function (e) {
+    $("#createArea").keypress(function (e) {
         if (e.keyCode == 13 && $("#submitTask").length > 0) {
             submitTask();
         }
     })
+}
+
+function removeTask(taskId) {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    $.ajax({
+        url: "/TaskLists/DeleteTask",
+        type: "POST",
+        data: {
+            __RequestVerificationToken: token,
+            "taskId": taskId
+        },
+        cache: false,
+        success: function () {
+            $(`#${taskId}`).remove()
+        },
+        error: function (XMLHTtpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
 }
