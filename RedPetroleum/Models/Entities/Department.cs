@@ -17,5 +17,6 @@ namespace RedPetroleum.Models.Entities
         public Department Departments { get; set; }
 
         public ICollection<Employee> Employees { get; set; }
+        public ICollection<TaskList> TaskLists { get; set; }
     }
 }

@@ -316,6 +316,10 @@
     <Compile Include="Migrations\201806201106321_deletedViewModel.Designer.cs">
       <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806220900336_UpdateTaskTable.cs" />
+    <Compile Include="Migrations\201806220900336_UpdateTaskTable.Designer.cs">
+      <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -446,11 +450,9 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
-
     <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByCompany.cshtml" />
-
     <Content Include="Views\Home\GetEmployeesByDepartment.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Account\UserList.cshtml" />
@@ -470,7 +472,6 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -498,6 +499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806201106321_deletedViewModel.resx">
       <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806220900336_UpdateTaskTable.resx">
+      <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

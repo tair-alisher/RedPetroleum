@@ -55,13 +55,13 @@ namespace RedPetroleum.Controllers.CRUD
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration)
+        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration, DateTime taskDate)
         {
             // TODO: сделать проверку,
             // обладает ли пользователь правами на выполнение операции
             TaskList task = unitOfWork
                 .TaskLists
-                .CreateTask(employeeId, taskName, taskDuration);
+                .CreateTask(employeeId, taskName, taskDuration, taskDate);
             string taskEmployeeName = unitOfWork
                 .Employees
                 .GetEmployeeNameById(Guid.Parse(employeeId));

@@ -19,7 +19,7 @@ namespace RedPetroleum.Models.Repositories
 
         public void Create(TaskList item) => db.TaskLists.Add(item);
 
-        public TaskList CreateTask(string employeeId, string taskName, string taskDuration)
+        public TaskList CreateTask(string employeeId, string taskName, string taskDuration, DateTime taskDate)
         {
             TaskList task = new TaskList()
             {
@@ -27,7 +27,7 @@ namespace RedPetroleum.Models.Repositories
                 EmployeeId = Guid.Parse(employeeId),
                 TaskName = taskName,
                 TaskDuration = taskDuration,
-                CommentEmployer = "",
+                TaskDate = taskDate,
                 CommentEmployees = ""
             };
 
