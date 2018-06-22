@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
-using PagedList;
+using X.PagedList;
 
 using RedPetroleum.Models.Interfaces;
 using RedPetroleum.Models.Entities;

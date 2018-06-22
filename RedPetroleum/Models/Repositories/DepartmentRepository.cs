@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
-using PagedList;
+using X.PagedList;
 
 namespace RedPetroleum.Models.Repositories
 {

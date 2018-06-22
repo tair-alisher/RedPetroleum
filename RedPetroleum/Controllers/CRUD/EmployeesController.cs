@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
-using PagedList;
+using X.PagedList;
 
 namespace RedPetroleum.Controllers.CRUD
 {

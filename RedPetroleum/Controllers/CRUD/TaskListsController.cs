@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using PagedList;
+using X.PagedList;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 
@@ -24,6 +24,7 @@ namespace RedPetroleum.Controllers.CRUD
         // GET: TaskLists
         public ActionResult Index(int? page, string searching)
         {
+
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
