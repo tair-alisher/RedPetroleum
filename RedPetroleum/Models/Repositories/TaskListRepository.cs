@@ -17,6 +17,23 @@ namespace RedPetroleum.Models.Repositories
 
         public void Create(TaskList item) => db.TaskLists.Add(item);
 
+        public TaskList CreateTask(string employeeId, string taskName, string taskDuration)
+        {
+            TaskList task = new TaskList()
+            {
+                TaskListId = Guid.NewGuid(),
+                EmployeeId = Guid.Parse(employeeId),
+                TaskName = taskName,
+                TaskDuration = taskDuration,
+                CommentEmployer = "",
+                CommentEmployees = ""
+            };
+
+            db.TaskLists.Add(task);
+
+            return task;
+        }
+
         public void Delete(Guid id)
         {
             TaskList taskList = db.TaskLists.Find(id);

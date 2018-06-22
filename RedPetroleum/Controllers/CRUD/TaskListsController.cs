@@ -52,6 +52,18 @@ namespace RedPetroleum.Controllers.CRUD
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration)
+        {
+            TaskList task = unitOfWork
+                .TaskLists
+                .CreateTask(employeeId, taskName, taskDuration);
+            ViewBag.Task = task;
+
+            return PartialView(task);
+        }
+
         // POST: TaskLists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

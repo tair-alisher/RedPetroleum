@@ -1,6 +1,7 @@
 ﻿using RedPetroleum.Models.Interfaces;
 using RedPetroleum.Models.Entities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
@@ -33,5 +34,14 @@ namespace RedPetroleum.Models.Repositories
         public async Task<Department> GetAsync(Guid? id) => await db.Departments.FindAsync(id);
 
         public void Update(Department item) => db.Entry(item).State = EntityState.Modified;
+
+        public async Task<IEnumerable<Department>> GetAllAsync() => await db.Departments.Include(d => d.Departments).ToListAsync();
+
+        public string GetDepartmentNameById(Guid id)
+        {
+            return db.Departments
+                .SingleOrDefault(d => d.DepartmentId == id)
+                .Name;
+        }
     }
 }
