@@ -48,5 +48,12 @@ namespace RedPetroleum.Models.Repositories
                 .Include(p => p.Position)
                 .Where(e => e.DepartmentId == id);
         }
+
+        public string GetEmployeeNameById(Guid id)
+        {
+            return db.Employees
+                .SingleOrDefault(e => e.EmployeeId == id)
+                .EFullName;
+        }
     }
 }

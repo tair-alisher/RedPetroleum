@@ -56,10 +56,17 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public ActionResult CreateTask(string employeeId, string taskName, string taskDuration)
         {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
             TaskList task = unitOfWork
                 .TaskLists
                 .CreateTask(employeeId, taskName, taskDuration);
+            string taskEmployeeName = unitOfWork
+                .Employees
+                .GetEmployeeNameById(Guid.Parse(employeeId));
+
             ViewBag.Task = task;
+            ViewBag.EmployeeName = taskEmployeeName;
 
             return PartialView(task);
         }
@@ -114,6 +121,18 @@ namespace RedPetroleum.Controllers.CRUD
             }
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void DeleteTask(string taskId)
+        {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
+            Guid taskGuidId = Guid.Parse(taskId);
+            unitOfWork
+                .TaskLists
+                .Delete(taskGuidId);
         }
 
         // GET: TaskLists/Delete/5

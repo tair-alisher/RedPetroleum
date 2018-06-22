@@ -1,21 +1,14 @@
-﻿<div class="createdTask form-group" id="@ViewBag.Task.TaskListId">
-    <div class="col-md-5">
-        <div class="row">
-            <span class="col-md-4"><b>Задача:</b></span>
-            <div class="col-md-8">
-                <span>@ViewBag.Task.TaskName</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-5">
-        <div class="row">
-            <span class="col-md-4"><b>Продолжительность:</b></span>
-            <div class="col-md-8">
-                <span>@ViewBag.Task.TaskDuration</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <button type="button" class="btn btn-danger removeTask" onclick="removeTask(@ViewBag.Task.TaskListId)" title="Удалить"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-    </div>
-</div>
+﻿<tr class="createdTask" id="@ViewBag.Task.TaskListId">
+    <td>
+        @ViewBag.Task.TaskName
+    </td>
+    <td>
+        @ViewBag.Task.TaskDuration
+    </td>
+    <td>
+        @ViewBag.EmployeeName
+    </td>
+    <td>
+        <button type="button" class="btn btn-danger removeTask" onclick="removeTask('@ViewBag.Task.TaskListId')" title="Удалить"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    </td>
+</tr>
