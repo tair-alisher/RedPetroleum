@@ -26,6 +26,9 @@
                     <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
                     <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
 
+                    <li>@Html.ActionLink("RD", "ReportByDepartment", "Reports")</li>
+
+                    <li>@Html.ActionLink("RC", "ReportByCompany", "Reports")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
