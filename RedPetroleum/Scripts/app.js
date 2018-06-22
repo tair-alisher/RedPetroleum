@@ -1,9 +1,9 @@
-﻿function updateEmployeeTable() {
+function updateEmployeeTable() {
     var departmentId = $("#departmentsDropdown").val();
     var token = $('input[name="__RequestVerificationToken"]').val();
 
     $.ajax({
-        url: "/Home/GetEmployeesByDepartment",
+        url: "/Reports/GetEmployeesByDepartment",
         type: "POST",
         data: {
             __RequestVerificationToken: token,
@@ -21,11 +21,16 @@
     return false;
 }
 
-function downloadReport() {
+function downloadReport(reportType) {
     var token = $('input[name="__RequestVerificationToken"]').val();
-    var departmentId = $("#departmentsDropdown").val();
-    window.location.href = "/Home/ExportToExcel?departmentId=" + departmentId;
+    if ($("#departmentsDropdown").length > 0) {
+        var departmentId = $("#departmentsDropdown").val();
+    } else {
+        var departmentId = "*";
+    }
+    window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType;
 }
+
 
 function addTask() {
     $("#emptyTaskList").remove();
@@ -131,3 +136,4 @@ function removeTask(taskId) {
     });
     return false;
 }
+

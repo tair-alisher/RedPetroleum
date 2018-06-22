@@ -49,11 +49,19 @@ namespace RedPetroleum.Models.Repositories
                 .Where(e => e.DepartmentId == id);
         }
 
+
+        public IEnumerable<Employee> GetDepartment()
+        {
+            return db.Employees
+                .Include(p => p.Position)
+                .Include(e => e.Department);
+
         public string GetEmployeeNameById(Guid id)
         {
             return db.Employees
                 .SingleOrDefault(e => e.EmployeeId == id)
                 .EFullName;
+
         }
     }
 }
