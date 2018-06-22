@@ -224,6 +224,7 @@
     <Compile Include="Controllers\CRUD\TaskListsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -335,7 +336,9 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
-    <Content Include="Views\Home\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Reports\ReportByDepartment.cshtml" />
+    <Content Include="Views\Reports\ReportByCompany.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

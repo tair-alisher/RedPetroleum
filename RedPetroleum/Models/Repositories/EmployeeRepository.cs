@@ -44,5 +44,12 @@ namespace RedPetroleum.Models.Repositories
                 .Include(p => p.Position)
                 .Where(e => e.DepartmentId == id);
         }
+
+        public IEnumerable<Employee> GetDepartment()
+        {
+            return db.Employees
+                .Include(p => p.Position)
+                .Include(e => e.Department);
+        }
     }
 }

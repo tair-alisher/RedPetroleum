@@ -12,15 +12,26 @@ namespace RedPetroleum.Services
         private readonly string ReportTitle = "ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА";
 
         UnitOfWork unit;
-        Guid departmentId;
-        
-        public XlsReport(UnitOfWork unit, Guid departmentId)
+        Guid? departmentId;
+        string reportType;
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType)
         {
             this.unit = unit;
             this.departmentId = departmentId;
+            this.reportType = reportType;
         }
 
         public ExcelPackage FormReport()
+        {
+            if (this.reportType == "ReportByDepartment")
+                return FormFirstReport();
+            else if (this.reportType == "ReportByCompany")
+                return FormSecondReport();
+            else
+                return FormFirstReport();
+        }
+
+        public ExcelPackage FormFirstReport()
         {
             ExcelPackage xlsPack = new ExcelPackage();
 
@@ -36,7 +47,7 @@ namespace RedPetroleum.Services
 
             string departmentName = unit
                 .Departments
-                .GetDepartmentNameById(departmentId);
+                .GetDepartmentNameById((Guid)departmentId);
 
             worksheet.Column(1).Width = 5.69;
             worksheet.Column(2).Width = 31.00;
@@ -75,21 +86,137 @@ namespace RedPetroleum.Services
             worksheet.Cells["E3"].Value = "Подпись";
             worksheet.Cells["E3"].Style.Font.Bold = true;
 
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId(departmentId);
+            
+            for (int k = 1; k <= 3; k++)
+            {
+                BorderLines(worksheet,k);
+            }
+            
+
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId);
             int rowStart = 4;
             int i = 1;
+            int j = 4;
             foreach (Employee employee in employees)
             {
-                worksheet.Cells[$"C{i}"].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                BorderLines(worksheet,j);
 
                 worksheet.Cells[$"A{rowStart}"].Value = i++;
                 worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"C{rowStart}"].Value = employee.Position.Name;
                 worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                rowStart++;            
+                rowStart++;
+                j++;
+            }
+
+            return xlsPack;
+        }
+        public void BorderLines(ExcelWorksheet worksheet, int a)
+        {          
+            worksheet.Cells[$"A{a}:E{a}"].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:E{a}"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:E{a}"].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:E{a}"].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+        }
+
+        public ExcelPackage FormSecondReport()
+        {
+            ExcelPackage xlsPack = new ExcelPackage();
+
+            ExcelWorksheet worksheet = xlsPack.Workbook.Worksheets.Add("Report");
+            worksheet.Cells.Style.HorizontalAlignment = OfficeOpenXml
+                .Style
+                .ExcelHorizontalAlignment
+                .Center;
+            worksheet.Cells.Style.VerticalAlignment = OfficeOpenXml
+                .Style
+                .ExcelVerticalAlignment
+                .Center;
+
+            worksheet.Column(1).Width = 5.69;
+            worksheet.Column(2).Width = 32.59;
+            worksheet.Column(3).Width = 19.59;
+            worksheet.Column(4).Width = 23.59;
+            worksheet.Column(5).Width = 11.59;
+            worksheet.Column(6).Width = 13.49;
+            worksheet.Column(7).Width = 11.49;
+            worksheet.Column(8).Width = 14.89;
+            worksheet.Column(9).Width = 11.14;
+
+            worksheet.Column(2).Style.WrapText = true;
+            worksheet.Column(3).Style.WrapText = true;
+            worksheet.Column(4).Style.WrapText = true;
+            worksheet.Column(5).Style.WrapText = true;
+            worksheet.Column(7).Style.WrapText = true;
+            worksheet.Column(8).Style.WrapText = true;
+            worksheet.Column(9).Style.WrapText = true;
+
+            worksheet.Cells["A1:I1"].Merge = true;
+
+            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, DateTimeOffset.Now);
+            worksheet.Cells["A1"].Style.Font.Bold = true;
+            worksheet.Cells["A1"].Style.Font.Size = 16;
+
+            worksheet.Cells["A2"].Value = "№";
+            worksheet.Cells["A2"].Style.Font.Bold = true;
+
+            worksheet.Cells["B2"].Value = "Ф.И.О";
+            worksheet.Cells["B2"].Style.Font.Bold = true;
+
+            worksheet.Cells["C2"].Value = "Отдел";
+            worksheet.Cells["C2"].Style.Font.Bold = true;
+
+            worksheet.Cells["D2"].Value = "Должность";
+            worksheet.Cells["D2"].Style.Font.Bold = true;
+
+            worksheet.Cells["E2"].Value = "Количество работников";
+            worksheet.Cells["E2"].Style.Font.Bold = true;
+
+            worksheet.Cells["F2"].Value = "Дата приема";
+            worksheet.Cells["F2"].Style.Font.Bold = true;
+
+            worksheet.Cells["G2"].Value = "Средний показатель";
+            worksheet.Cells["G2"].Style.Font.Bold = true;
+
+            worksheet.Cells["H2"].Value = "Посещаемость и опоздания";
+            worksheet.Cells["H2"].Style.Font.Bold = true;
+
+            worksheet.Cells["I2"].Value = "Сводный показатель";
+            worksheet.Cells["I2"].Style.Font.Bold = true;
+
+            for (int k = 1; k <= 2; k++)
+            {
+                BorderLines2(worksheet, k);
+            }
+
+
+            IEnumerable<Employee> employees = unit.Employees.GetDepartment();
+            int rowStart = 3;
+            int i = 1;
+            int j = 3;
+            foreach (Employee employee in employees)
+            {
+                BorderLines2(worksheet, j);
+
+                worksheet.Cells[$"A{rowStart}"].Value = i++;
+                worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{rowStart}"].Value = employee.Department.Name;
+                worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
+                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                rowStart++;
+                j++;
             }
             return xlsPack;
+        }
+        public void BorderLines2(ExcelWorksheet worksheet, int a)
+        {
+            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
     }
 }
