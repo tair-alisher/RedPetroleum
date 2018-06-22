@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Linq;
+using X.PagedList;
 
 using RedPetroleum.Models.Interfaces;
 using RedPetroleum.Models.Entities;
@@ -26,7 +28,9 @@ namespace RedPetroleum.Models.Repositories
 
         public Employee Get(Guid id) => db.Employees.Find(id);
 
-        public IEnumerable<Employee> GetAll() => db.Employees;
+        public IEnumerable<Employee> GetAll() => db.Employees.Include(e => e.Department).Include(e => e.Position);
+
+        public IPagedList<Employee> GetAllIndex(int pageNumber, int pageSize, string search) => db.Employees.Where(x => x.EFullName.Contains(search) || search == null).Include(e => e.Department).Include(e => e.Position).OrderBy(x=>x.EFullName).ToPagedList(pageNumber, pageSize);
 
         public async Task<Employee> GetAsync(Guid? id) => await db.Employees.FindAsync(id);
 
@@ -45,11 +49,19 @@ namespace RedPetroleum.Models.Repositories
                 .Where(e => e.DepartmentId == id);
         }
 
+
         public IEnumerable<Employee> GetDepartment()
         {
             return db.Employees
                 .Include(p => p.Position)
                 .Include(e => e.Department);
+
+        public string GetEmployeeNameById(Guid id)
+        {
+            return db.Employees
+                .SingleOrDefault(e => e.EmployeeId == id)
+                .EFullName;
+
         }
     }
 }

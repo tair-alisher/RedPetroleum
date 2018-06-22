@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Globalization;
+using System.Data.Entity;
 using System.Linq;
-using System.Security.Claims;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using X.PagedList;
 using RedPetroleum.Models;
 
 namespace RedPetroleum.Controllers
@@ -15,6 +16,7 @@ namespace RedPetroleum.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -51,7 +53,83 @@ namespace RedPetroleum.Controllers
                 _userManager = value;
             }
         }
+     
+        public ActionResult UserList(int? page, string searching)
+        {
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var user = UserManager.Users.Where(x => x.UserName.Contains(searching) || searching == null).OrderBy(x=>x.UserName).ToPagedList(pageNumber, pageSize);
+            return View(user);
+        }
 
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        //Edit
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ApplicationUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("UserList");
+            }
+            return View(user);
+        }
+
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            var user = UserManager.FindById(id);
+            UserManager.Delete(user);
+            return RedirectToAction("UserList");
+        }
+        
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -75,7 +153,7 @@ namespace RedPetroleum.Controllers
 
             // Сбои при входе не приводят к блокированию учетной записи
             // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -139,6 +217,12 @@ namespace RedPetroleum.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var users = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            }).ToList();
+            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
             return View();
         }
 
@@ -147,14 +231,21 @@ namespace RedPetroleum.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, Guid[] EmployeeId, string SelectedRole)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var id = "";
+                if (EmployeeId != null)
+                {
+                    id = string.Join(",", EmployeeId);
+                }
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeIds = id};
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)
                 {
+                    await UserManager.AddToRoleAsync(user.Id, role.Name);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.

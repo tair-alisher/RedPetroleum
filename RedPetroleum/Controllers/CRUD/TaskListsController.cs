@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using RedPetroleum.Models;
+using X.PagedList;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 
@@ -22,10 +22,13 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        public async Task<ActionResult> Index()
+        public ActionResult Index(int? page, string searching)
         {
-            var taskLists = await unitOfWork.TaskLists.GetAllAsync();
-            return View(taskLists);
+            
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
+            return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: TaskLists/Details/5
@@ -48,6 +51,25 @@ namespace RedPetroleum.Controllers.CRUD
         {
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration)
+        {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
+            TaskList task = unitOfWork
+                .TaskLists
+                .CreateTask(employeeId, taskName, taskDuration);
+            string taskEmployeeName = unitOfWork
+                .Employees
+                .GetEmployeeNameById(Guid.Parse(employeeId));
+
+            ViewBag.Task = task;
+            ViewBag.EmployeeName = taskEmployeeName;
+
+            return PartialView(task);
         }
 
         // POST: TaskLists/Create
@@ -100,6 +122,18 @@ namespace RedPetroleum.Controllers.CRUD
             }
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void DeleteTask(string taskId)
+        {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
+            Guid taskGuidId = Guid.Parse(taskId);
+            unitOfWork
+                .TaskLists
+                .Delete(taskGuidId);
         }
 
         // GET: TaskLists/Delete/5
