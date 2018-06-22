@@ -94,6 +94,8 @@ function submitTask() {
         success: function (createdTask) {
             removeGeneratedHtml();
             $("#taskList").append(createdTask);
+            addTask();
+            $("#TaskName").focus();
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
