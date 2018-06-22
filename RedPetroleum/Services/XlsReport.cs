@@ -138,7 +138,6 @@ namespace RedPetroleum.Services
             worksheet.Column(2).Width = 32.59;
             worksheet.Column(3).Width = 19.59;
             worksheet.Column(4).Width = 23.59;
-            worksheet.Column(5).Width = 11.59;
             worksheet.Column(6).Width = 13.49;
             worksheet.Column(7).Width = 11.49;
             worksheet.Column(8).Width = 14.89;
@@ -147,7 +146,6 @@ namespace RedPetroleum.Services
             worksheet.Column(2).Style.WrapText = true;
             worksheet.Column(3).Style.WrapText = true;
             worksheet.Column(4).Style.WrapText = true;
-            worksheet.Column(5).Style.WrapText = true;
             worksheet.Column(7).Style.WrapText = true;
             worksheet.Column(8).Style.WrapText = true;
             worksheet.Column(9).Style.WrapText = true;
