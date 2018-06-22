@@ -55,6 +55,7 @@ namespace RedPetroleum.Models.Repositories
             return db.Employees
                 .Include(p => p.Position)
                 .Include(e => e.Department);
+        }
 
         public string GetEmployeeNameById(Guid id)
         {
