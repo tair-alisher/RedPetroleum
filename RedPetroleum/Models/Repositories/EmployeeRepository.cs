@@ -49,7 +49,6 @@ namespace RedPetroleum.Models.Repositories
                 .Where(e => e.DepartmentId == id);
         }
 
-
         public IEnumerable<Employee> GetDepartment()
         {
             return db.Employees
@@ -63,6 +62,13 @@ namespace RedPetroleum.Models.Repositories
                 .SingleOrDefault(e => e.EmployeeId == id)
                 .EFullName;
 
+        }
+
+        public IEnumerable<Employee> GetAvailableEmployees(string id)
+        {
+            var currentUser = db.Users.Find(id);
+            var employees = currentUser.EmployeeId.Split(',').Select(i => Guid.Parse(i));
+            return db.Employees.Where(d => employees.Contains(d.EmployeeId));
         }
     }
 }
