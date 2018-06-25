@@ -23,9 +23,19 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles ="admin, manager")]
         public ActionResult Index(int? page, string searching)
         {
+            var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
+            var names = currentUser.EmployeeNames.Split(',');
+            ViewBag.Names = new List<string>();
+            if(names.Length > 0)
+            {
+                foreach (var name in names)
+                {
+                    ViewBag.Names.Add(name);
+                }
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);

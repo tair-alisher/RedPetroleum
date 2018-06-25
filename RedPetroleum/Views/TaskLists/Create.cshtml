@@ -18,6 +18,10 @@
         <div class="col-md-10">
             @Html.DropDownList("EmployeeId", null, htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
         </div>
+        <div class="col-md-2">
+            <label for="taskDate">What month were you born in?</label>
+            <input id="taskDate" type="month" name="taskDate" value="2017-06">
+        </div>
     </div>
     <hr />
 
