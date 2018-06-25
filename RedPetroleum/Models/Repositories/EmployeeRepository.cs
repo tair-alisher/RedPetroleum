@@ -49,7 +49,6 @@ namespace RedPetroleum.Models.Repositories
                 .Where(e => e.DepartmentId == id);
         }
 
-
         public IEnumerable<Employee> GetDepartment()
         {
             return db.Employees

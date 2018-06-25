@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using RedPetroleum.Models;
@@ -19,7 +20,7 @@ namespace RedPetroleum.Controllers
         {
             IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithPositions();
             ViewBag.Departments = new SelectList(
-                unit.Departments.GetAll(),
+                unit.Departments.GetAvailableDepartments(User.Identity.GetUserId()),
                 "DepartmentId",
                 "Name"
             );
@@ -55,6 +56,7 @@ namespace RedPetroleum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GetEmployeesByDepartment(string departmentId)
         {
+            
             Guid id = Guid.Parse(departmentId);
             IEnumerable<Employee> employees = unit.Employees
                 .GetEmployeesByDepartmentId(id);

@@ -89,6 +89,8 @@ namespace RedPetroleum.Models
 
         public string EmployeeNames { get; set; }
 
+        public string DepartmentId { get; set; }
+
         [Display(Name = "Selected Role")]
         public string SelectedRole { get; set; }
         public IEnumerable<SelectList> Roles { get; set; }
