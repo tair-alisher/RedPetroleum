@@ -17,6 +17,7 @@ namespace RedPetroleum.Models.Entities
         [Display(Name = "Наименование отдела")]
         public string Name { get; set; }
 
+        [Display(Name = "Наименование управляющего отдела")]
         public Guid? ParentId { get; set; }
         [ForeignKey("ParentId")]
         public Department Departments { get; set; }

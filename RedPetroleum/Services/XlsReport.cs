@@ -201,6 +201,8 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
                 worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
+                worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
                 rowStart++;
                 j++;
             }

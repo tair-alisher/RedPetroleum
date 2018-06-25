@@ -12,126 +12,126 @@ using System.Net;
 
 namespace RedPetroleum.Controllers.CRUD
 {
-    public class PositionsController : Controller
+    public class MarksController : Controller
     {
         UnitOfWork unitOfWork;
 
-        public PositionsController()
+        public MarksController()
         {
             this.unitOfWork = new UnitOfWork();
         }
 
-        public PositionsController(UnitOfWork unit)
+        public MarksController(UnitOfWork unit)
         {
             this.unitOfWork = unit;
         }
-        
+
         public ActionResult Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            
-            var position = unitOfWork.Positions.GetAllIndex(pageNumber, pageSize, searching);
-            return View(position.ToPagedList(pageNumber, pageSize));
+
+            var mark = unitOfWork.Marks.GetAllIndex(pageNumber, pageSize, searching);
+            return View(mark.ToPagedList(pageNumber, pageSize));
         }
-        
+
         public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Position position = await unitOfWork.Positions.GetAsync(id);
-            if (position == null)
+            Mark mark = await unitOfWork.Marks.GetAsync(id);
+            if (mark == null)
             {
                 return HttpNotFound();
             }
-            return View(position);
+            return View(mark);
         }
-        
+
         public ActionResult Create()
         {
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Position position)
+        public async Task<ActionResult> Create(Mark mark)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    position.PositionId = Guid.NewGuid();
-                    unitOfWork.Positions.Create(position);
+                    mark.Id = Guid.NewGuid();
+                    unitOfWork.Marks.Create(mark);
                     await unitOfWork.SaveAsync();
                     return RedirectToAction("Index");
                 }
-                return View(position);
+                return View(mark);
             }
             catch (Exception)
             {
                 ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                return View(mark);
             }
 
         }
-        
+
         public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Position position = await unitOfWork.Positions.GetAsync(id);
-            if (position == null)
+            Mark mark = await unitOfWork.Marks.GetAsync(id);
+            if (mark == null)
             {
                 return HttpNotFound();
             }
-            return View(position);
+            return View(mark);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "PositionId,Name")] Position position)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] Mark mark)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    unitOfWork.Positions.Update(position);
+                    unitOfWork.Marks.Update(mark);
                     await unitOfWork.SaveAsync();
                     return RedirectToAction("Index");
                 }
-                return View(position);
+                return View(mark);
 
             }
             catch (Exception)
             {
                 ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                return View(mark);
             }
         }
-        
+
         public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Position position = await unitOfWork.Positions.GetAsync(id);
-            if (position == null)
+            Mark mark = await unitOfWork.Marks.GetAsync(id);
+            if (mark == null)
             {
                 return HttpNotFound();
             }
-            return View(position);
+            return View(mark);
         }
-        
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            unitOfWork.Positions.Delete(id);
+            unitOfWork.Marks.Delete(id);
             await unitOfWork.SaveAsync();
             return RedirectToAction("Index");
         }

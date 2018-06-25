@@ -7,13 +7,13 @@ namespace RedPetroleum.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Names : IMigrationMetadata
+    public sealed partial class AddtwotablesMarkandTaskMark : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Names));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddtwotablesMarkandTaskMark));
         
         string IMigrationMetadata.Id
         {
-            get { return "201806250258478_Names"; }
+            get { return "201806251123474_Add two tables Mark and TaskMark"; }
         }
         
         string IMigrationMetadata.Source
