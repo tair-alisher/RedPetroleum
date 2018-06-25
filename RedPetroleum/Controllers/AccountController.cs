@@ -218,29 +218,28 @@ namespace RedPetroleum.Controllers
         public ActionResult Register()
         {
             var users = db.Employees.Select(c => new {
-                c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
+            ViewBag.EmployeeNames = new MultiSelectList(users, "EFullName", "EFullName");
             return View();
         }
 
-        //
+        // 
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, Guid[] EmployeeId, string SelectedRole)
+        public async Task<ActionResult> Register(RegisterViewModel model, string[] EmployeeNames, string SelectedRole)
         {
             if (ModelState.IsValid)
             {
-                var id = "";
-                if (EmployeeId != null)
+                var names = "";
+                if (EmployeeNames != null)
                 {
-                    id = string.Join(",", EmployeeId);
+                    names = string.Join(",", EmployeeNames);
                 }
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeIds = id};
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeNames = names};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)

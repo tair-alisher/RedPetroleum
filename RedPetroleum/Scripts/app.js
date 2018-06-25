@@ -85,6 +85,7 @@ function submitTask() {
     var employeeId = $("#employeesDropdown").val();
     var taskName = $("#TaskName").val();
     var taskDuration = $("#TaskDuration").val();
+    var taskDate = $("#taskDate").val();
 
     $.ajax({
         url: "/TaskLists/CreateTask",
@@ -93,7 +94,8 @@ function submitTask() {
             __RequestVerificationToken: token,
             "employeeId": employeeId,
             "taskName": taskName,
-            "taskDuration": taskDuration
+            "taskDuration": taskDuration,
+            "taskDate": taskDate
         },
         cache: false,
         success: function (createdTask) {

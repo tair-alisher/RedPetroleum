@@ -59,7 +59,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "EmployeeId,EFullName,DepartmentId,PositionId,DateBorn,Dismissed")] Employee employee)
+        public async Task<ActionResult> Create([Bind(Include = "EmployeeId,EFullName,DepartmentId,PositionId,DateBorn,AdoptionDate,Dismissed")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "EmployeeId,EFullName,DepartmentId,PositionId,DateBorn,Dismissed")] Employee employee)
+        public async Task<ActionResult> Edit([Bind(Include = "EmployeeId,EFullName,DepartmentId,PositionId,DateBorn,AdoptionDate,Dismissed")] Employee employee)
         {
             if (ModelState.IsValid)
             {
