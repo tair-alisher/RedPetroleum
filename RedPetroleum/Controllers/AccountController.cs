@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using PagedList;
+using X.PagedList;
 using RedPetroleum.Models;
-using RedPetroleum.Models.Entities;
 
 namespace RedPetroleum.Controllers
 {
@@ -223,29 +218,36 @@ namespace RedPetroleum.Controllers
         public ActionResult Register()
         {
             var users = db.Employees.Select(c => new {
-                c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
+            var departments = db.Departments.Select(c => new {
+                DepartmentId = c.DepartmentId,
+                c.Name
+            }).ToList();
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
+            ViewBag.EmployeeNames = new MultiSelectList(users, "EFullName", "EFullName");
+            ViewBag.DepartmentId = new MultiSelectList(departments, "DepartmentId", "Name");
             return View();
         }
 
-        //
+        // 
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, Guid[] EmployeeId, string SelectedRole)
+        public async Task<ActionResult> Register(RegisterViewModel model, string[] EmployeeNames, string SelectedRole, string[] DepartmentId)
         {
             if (ModelState.IsValid)
             {
-                var id = "";
-                if (EmployeeId != null)
+                var departments = "";
+                var names = "";
+                if (DepartmentId != null)
+                    departments = string.Join(",", DepartmentId);
+                if (EmployeeNames != null)
                 {
-                    id = string.Join(",", EmployeeId);
+                    names = string.Join(",", EmployeeNames);
                 }
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeIds = id};
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeNames = names, DepartmentId = departments};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)

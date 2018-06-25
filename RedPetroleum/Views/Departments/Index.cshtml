@@ -1,5 +1,7 @@
-﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.Department>
-@using PagedList.Mvc
+﻿@model IEnumerable<RedPetroleum.Models.Entities.Department>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
 @{
     ViewBag.Title = "Index";
 }
@@ -29,31 +31,30 @@
 <table class="table">
     <tr>
         <th>
-            Управляющий отдел
+            Отдел
         </th>
         <th>
-            Отдел
+            Управляющий отдел
         </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Departments.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.DepartmentId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentId })
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Departments.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.DepartmentId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentId })
+        </td>
+    </tr>
     }
 
 </table>
-Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)

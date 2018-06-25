@@ -1,11 +1,12 @@
 ﻿using RedPetroleum.Models.Interfaces;
 using RedPetroleum.Models.Entities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
-using PagedList;
+using X.PagedList;
 
 namespace RedPetroleum.Models.Repositories
 {
@@ -33,5 +34,29 @@ namespace RedPetroleum.Models.Repositories
         public async Task<Department> GetAsync(Guid? id) => await db.Departments.FindAsync(id);
 
         public void Update(Department item) => db.Entry(item).State = EntityState.Modified;
+
+        public async Task<IEnumerable<Department>> GetAllAsync() => await db.Departments.Include(d => d.Departments).ToListAsync();
+
+        public string GetDepartmentNameById(Guid id)
+        {
+            return db.Departments
+                .SingleOrDefault(d => d.DepartmentId == id)
+                .Name;
+        }
+
+        public IEnumerable<Department> GetAvailableDepartments(string id)
+        {
+            var currentUser = db.Users.Find(id);
+            var departments = currentUser.DepartmentId.Split(',').Select(i => Guid.Parse(i));
+            return db.Departments.Where(d => departments.Contains(d.DepartmentId));
+            //ViewBag.Departments = new List<string>();
+            //if (departments.Length > 0)
+            //{
+            //    foreach (var department in departments)
+            //    {
+            //        ViewBag.Departments.Add(department);
+            //    }
+            //}
+        }
     }
 }

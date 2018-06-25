@@ -1,5 +1,7 @@
-﻿@model PagedList.IPagedList<Microsoft.AspNet.Identity.EntityFramework.IdentityUser>
-@using PagedList.Mvc
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityUser>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
 
 @{
     ViewBag.Title = "Index";
@@ -42,12 +44,11 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }
 </table>
-Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)

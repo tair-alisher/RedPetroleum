@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Linq;
-using PagedList;
+using X.PagedList;
+using System.Web.Security;
+using Microsoft.AspNet.Identity;
 
 namespace RedPetroleum.Models.Repositories
 {
@@ -17,11 +19,30 @@ namespace RedPetroleum.Models.Repositories
 
         public void Create(TaskList item) => db.TaskLists.Add(item);
 
+        public TaskList CreateTask(string employeeId, string taskName, string taskDuration, DateTime taskDate)
+        {
+            TaskList task = new TaskList()
+            {
+                TaskListId = Guid.NewGuid(),
+                EmployeeId = Guid.Parse(employeeId),
+                TaskName = taskName,
+                TaskDuration = taskDuration,
+                TaskDate = taskDate,
+                CommentEmployees = ""
+            };
+
+            db.TaskLists.Add(task);
+            db.SaveChanges();
+
+            return task;
+        }
+
         public void Delete(Guid id)
         {
             TaskList taskList = db.TaskLists.Find(id);
             if (taskList != null)
                 db.TaskLists.Remove(taskList);
+            db.SaveChanges();
         }
 
         public TaskList Get(Guid id) => db.TaskLists.Find(id);
@@ -33,5 +54,10 @@ namespace RedPetroleum.Models.Repositories
         public async Task<TaskList> GetAsync(Guid? id) => await db.TaskLists.FindAsync(id);
 
         public void Update(TaskList item) => db.Entry(item).State = EntityState.Modified;
+
+        public ApplicationUser GetUser(string id)
+        {
+            return db.Users.Find(id);
+        }
     }
 }
