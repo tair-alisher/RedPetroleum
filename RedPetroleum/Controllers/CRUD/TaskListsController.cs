@@ -18,6 +18,22 @@ namespace RedPetroleum.Controllers.CRUD
     {
         UnitOfWork unitOfWork;
 
+        private readonly Dictionary<int, string> Months = new Dictionary<int, string>()
+        {
+            { 1, "январь" },
+            { 2, "февраль" },
+            { 3, "март" },
+            { 4, "апрель" },
+            { 5, "май" },
+            { 6, "июнь" },
+            { 7, "июль" },
+            { 8, "август" },
+            { 9, "сентрябрь" },
+            { 10, "октябрь" },
+            { 11, "ноябрь" },
+            { 12, "декабрь" }
+        };
+
         public TaskListsController() => this.unitOfWork = new UnitOfWork();
 
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
@@ -51,6 +67,8 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult Create()
         {
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
+            ViewBag.MonthsId = new SelectList(Months, "MonthId", "Month");
+
             return View();
         }
 
