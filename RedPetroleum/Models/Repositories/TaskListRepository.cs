@@ -54,5 +54,10 @@ namespace RedPetroleum.Models.Repositories
         public async Task<TaskList> GetAsync(Guid? id) => await db.TaskLists.FindAsync(id);
 
         public void Update(TaskList item) => db.Entry(item).State = EntityState.Modified;
+
+        public ApplicationUser GetUser(string id)
+        {
+            return db.Users.Find(id);
+        }
     }
 }

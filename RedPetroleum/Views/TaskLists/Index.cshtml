@@ -53,31 +53,37 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.EFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskDuration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CommentEmployees)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mark)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
-            </td>
-        </tr>
+        foreach (var name in ViewBag.Names)
+        {
+            if(name == item.Employee.EFullName)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Employee.EFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskDuration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommentEmployees)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mark)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
+                    </td>
+                </tr>
+            }
+        }
     }
 
 </table>
