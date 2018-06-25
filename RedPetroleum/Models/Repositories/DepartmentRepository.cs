@@ -49,14 +49,6 @@ namespace RedPetroleum.Models.Repositories
             var currentUser = db.Users.Find(id);
             var departments = currentUser.DepartmentId.Split(',').Select(i => Guid.Parse(i));
             return db.Departments.Where(d => departments.Contains(d.DepartmentId));
-            //ViewBag.Departments = new List<string>();
-            //if (departments.Length > 0)
-            //{
-            //    foreach (var department in departments)
-            //    {
-            //        ViewBag.Departments.Add(department);
-            //    }
-            //}
         }
     }
 }
