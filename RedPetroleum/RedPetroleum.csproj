@@ -324,12 +324,14 @@
     <Compile Include="Migrations\201806221116448_AdoptionDate.Designer.cs">
       <DependentUpon>201806221116448_AdoptionDate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806250342571_Add Required in Entities.cs" />
-    <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
-      <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
+
     <Compile Include="Migrations\201806250258478_Names.cs" />
     <Compile Include="Migrations\201806250258478_Names.Designer.cs">
       <DependentUpon>201806250258478_Names.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806250342571_Add Required in Entities.cs" />
+    <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
+      <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -521,6 +523,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250258478_Names.resx">
       <DependentUpon>201806250258478_Names.cs</DependentUpon>
     </EmbeddedResource>
