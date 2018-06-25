@@ -53,6 +53,8 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult Create()
         {
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+
             return View();
         }
 

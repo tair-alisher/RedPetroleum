@@ -93,7 +93,7 @@ namespace RedPetroleum.Controllers.CRUD
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "PositionId,PositionName")] Position position)
+        public async Task<ActionResult> Edit([Bind(Include = "PositionId,Name")] Position position)
         {
             try
             {

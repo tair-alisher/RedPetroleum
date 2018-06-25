@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 using RedPetroleum.Services;
@@ -15,7 +11,16 @@ namespace RedPetroleum.Controllers
 {
     public class ReportsController : Controller
     {
-        UnitOfWork unit = new UnitOfWork();
+        UnitOfWork unit;
+        public ReportsController(UnitOfWork unit)
+        {
+            this.unit = unit;
+        }
+        public ReportsController()
+        {
+            this.unit = new UnitOfWork();
+        }
+
         public ActionResult ReportByDepartment()
         {
             IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithPositions();
