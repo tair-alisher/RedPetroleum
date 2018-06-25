@@ -25,10 +25,12 @@ namespace RedPetroleum.Models.Repositories
             {
                 TaskListId = Guid.NewGuid(),
                 EmployeeId = Guid.Parse(employeeId),
+                DepartmentId = null,
                 TaskName = taskName,
                 TaskDuration = taskDuration,
                 TaskDate = taskDate,
-                CommentEmployees = ""
+                CommentEmployees = "",
+                Mark = null
             };
 
             db.TaskLists.Add(task);

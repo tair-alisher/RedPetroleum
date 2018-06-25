@@ -49,7 +49,7 @@ function addTask() {
     }
     else {
         var generatedHtml = `
-    <div class="generatedHtml form-group" id="generatedHtml">
+    <div class="generatedHtml form-group row" id="generatedHtml">
         <div class="col-md-5">
             <div class="row">
                 <label class="control-label col-md-4" for="TaskName">Задача</label>
@@ -67,8 +67,8 @@ function addTask() {
             </div>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-success" id="submitTask" onclick="submitTask()" title="Сохранить"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-            <button type="button" class="btn btn-danger" id="removeGeneratedHtml" onclick="removeGeneratedHtml()" title="Удалить"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-success" id="submitTask" onclick="submitTask()" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-danger" id="removeGeneratedHtml" onclick="removeGeneratedHtml()"><span class="oi oi-x" title="Удалить" aria-hidden="true"></span></button>
         </div>
     </div>
 `;

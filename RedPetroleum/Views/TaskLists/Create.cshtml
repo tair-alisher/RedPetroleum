@@ -18,14 +18,19 @@
         <div class="col-md-3">
             @Html.DropDownList("EmployeeId", null, htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
         </div>
-        <div class="col-md-2">
-            <label for="taskDate">What month were you born in?</label>
-            <input id="taskDate" type="month" name="taskDate" value="2017-06">
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
         </div>
     </div>
     <hr />
 
-    <table class="table table-hover table-responsive">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>Задача</th>
@@ -44,7 +49,7 @@
 </div>
 
 <hr />
-<button type="button" class="btn btn-default col-md-12" onclick="addTask()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить задачу</button>
+<button type="button" class="btn btn-info col-md-12" onclick="addTask()"><span class="oi oi-plus" aria-hidden="true"></span> Добавить задачу</button>
 
 <br /><br />
 <div>
