@@ -13,7 +13,8 @@ namespace RedPetroleum.Models
     public class ApplicationUser : IdentityUser
     {
         public string EmployeeNames { get; set; }
-        
+        public string DepartmentId { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Обратите внимание, что authenticationType должен совпадать с типом, определенным в CookieAuthenticationOptions.AuthenticationType

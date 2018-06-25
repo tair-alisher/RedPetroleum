@@ -220,8 +220,13 @@ namespace RedPetroleum.Controllers
             var users = db.Employees.Select(c => new {
                 EFullname = c.EFullName
             }).ToList();
+            var departments = db.Departments.Select(c => new {
+                DepartmentId = c.DepartmentId,
+                c.Name
+            }).ToList();
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
             ViewBag.EmployeeNames = new MultiSelectList(users, "EFullName", "EFullName");
+            ViewBag.DepartmentId = new MultiSelectList(departments, "DepartmentId", "Name");
             return View();
         }
 
@@ -230,16 +235,19 @@ namespace RedPetroleum.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, string[] EmployeeNames, string SelectedRole)
+        public async Task<ActionResult> Register(RegisterViewModel model, string[] EmployeeNames, string SelectedRole, string[] DepartmentId)
         {
             if (ModelState.IsValid)
             {
+                var departments = "";
                 var names = "";
+                if (DepartmentId != null)
+                    departments = string.Join(",", DepartmentId);
                 if (EmployeeNames != null)
                 {
                     names = string.Join(",", EmployeeNames);
                 }
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeNames = names};
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeNames = names, DepartmentId = departments};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)

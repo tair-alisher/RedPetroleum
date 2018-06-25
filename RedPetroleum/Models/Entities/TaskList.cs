@@ -10,7 +10,7 @@ namespace RedPetroleum.Models.Entities
         public Employee Employee { get; set; }
 
         public Guid? DepartmentId { get; set; }
-        public Department Departments { get; set; }
+        public Department Department { get; set; }
 
         public string TaskName { get; set; }
 
