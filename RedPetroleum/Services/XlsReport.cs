@@ -134,23 +134,23 @@ namespace RedPetroleum.Services
                 .ExcelVerticalAlignment
                 .Center;
 
-            worksheet.Column(1).Width = 5.69;
-            worksheet.Column(2).Width = 32.59;
-            worksheet.Column(3).Width = 19.59;
-            worksheet.Column(4).Width = 23.59;
-            worksheet.Column(6).Width = 13.49;
-            worksheet.Column(7).Width = 11.49;
-            worksheet.Column(8).Width = 14.89;
-            worksheet.Column(9).Width = 11.14;
+            worksheet.Column(1).Width = 5.69; //Width = 5.00 in excel
+            worksheet.Column(2).Width = 32.59; //Width = 31.86 in excel
+            worksheet.Column(3).Width = 26.23; //Width = 25.57 in excel
+            worksheet.Column(4).Width = 28.69; //Width = 28.00 in excel
+            worksheet.Column(5).Width = 13.49; //Width = 12.71 in excel
+            worksheet.Column(6).Width = 11.29; //Width = 10.57 in excel
+            worksheet.Column(7).Width = 14.69; //Width = 14.00 in excel
+            worksheet.Column(8).Width = 11.29; //Width = 10.57 in excel
 
             worksheet.Column(2).Style.WrapText = true;
             worksheet.Column(3).Style.WrapText = true;
             worksheet.Column(4).Style.WrapText = true;
+            worksheet.Column(6).Style.WrapText = true;
             worksheet.Column(7).Style.WrapText = true;
             worksheet.Column(8).Style.WrapText = true;
-            worksheet.Column(9).Style.WrapText = true;
 
-            worksheet.Cells["A1:I1"].Merge = true;
+            worksheet.Cells["A1:H1"].Merge = true;
 
             worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, DateTimeOffset.Now);
             worksheet.Cells["A1"].Style.Font.Bold = true;
@@ -168,20 +168,17 @@ namespace RedPetroleum.Services
             worksheet.Cells["D2"].Value = "Должность";
             worksheet.Cells["D2"].Style.Font.Bold = true;
 
-            worksheet.Cells["E2"].Value = "Количество работников";
+            worksheet.Cells["E2"].Value = "Дата приема";
             worksheet.Cells["E2"].Style.Font.Bold = true;
 
-            worksheet.Cells["F2"].Value = "Дата приема";
+            worksheet.Cells["F2"].Value = "Средний показатель";
             worksheet.Cells["F2"].Style.Font.Bold = true;
 
-            worksheet.Cells["G2"].Value = "Средний показатель";
+            worksheet.Cells["G2"].Value = "Посещаемость и опоздания";
             worksheet.Cells["G2"].Style.Font.Bold = true;
 
-            worksheet.Cells["H2"].Value = "Посещаемость и опоздания";
+            worksheet.Cells["H2"].Value = "Сводный показатель";
             worksheet.Cells["H2"].Style.Font.Bold = true;
-
-            worksheet.Cells["I2"].Value = "Сводный показатель";
-            worksheet.Cells["I2"].Style.Font.Bold = true;
 
             for (int k = 1; k <= 2; k++)
             {
@@ -211,10 +208,10 @@ namespace RedPetroleum.Services
         }
         public void BorderLines2(ExcelWorksheet worksheet, int a)
         {
-            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{a}:I{a}"].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:H{a}"].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:H{a}"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:H{a}"].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            worksheet.Cells[$"A{a}:H{a}"].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
     }
 }

@@ -320,6 +320,14 @@
     <Compile Include="Migrations\201806220900336_UpdateTaskTable.Designer.cs">
       <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806221116448_AdoptionDate.cs" />
+    <Compile Include="Migrations\201806221116448_AdoptionDate.Designer.cs">
+      <DependentUpon>201806221116448_AdoptionDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806250342571_Add Required in Entities.cs" />
+    <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
+      <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -504,6 +512,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806220900336_UpdateTaskTable.resx">
       <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806221116448_AdoptionDate.resx">
+      <DependentUpon>201806221116448_AdoptionDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
+      <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
