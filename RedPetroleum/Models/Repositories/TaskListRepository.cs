@@ -59,5 +59,15 @@ namespace RedPetroleum.Models.Repositories
         {
             return db.Users.Find(id);
         }
+        public IPagedList<TaskList> GetEmployeesById(int pageNumber, int pageSize, string search, string id)
+        {
+            var currentUser = db.Users.Find(id);
+            var employees = currentUser.EmployeeId.Split(',').Select(i => Guid.Parse(i));
+            return db.TaskLists
+                .Include(t => t.Employee)
+                .Where(d => employees.Contains(d.Employee.EmployeeId))
+                .Where(x => x.TaskName.Contains(search) || search == null)
+                .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
+        }
     }
 }

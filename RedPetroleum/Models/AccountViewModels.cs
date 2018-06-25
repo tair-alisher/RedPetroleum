@@ -87,7 +87,7 @@ namespace RedPetroleum.Models
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
 
-        public string EmployeeNames { get; set; }
+        public string EmployeeId { get; set; }
 
         public string DepartmentId { get; set; }
 

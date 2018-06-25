@@ -27,18 +27,10 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult Index(int? page, string searching)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
-            var names = currentUser.EmployeeNames.Split(',');
-            ViewBag.Names = new List<string>();
-            if(names.Length > 0)
-            {
-                foreach (var name in names)
-                {
-                    ViewBag.Names.Add(name);
-                }
-            }
+            
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
+            var taskLists = unitOfWork.TaskLists.GetEmployeesById(pageNumber, pageSize, searching, currentUser.Id);
             return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 
@@ -60,7 +52,7 @@ namespace RedPetroleum.Controllers.CRUD
         // GET: TaskLists/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
+            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
             return View();
         }
 
@@ -98,7 +90,7 @@ namespace RedPetroleum.Controllers.CRUD
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            //ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
@@ -114,7 +106,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
@@ -131,7 +123,7 @@ namespace RedPetroleum.Controllers.CRUD
                 await unitOfWork.SaveAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            //ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
