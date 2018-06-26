@@ -47,8 +47,8 @@ namespace RedPetroleum.Models.Repositories
         public IEnumerable<Department> GetAvailableDepartments(string id)
         {
             var currentUser = db.Users.Find(id);
-            var departments = currentUser.DepartmentId.Split(',').Select(i => Guid.Parse(i));
-            return db.Departments.Where(d => departments.Contains(d.DepartmentId));
+            var user = currentUser.DepartmentId;
+            return db.Departments.Where(d => user.Contains(d.DepartmentId.ToString()));
         }
     }
 }
