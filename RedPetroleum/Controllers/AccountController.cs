@@ -10,6 +10,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using X.PagedList;
 using RedPetroleum.Models;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers
 {
@@ -73,19 +76,14 @@ namespace RedPetroleum.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(user);
         }
 
         //Edit
         public ActionResult Edit(string id)
         {
-            var users = db.Employees.Select(c => new {
-                c.EmployeeId,
-                EFullname = c.EFullName
-            }).ToList();
-
-            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -95,6 +93,15 @@ namespace RedPetroleum.Controllers
             {
                 return HttpNotFound();
             }
+            var users = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            });
+
+
+            ViewBag.Roles = new SelectList(db.Roles, "Id", "Name");
+            //ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName", user.EmployeeId);
+            ViewBag.EmployeeId = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
             return View(user);
         }
 
@@ -102,16 +109,29 @@ namespace RedPetroleum.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ApplicationUser user, string SelectedRole)
+        public ActionResult Edit(ApplicationUser user, string RoleId, string EmployeeId)
         {
-
+            var users = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            }).ToList();
+            
+            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
             if (ModelState.IsValid)
             {
-                var role = db.Roles.Find(SelectedRole);
-                if (role!=null)
+                var oldUser = UserManager.FindById(user.Id);
+                var oldRoleId = oldUser.Roles.SingleOrDefault().RoleId;
+                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                var newRoleName = db.Roles.SingleOrDefault(r => r.Id == RoleId).Name;
+
+                if (oldRoleName != newRoleName)
                 {
-                    UserManager.AddToRole(user.Id, role.Name);
+                    UserManager.RemoveFromRole(user.Id, oldRoleName);
+                    UserManager.AddToRole(user.Id, newRoleName);
                 }
+
+                user.EmployeeId = EmployeeId;
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("UserList");

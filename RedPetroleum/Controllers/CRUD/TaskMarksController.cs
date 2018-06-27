@@ -21,7 +21,7 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult Index()
         {
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
-
+            ViewBag.TaskDate = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
             return View(unitOfWork.TaskMarks.GetAll());
         }
 
