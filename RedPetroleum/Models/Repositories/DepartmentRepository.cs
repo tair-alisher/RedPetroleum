@@ -43,5 +43,12 @@ namespace RedPetroleum.Models.Repositories
                 .SingleOrDefault(d => d.DepartmentId == id)
                 .Name;
         }
+
+        public IEnumerable<Department> GetAvailableDepartments(string id)
+        {
+            var currentUser = db.Users.Find(id);
+            var user = currentUser.DepartmentId;
+            return db.Departments.Where(d => user.Contains(d.DepartmentId.ToString()));
+        }
     }
 }
