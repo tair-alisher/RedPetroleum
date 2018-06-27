@@ -79,6 +79,13 @@ namespace RedPetroleum.Controllers
         //Edit
         public ActionResult Edit(string id)
         {
+            var users = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            }).ToList();
+
+            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -95,10 +102,16 @@ namespace RedPetroleum.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ApplicationUser user)
+        public ActionResult Edit(ApplicationUser user, string SelectedRole)
         {
+
             if (ModelState.IsValid)
             {
+                var role = db.Roles.Find(SelectedRole);
+                if (role!=null)
+                {
+                    UserManager.AddToRole(user.Id, role.Name);
+                }
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("UserList");

@@ -25,7 +25,7 @@ namespace RedPetroleum.Models.Repositories
 
         public TaskMark Get(Guid id) => db.TaskMarks.Find(id);
 
-        public IEnumerable<TaskMark> GetAll() => db.TaskMarks.OrderByDescending(x=>x.Mark);
+        public IEnumerable<TaskMark> GetAll() => db.TaskMarks.Include(y=>y.Mark).Include(x=>x.TaskList);
 
         public IPagedList<TaskMark> GetAllIndex(int pageNumber, int pageSize, string search)
         {
