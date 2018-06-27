@@ -297,10 +297,6 @@
     <Compile Include="Migrations\201806200355403_InitialCreate.Designer.cs">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806200447139_Init.cs" />
-    <Compile Include="Migrations\201806200447139_Init.Designer.cs">
-      <DependentUpon>201806200447139_Init.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806200730495_NewGuid.cs" />
     <Compile Include="Migrations\201806200730495_NewGuid.Designer.cs">
       <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
@@ -333,10 +329,6 @@
     <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806250421418_Names.cs" />
-    <Compile Include="Migrations\201806250421418_Names.Designer.cs">
-      <DependentUpon>201806250421418_Names.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.cs" />
     <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.Designer.cs">
       <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
@@ -348,6 +340,10 @@
     <Compile Include="Migrations\201806260309265_OneToOneRelationship.cs" />
     <Compile Include="Migrations\201806260309265_OneToOneRelationship.Designer.cs">
       <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806270323200_Update.cs" />
+    <Compile Include="Migrations\201806270323200_Update.Designer.cs">
+      <DependentUpon>201806270323200_Update.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -3455,9 +3451,6 @@
     <EmbeddedResource Include="Migrations\201806200355403_InitialCreate.resx">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200447139_Init.resx">
-      <DependentUpon>201806200447139_Init.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806200730495_NewGuid.resx">
       <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
     </EmbeddedResource>
@@ -3479,9 +3472,6 @@
     <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806250421418_Names.resx">
-      <DependentUpon>201806250421418_Names.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806251123474_Add two tables Mark and TaskMark.resx">
       <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
     </EmbeddedResource>
@@ -3493,6 +3483,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806260309265_OneToOneRelationship.resx">
       <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806270323200_Update.resx">
+      <DependentUpon>201806270323200_Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

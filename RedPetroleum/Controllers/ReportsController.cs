@@ -57,18 +57,13 @@ namespace RedPetroleum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GetEmployeesByDepartment(string departmentId)
         {
-
-            Guid id = Guid.Parse(departmentId);
-            IEnumerable<Employee> employees = unit.Employees
-                .GetEmployeesByDepartmentId(id);
-
             if (departmentId == "")
             {
                 return PartialView();
             }
-                IEnumerable<Employee> employees = unit.Employees
-                    .GetEmployeesByDepartmentId(Guid.Parse(departmentId));
-                return PartialView(employees);
+            IEnumerable<Employee> employees = unit.Employees
+                .GetEmployeesByDepartmentId(Guid.Parse(departmentId));
+            return PartialView(employees);
         }
 
         public ActionResult ReportByCompany()
