@@ -25,10 +25,12 @@ namespace RedPetroleum.Models.Repositories
             {
                 TaskListId = Guid.NewGuid(),
                 EmployeeId = Guid.Parse(employeeId),
+                DepartmentId = null,
                 TaskName = taskName,
                 TaskDuration = taskDuration,
                 TaskDate = taskDate,
-                CommentEmployees = ""
+                CommentEmployees = "",
+                Mark = null
             };
 
             db.TaskLists.Add(task);
@@ -58,6 +60,25 @@ namespace RedPetroleum.Models.Repositories
         public ApplicationUser GetUser(string id)
         {
             return db.Users.Find(id);
+        }
+        public IPagedList<TaskList> GetEmployeesById(int pageNumber, int pageSize, string search, string id)
+        {
+            var currentUser = db.Users.Find(id);
+            var employees = currentUser.EmployeeId;
+            return
+                db.TaskLists
+                .Include(t => t.Employee)
+                .Where(d => employees.Contains(d.Employee.EmployeeId.ToString()))
+                .Where(x => x.TaskName.Contains(search) || search == null)
+                .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
+        }
+        public IPagedList<TaskList> GetEmployeesAdmin(int pageNumber, int pageSize, string search)
+        {
+            return
+                db.TaskLists
+                .Include(t => t.Employee)
+                .Where(x => x.TaskName.Contains(search) || search == null)
+                .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
         }
     }
 }
