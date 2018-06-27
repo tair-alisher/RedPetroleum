@@ -2,14 +2,28 @@
 
 @{
     ViewBag.Title = "Главная";
+    int i = 1;
 }
 
 <div class="container">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>EFullName</th>
-                <th>Position</th>
+                <th colspan="8" class="text-center">
+                    ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+        </thead>
+        <thead>          
+            <tr>
+                <th class="w-10 text-center">№</th>
+                <th class="w-25 text-center">Ф.И.О</th>
+                <th class="w-25 text-center">Отдел</th>
+                <th class="w-25 text-center">Должность</th>
+                <th class="col text-center">Дата приема</th>
+                <th class="col text-center">Средний показатель</th>
+                <th class="col text-center">Посещаемость и опоздания</th>
+                <th class="col text-center">Сводный показатель</th>
             </tr>
         </thead>
         <tbody id="tableContent">
@@ -17,17 +31,22 @@
             {
                 foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.EFullName</td>
-                        <td>@item.Position.Name</td>
-                    </tr>
+                <tr>
+                    <td>@(i++)</td>
+                    <td>@item.EFullName</td>
+                    <td>@item.Department.Name</td>
+                    <td>@item.Position.Name</td>
+                    <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 }
             }
         </tbody>
     </table>
     @Html.AntiForgeryToken()
     <button type="button" class="btn btn-success" onclick="downloadReport('ReportByCompany')">Скачать отчет</button>
-
 </div>
 
 @section Scripts {

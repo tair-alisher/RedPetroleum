@@ -2,15 +2,32 @@
 
 @{
     ViewBag.Title = "Главная";
+    int i = 1;
 }
 
 <div class="container">
-    @Html.DropDownList("Departments", null, htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable()" })
+    @Html.DropDownList("Departments", null,"Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable(this);" })
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>EFullName</th>
-                <th>Position</th>
+                <th colspan="5" class="text-center">
+                    ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+             
+            </tr>
+            <tr>
+                <th colspan="5" class="text-center" id="nameDep">
+                    <p id="DepartmentName">Выберите отдел...</p>
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="w-10 text-center">№</th>
+                <th class="w-25 text-center">Ф.И.О</th>
+                <th class="w-25 text-center">Должность</th>
+                <th class="text-center">Средний показатель</th>
+                <th class="text-center">Подпись</th>
             </tr>
         </thead>
         <tbody id="tableContent">
@@ -19,22 +36,21 @@
                 foreach (var item in Model)
                 {
                     <tr>
+                        <td class="text-center">@(i++)</td>
                         <td>@item.EFullName</td>
                         <td>@item.Position.Name</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 }
             }
         </tbody>
     </table>
     @Html.AntiForgeryToken()
-    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartment')" >Скачать отчет</button>
+    <button type="button" id="downloadBtn" disabled class="btn btn-success" onclick="downloadReport('ReportByDepartment')">Скачать отчет</button>
 
 </div>
 
 @section Scripts {
     @Scripts.Render("~/Scripts/app.js")
-
-    <script>
-
-    </script>
 }

@@ -39,7 +39,7 @@ namespace RedPetroleum.Models.Repositories
 
         public IEnumerable<Employee> GetEmployeesWithPositions()
         {
-            return db.Employees.Include(p => p.Position);
+            return db.Employees.Include(p => p.Position).Include(e => e.Department);
         }
 
         public IEnumerable<Employee> GetEmployeesByDepartmentId(Guid id)
@@ -53,8 +53,9 @@ namespace RedPetroleum.Models.Repositories
         public IEnumerable<Employee> GetDepartment()
         {
             return db.Employees
-                .Include(p => p.Position)
-                .Include(e => e.Department);
+                .Include(e => e.Department)
+                .Include(p => p.Position);
+             
         }
 
         public string GetEmployeeNameById(Guid id)

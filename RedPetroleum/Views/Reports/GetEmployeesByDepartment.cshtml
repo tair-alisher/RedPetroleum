@@ -1,12 +1,17 @@
 ﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
-
+@{
+    int i = 1;
+}
 @if (Model != null)
 {
     foreach (var employee in Model)
     {
         <tr>
+            <td class="text-center">@(i++)</td>
             <td>@employee.EFullName</td>
             <td>@employee.Position.Name</td>
+            <td></td>
+            <td></td>
         </tr>
     }
 }
