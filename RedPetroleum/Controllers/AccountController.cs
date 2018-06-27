@@ -221,13 +221,9 @@ namespace RedPetroleum.Controllers
                 c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
-            var departments = db.Departments.Select(c => new {
-                c.DepartmentId,
-                c.Name
-            }).ToList();
+            
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
-            ViewBag.DepartmentId = new MultiSelectList(departments, "DepartmentId", "Name");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
             return View();
         }
 
@@ -236,19 +232,12 @@ namespace RedPetroleum.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, string[] EmployeeId, string SelectedRole, string[] DepartmentId)
+        public async Task<ActionResult> Register(RegisterViewModel model, string SelectedRole)
         {
             if (ModelState.IsValid)
             {
-                var departments = "";
-                var names = "";
-                if (DepartmentId != null)
-                    departments = string.Join(",", DepartmentId);
-                if (EmployeeId != null)
-                {
-                    names = string.Join(",", EmployeeId);
-                }
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeId = names, DepartmentId = departments};
+                var employee = db.Employees.Where(x=>x.EmployeeId.ToString() == model.EmployeeId).FirstOrDefault();
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeId = model.EmployeeId, DepartmentId = employee.DepartmentId.ToString()};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)
