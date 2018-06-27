@@ -3,7 +3,7 @@ namespace RedPetroleum.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddtwotablesMarkandTaskMark : DbMigration
+    public partial class Update : DbMigration
     {
         public override void Up()
         {

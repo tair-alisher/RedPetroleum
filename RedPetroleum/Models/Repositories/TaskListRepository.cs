@@ -29,8 +29,7 @@ namespace RedPetroleum.Models.Repositories
                 TaskName = taskName,
                 TaskDuration = taskDuration,
                 TaskDate = taskDate,
-                CommentEmployees = "",
-                Mark = null
+                CommentEmployees = ""
             };
 
             db.TaskLists.Add(task);
