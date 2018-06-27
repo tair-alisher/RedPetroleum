@@ -283,6 +283,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CRUD\DepartmentsController.cs" />
     <Compile Include="Controllers\CRUD\EmployeesController.cs" />
+    <Compile Include="Controllers\CRUD\MarksController.cs" />
     <Compile Include="Controllers\CRUD\PositionsController.cs" />
     <Compile Include="Controllers\CRUD\RolesController.cs" />
     <Compile Include="Controllers\CRUD\TaskListsController.cs" />
@@ -324,10 +325,6 @@
     <Compile Include="Migrations\201806221116448_AdoptionDate.Designer.cs">
       <DependentUpon>201806221116448_AdoptionDate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806250258478_Names.cs" />
-    <Compile Include="Migrations\201806250258478_Names.Designer.cs">
-      <DependentUpon>201806250258478_Names.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806250440061_DepartmentOnRegistration.cs" />
     <Compile Include="Migrations\201806250440061_DepartmentOnRegistration.Designer.cs">
       <DependentUpon>201806250440061_DepartmentOnRegistration.cs</DependentUpon>
@@ -335,6 +332,14 @@
     <Compile Include="Migrations\201806250342571_Add Required in Entities.cs" />
     <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806250421418_Names.cs" />
+    <Compile Include="Migrations\201806250421418_Names.Designer.cs">
+      <DependentUpon>201806250421418_Names.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.cs" />
+    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.Designer.cs">
+      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201806250907296_Id.cs" />
     <Compile Include="Migrations\201806250907296_Id.Designer.cs">
@@ -346,6 +351,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Entities\Mark.cs" />
+    <Compile Include="Models\Entities\TaskMark.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Interfaces\IRepository.cs" />
     <Compile Include="Models\Interfaces\IUnitOfWork.cs" />
@@ -357,18 +364,16 @@
     <Compile Include="Models\Entities\TaskList.cs" />
     <Compile Include="Models\Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Repositories\EmployeeRepository.cs" />
+    <Compile Include="Models\Repositories\MarkRepository.cs" />
     <Compile Include="Models\Repositories\PositionRepository.cs" />
     <Compile Include="Models\Repositories\TaskListRepository.cs" />
+    <Compile Include="Models\Repositories\TaskMarkRepository.cs" />
     <Compile Include="Models\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\XlsReport.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\RedPetroleum.mdf" />
-    <Content Include="App_Data\RedPetroleum_log.ldf">
-      <DependentUpon>RedPetroleum.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -3432,8 +3437,15 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
+    <Content Include="Views\Marks\Index.cshtml" />
+    <Content Include="Views\Marks\Details.cshtml" />
+    <Content Include="Views\Marks\Create.cshtml" />
+    <Content Include="Views\Marks\Edit.cshtml" />
+    <Content Include="Views\Marks\Delete.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
@@ -3467,8 +3479,11 @@
     <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806250258478_Names.resx">
-      <DependentUpon>201806250258478_Names.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806250421418_Names.resx">
+      <DependentUpon>201806250421418_Names.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806251123474_Add two tables Mark and TaskMark.resx">
+      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250440061_DepartmentOnRegistration.resx">
       <DependentUpon>201806250440061_DepartmentOnRegistration.cs</DependentUpon>

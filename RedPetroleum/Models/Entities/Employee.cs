@@ -34,6 +34,7 @@ namespace RedPetroleum.Models.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime AdoptionDate { get; set; }
 
+        [Display(Name = "Уволен")]
         public bool Dismissed { get; set; }
         public ICollection<TaskList> TaskLists { get; set; }
         public Department Department { get; set; }
