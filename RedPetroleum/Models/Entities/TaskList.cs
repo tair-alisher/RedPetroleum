@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RedPetroleum.Models.Entities
 {
@@ -20,6 +21,6 @@ namespace RedPetroleum.Models.Entities
 
         public string CommentEmployees { get; set; }
 
-        public double? Mark { get; set; }   
+        public ICollection<TaskMark> TaskMarks { get; set; }
     }
 }

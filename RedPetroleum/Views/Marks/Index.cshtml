@@ -1,0 +1,54 @@
+﻿@model IEnumerable<RedPetroleum.Models.Entities.Mark>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Marks", FormMethod.Get))
+{
+
+    @Html.AntiForgeryToken()
+    <!-- Search  -->
+    <div class="col-md-11 search-div" style="margin-bottom: 2%;">
+        <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование компании" onchange="form.submit();"
+               style="border: 1px solid; border-color: #eb5e28;" />
+    </div>
+    <div class="col-md-1 search-div">
+        <button type="submit" class="btn btn-default default-btn">
+            <i class="fa fa-search"></i>
+            Поиск
+        </button>
+
+    </div>
+}
+<table class="table">
+    <tr>
+        <th>
+            Оценка
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)

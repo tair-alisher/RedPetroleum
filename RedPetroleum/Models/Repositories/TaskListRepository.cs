@@ -61,6 +61,7 @@ namespace RedPetroleum.Models.Repositories
         {
             return db.Users.Find(id);
         }
+
         public IPagedList<TaskList> GetEmployeesById(int pageNumber, int pageSize, string search, string id)
         {
             var currentUser = db.Users.Find(id);
@@ -74,6 +75,15 @@ namespace RedPetroleum.Models.Repositories
                 .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
             else
                 return new PagedList<TaskList>(null, 1, 1);
+        }
+
+        public IPagedList<TaskList> GetEmployeesAdmin(int pageNumber, int pageSize, string search)
+        {
+            return
+                db.TaskLists
+                .Include(t => t.Employee)
+                .Where(x => x.TaskName.Contains(search) || search == null)
+                .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
         }
     }
 }

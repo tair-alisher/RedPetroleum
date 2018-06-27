@@ -38,6 +38,8 @@ namespace RedPetroleum.Models
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<TaskList> TaskLists { get; set; }
+        public DbSet<Mark> Marks { get; set; }
+        public DbSet<TaskMark> TaskMarks { get; set; }
         public DbSet<ACL> ACLs { get; set; }
         public static ApplicationDbContext Create()
         {

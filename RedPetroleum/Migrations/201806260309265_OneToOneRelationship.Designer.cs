@@ -7,13 +7,13 @@ namespace RedPetroleum.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Names : IMigrationMetadata
+    public sealed partial class OneToOneRelationship : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Names));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(OneToOneRelationship));
         
         string IMigrationMetadata.Id
         {
-            get { return "201806250258478_Names"; }
+            get { return "201806260309265_OneToOneRelationship"; }
         }
         
         string IMigrationMetadata.Source

@@ -18,11 +18,9 @@ namespace RedPetroleum.Models.Entities
 
         [Required(ErrorMessage = "Необходимо выбрать отдел!")]
         public Guid DepartmentId { get; set; }
-        public Department Department { get; set; }
 
         [Required(ErrorMessage = "Необходимо выбрать должность!")]
         public Guid PositionId { get; set; }
-        public Position Position { get; set; }
 
         [Display(Name = "Дата рождения")]
         [Required(ErrorMessage = "Необходимо выбрать дату рождения сотрудника!")]
@@ -36,7 +34,10 @@ namespace RedPetroleum.Models.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime AdoptionDate { get; set; }
 
+        [Display(Name = "Уволен")]
         public bool Dismissed { get; set; }
         public ICollection<TaskList> TaskLists { get; set; }
+        public Department Department { get; set; }
+        public Position Position { get; set; }
     }
 }

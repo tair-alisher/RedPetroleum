@@ -16,6 +16,8 @@ namespace RedPetroleum.Models.UnitOfWork
         private EmployeeRepository employeeRepository;
         private PositionRepository positionRepository;
         private TaskListRepository listRepository;
+        private MarkRepository markRepository;
+        private TaskMarkRepository taskMarkRepository;
 
         public UnitOfWork() => db = new ApplicationDbContext();
 
@@ -60,7 +62,24 @@ namespace RedPetroleum.Models.UnitOfWork
                 return listRepository;
             }
         }
-        
+        public MarkRepository Marks
+        {
+            get
+            {
+                if (markRepository == null)
+                    markRepository = new MarkRepository(db);
+                return markRepository;
+            }
+        }
+        public TaskMarkRepository TaskMarks
+        {
+            get
+            {
+                if (taskMarkRepository == null)
+                    taskMarkRepository = new TaskMarkRepository(db);
+                return taskMarkRepository;
+            }
+        }
 
         private bool disposed = false;
 

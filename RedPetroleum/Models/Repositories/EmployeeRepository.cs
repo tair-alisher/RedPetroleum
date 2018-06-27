@@ -67,8 +67,8 @@ namespace RedPetroleum.Models.Repositories
         public IEnumerable<Employee> GetAvailableEmployees(string id)
         {
             var currentUser = db.Users.Find(id);
-            var employees = currentUser.EmployeeId.Split(',').Select(i => Guid.Parse(i));
-            return db.Employees.Where(d => employees.Contains(d.EmployeeId));
+            var employees = currentUser.EmployeeId;
+            return db.Employees.Where(d => employees.Contains(d.EmployeeId.ToString()));
         }
     }
 }
