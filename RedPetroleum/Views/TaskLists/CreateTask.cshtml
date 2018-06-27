@@ -1,0 +1,14 @@
+﻿<tr class="createdTask" id="@ViewBag.Task.TaskListId">
+    <td>
+        @ViewBag.Task.TaskName
+    </td>
+    <td>
+        @ViewBag.Task.TaskDuration
+    </td>
+    <td>
+        @ViewBag.EmployeeName
+    </td>
+    <td>
+        <button type="button" class="btn btn-danger removeTask" onclick="removeTask('@ViewBag.Task.TaskListId')"><span class="oi oi-x" title="Удалить" aria-hidden="true"></span></button>
+    </td>
+</tr>

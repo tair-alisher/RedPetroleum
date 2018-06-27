@@ -1,0 +1,39 @@
+﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+
+@{
+    ViewBag.Title = "Главная";
+}
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>EFullName</th>
+                <th>Position</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.EFullName</td>
+                        <td>@item.Position.Name</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByCompany')">Скачать отчет</button>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/app.js")
+
+    <script>
+
+    </script>
+}

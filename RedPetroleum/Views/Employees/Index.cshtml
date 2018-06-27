@@ -1,5 +1,7 @@
-﻿@model PagedList.IPagedList<RedPetroleum.Models.Entities.Employee>
-@using PagedList.Mvc
+﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
 @{
     ViewBag.Title = "Index";
 }
@@ -29,16 +31,19 @@
 <table class="table">
     <tr>
         <th>
+            ФИО
+        </th>
+        <th>
             Отдел
         </th>
         <th>
             Должность
         </th>
         <th>
-            ФИО
+            Дата Рождения
         </th>
         <th>
-            Дата Рождения
+            Дата Принятия
         </th>
         <th>
             Уволен
@@ -48,30 +53,32 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Position.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateBorn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dismissed)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.EmployeeId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeId })
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EFullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Position.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateBorn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdoptionDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Dismissed)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.EmployeeId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeId })
+        </td>
+    </tr>
     }
 
 </table>
-Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)

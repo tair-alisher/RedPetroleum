@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using PagedList;
+using X.PagedList;
 using RedPetroleum.Models;
-using RedPetroleum.Models.Entities;
 
 namespace RedPetroleum.Controllers
 {
@@ -226,26 +221,23 @@ namespace RedPetroleum.Controllers
                 c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
+            
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new MultiSelectList(users, "EmployeeId", "EFullName");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
             return View();
         }
 
-        //
+        // 
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, Guid[] EmployeeId, string SelectedRole)
+        public async Task<ActionResult> Register(RegisterViewModel model, string SelectedRole)
         {
             if (ModelState.IsValid)
             {
-                var id = "";
-                if (EmployeeId != null)
-                {
-                    id = string.Join(",", EmployeeId);
-                }
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeIds = id};
+                var employee = db.Employees.Where(x=>x.EmployeeId.ToString() == model.EmployeeId).FirstOrDefault();
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeId = model.EmployeeId, DepartmentId = employee.DepartmentId.ToString()};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
                 if (result.Succeeded)

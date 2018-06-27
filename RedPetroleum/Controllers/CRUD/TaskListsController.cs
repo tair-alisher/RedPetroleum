@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using PagedList;
+using X.PagedList;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
+using Microsoft.AspNet.Identity;
 
 namespace RedPetroleum.Controllers.CRUD
 {
@@ -22,11 +23,19 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
+        [Authorize(Roles ="admin, manager")]
         public ActionResult Index(int? page, string searching)
         {
+            var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
+            
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var taskLists = unitOfWork.TaskLists.GetAllIndex(pageNumber, pageSize, searching);
+            IPagedList<TaskList> taskLists;
+            if (User.IsInRole("admin"))
+            {
+                taskLists = unitOfWork.TaskLists.GetEmployeesAdmin(pageNumber, pageSize, searching);
+            }
+            taskLists = unitOfWork.TaskLists.GetEmployeesById(pageNumber, pageSize, searching, currentUser.Id);
             return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 
@@ -48,8 +57,29 @@ namespace RedPetroleum.Controllers.CRUD
         // GET: TaskLists/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
+            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTask(string employeeId, string taskName, string taskDuration, DateTime taskDate)
+        {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
+            TaskList task = unitOfWork
+                .TaskLists
+                .CreateTask(employeeId, taskName, taskDuration, taskDate);
+            string taskEmployeeName = unitOfWork
+                .Employees
+                .GetEmployeeNameById(Guid.Parse(employeeId));
+
+            ViewBag.Task = task;
+            ViewBag.EmployeeName = taskEmployeeName;
+
+            return PartialView(task);
         }
 
         // POST: TaskLists/Create
@@ -67,7 +97,7 @@ namespace RedPetroleum.Controllers.CRUD
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            //ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
@@ -83,7 +113,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
@@ -100,8 +130,20 @@ namespace RedPetroleum.Controllers.CRUD
                 await unitOfWork.SaveAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            //ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void DeleteTask(string taskId)
+        {
+            // TODO: сделать проверку,
+            // обладает ли пользователь правами на выполнение операции
+            Guid taskGuidId = Guid.Parse(taskId);
+            unitOfWork
+                .TaskLists
+                .Delete(taskGuidId);
         }
 
         // GET: TaskLists/Delete/5
