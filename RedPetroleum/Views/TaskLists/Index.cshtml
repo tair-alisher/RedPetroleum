@@ -45,9 +45,6 @@
         <th>
             Комментарии сотрудника(?)
         </th>
-        <th>
-            Оценка
-        </th>
         <th></th>
     </tr>
 
@@ -71,9 +68,6 @@
                 @Html.DisplayFor(modelItem => item.CommentEmployees)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Mark)
-            </td>
-            <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
                 @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
@@ -83,4 +77,6 @@
     }
 
 </table>
+@if (!(Model.Count() <= 0)) {
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+}
