@@ -93,15 +93,9 @@ namespace RedPetroleum.Controllers
             {
                 return HttpNotFound();
             }
-            var users = db.Employees.Select(c => new {
-                c.EmployeeId,
-                EFullname = c.EFullName
-            });
 
-
-            ViewBag.Roles = new SelectList(db.Roles, "Id", "Name");
-            //ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName", user.EmployeeId);
-            ViewBag.EmployeeId = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
+            ViewBag.Rol = new SelectList(db.Roles, "Id", "Name", user.Roles.SingleOrDefault().RoleId);
+            ViewBag.Emp = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
             return View(user);
         }
 
@@ -130,7 +124,7 @@ namespace RedPetroleum.Controllers
                     UserManager.RemoveFromRole(user.Id, oldRoleName);
                     UserManager.AddToRole(user.Id, newRoleName);
                 }
-
+                
                 user.EmployeeId = EmployeeId;
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
@@ -273,10 +267,12 @@ namespace RedPetroleum.Controllers
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeId = model.EmployeeId, DepartmentId = employee.DepartmentId.ToString()};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
+
+                
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, role.Name);
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                   //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
                     // Отправка сообщения электронной почты с этой ссылкой
@@ -286,6 +282,14 @@ namespace RedPetroleum.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+                var users = db.Employees.Select(c => new {
+                    c.EmployeeId,
+                    EFullname = c.EFullName
+                }).ToList();
+
+                ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+                ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+
                 AddErrors(result);
             }
 

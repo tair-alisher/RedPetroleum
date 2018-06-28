@@ -42,8 +42,10 @@ namespace RedPetroleum.Controllers
             {
                department = null;
             }
-
-            department = Guid.Parse(departmentId);
+            else
+            {
+                department = Guid.Parse(departmentId);
+            }
             XlsReport report = new XlsReport(unit, department, reportType);
             ExcelPackage package = report.FormReport();
             Response.Clear();
