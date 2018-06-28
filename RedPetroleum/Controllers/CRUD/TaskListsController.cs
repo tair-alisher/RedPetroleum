@@ -32,10 +32,14 @@ namespace RedPetroleum.Controllers.CRUD
             int pageNumber = (page ?? 1);
             IPagedList<TaskList> taskLists;
             if (User.IsInRole("admin"))
-            {
-                taskLists = unitOfWork.TaskLists.GetEmployeesAdmin(pageNumber, pageSize, searching);
-            }
-            taskLists = unitOfWork.TaskLists.GetEmployeesById(pageNumber, pageSize, searching, currentUser.Id);
+                taskLists = unitOfWork
+                    .TaskLists
+                    .GetEmployeesAdmin(pageNumber, pageSize, searching);
+
+            taskLists = unitOfWork
+                .TaskLists
+                .GetEmployeesByDepartmentId(pageNumber, pageSize, searching, currentUser.DepartmentId);
+
             return View(taskLists.ToPagedList(pageNumber, pageSize));
         }
 

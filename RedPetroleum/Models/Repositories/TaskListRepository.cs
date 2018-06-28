@@ -76,6 +76,22 @@ namespace RedPetroleum.Models.Repositories
                 return new PagedList<TaskList>(null, 1, 1);
         }
 
+        public IPagedList<TaskList> GetEmployeesByDepartmentId(int pageNumber, int pageSize, string search, string departmentId)
+        {
+            IEnumerable<TaskList> departmentEmployees = db.TaskLists
+                .Include(e => e.Employee)
+                .Where(t =>
+                    t.Employee.DepartmentId.ToString() == departmentId &&
+                    (t.TaskName.Contains(search) || search == null)
+                )
+                .OrderBy(t => t.TaskName);
+
+            if (!(departmentEmployees.Count() <= 0))
+                return departmentEmployees.ToPagedList(pageNumber, pageSize);
+            else
+                return new PagedList<TaskList>(null, 1, 1);
+        }
+
         public IPagedList<TaskList> GetEmployeesAdmin(int pageNumber, int pageSize, string search)
         {
             return
