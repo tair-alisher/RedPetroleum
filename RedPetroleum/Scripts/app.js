@@ -142,7 +142,37 @@ function removeTask(taskId) {
         success: function () {
             $(`#${taskId}`).remove()
         },
-        error: function (XMLHTtpRequest) {
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+
+function rate(id) {
+    var button = $("#" + id).find(button);
+    button.prop('disabled', true);
+    var firstMark = $("#" + id).find(".firstMark").val();
+    var secondMark = $("#" + id).find(".secondMark").val();
+    var thirdMark = $("#" + id).find(".thirdMark").val();
+    var fourthMark = $("#" + id).find(".fourthMark").val();
+
+    $.ajax({
+        url: "/TaskMarks/RateTask",
+        type: "POST",
+        data: {
+            "taskId": id,
+            "firstMark": firstMark,
+            "secondMark": secondMark,
+            "thirdMark": thirdMark,
+            "fourthMark": fourthMark
+        },
+        cache: false,
+        success: function (average) {
+            $("#average").val(average);
+            button.prop('disabled', false);
+        },
+        error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
         }
     });

@@ -63,7 +63,7 @@
 
 <hr />
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -91,19 +91,19 @@
 
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Employee.EFullName)
+                    <b>@Html.DisplayFor(modelItem => item.Employee.EFullName)</b>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TaskName)
+                    <b>@Html.DisplayFor(modelItem => item.TaskName)</b>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TaskDuration)
+                    <b>@Html.DisplayFor(modelItem => item.TaskDuration)</b>
                 </td>
                 <td>
-                    @(((DateTime)item.TaskDate).ToString("MM.yyyy"))
+                    <b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CommentEmployees)
+                    <b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b>
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
@@ -111,7 +111,53 @@
                     @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
                 </td>
             </tr>
-
+            if (item.TaskMarks != null)
+            {
+            <tr>
+                @foreach (var mark in item.TaskMarks)
+                {
+                    <td>
+                        <input type="number" name="@mark.Mark.Id" class="form-control" value="@mark.MarkValue" />
+                        <small class="form-text text-muted">@mark.Mark.Name</small>
+                    </td>
+                }
+                <td>
+                    <input type="number" name="Average" class="form-control" disabled />
+                    <small class="form-text text-muted">Среднее</small>
+                </td>
+                <td>
+                    <button id="saveMarks" class="btn btn-info" type="button" onclick="updateRate('@item.TaskListId')">Сохранить</button>
+                </td>
+            </tr>
+            }
+            else
+            {
+            <tr id="@item.TaskListId">
+                <td>
+                    <input type="number" class="firstMark" name="firstMark" class="form-control" value="0" />
+                    <small class="form-text text-muted">Компетентность</small>
+                </td>
+                <td>
+                    <input type="number" class="secondMark" name="secondMark" class="form-control" value="0" />
+                    <small class="form-text text-muted">Результативность</small>
+                </td>
+                <td>
+                    <input type="number" class="thirdMark" name="thirdMark" class="form-control" value="0" />
+                    <small class="form-text text-muted">Дисциплинированность</small>
+                </td>
+                <td>
+                    <input type="number" class="fourthMark" name="fourthMark" class="form-control" value="0" />
+                    <small class="form-text text-muted">Своевременность</small>
+                </td>
+                <td>
+                    <input type="number" id="average" name="average" class="form-control" value="0" disabled />
+                    <small class="form-text text-muted">Среднее</small>
+                </td>
+                <td>
+                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+                </td>
+            </tr>
+            }
         }
     </tbody>
 
@@ -123,4 +169,5 @@
 
 @section Scripts {
     @Scripts.Render("~/Scripts/app.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
 }

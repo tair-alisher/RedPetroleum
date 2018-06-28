@@ -107,5 +107,33 @@ namespace RedPetroleum.Controllers.CRUD
                 return View();
             }
         }
+
+        [HttpPost]
+        public double RateTask(string taskId, string firstMark, string secondMark, string thirdMark, string fourthMark)
+        {
+            double firstM = EditMark(firstMark);
+            double secondM = EditMark(secondMark);
+            double thirdM = EditMark(thirdMark);
+            double fourthM = EditMark(fourthMark);
+
+            double average = (firstM + secondM + thirdM + fourthM) / 4;
+
+            unitOfWork
+                .TaskMarks
+                .CreateTaskMarks(
+                    taskId,
+                    firstM,
+                    secondM,
+                    thirdM,
+                    fourthM
+                );
+
+            return average;
+        }
+
+        private double EditMark(string mark)
+        {
+            return double.Parse(mark.Replace(".", ","));
+        }
     }
 }

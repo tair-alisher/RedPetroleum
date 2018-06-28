@@ -35,5 +35,46 @@ namespace RedPetroleum.Models.Repositories
         public async Task<TaskMark> GetAsync(Guid? id) => await db.TaskMarks.FindAsync(id);
 
         public void Update(TaskMark item) => db.Entry(item).State = EntityState.Modified;
+
+        public void CreateTaskMarks(string taskId, double firstMark, double secondMark, double thirdMark, double fourthMark)
+        {
+            Guid taskListId = Guid.Parse(taskId);
+
+            TaskMark firstTM = new TaskMark
+            {
+                Id = new Guid(),
+                MarkId = db.Marks.AsEnumerable().ElementAt(0).Id,
+                TaskListId = taskListId,
+                MarkValue = firstMark
+            };
+            TaskMark secondTM = new TaskMark
+            {
+                Id = new Guid(),
+                MarkId = db.Marks.AsEnumerable().ElementAt(1).Id,
+                TaskListId = taskListId,
+                MarkValue = secondMark
+            };
+            TaskMark thirdTM = new TaskMark
+            {
+                Id = new Guid(),
+                MarkId = db.Marks.AsEnumerable().ElementAt(2).Id,
+                TaskListId = taskListId,
+                MarkValue = thirdMark
+            };
+            TaskMark fourthTM = new TaskMark
+            {
+                Id = new Guid(),
+                MarkId = db.Marks.AsEnumerable().ElementAt(3).Id,
+                TaskListId = taskListId,
+                MarkValue = fourthMark
+            };
+
+            db.TaskMarks.Add(firstTM);
+            db.TaskMarks.Add(secondTM);
+            db.TaskMarks.Add(thirdTM);
+            db.TaskMarks.Add(fourthTM);
+
+            db.SaveChanges();
+        }
     }
 }
