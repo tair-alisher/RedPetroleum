@@ -1,23 +1,33 @@
-function updateEmployeeTable() {
+function updateEmployeeTable(dropDown) {
     var departmentId = $("#departmentsDropdown").val();
     var token = $('input[name="__RequestVerificationToken"]').val();
-
-    $.ajax({
-        url: "/Reports/GetEmployeesByDepartment",
-        type: "POST",
-        data: {
-            __RequestVerificationToken: token,
-            "departmentId": departmentId
-        },
-        cache: false,
-        success: function (result) {
-            var tableContent = $("#tableContent");
-            tableContent.html(result);
-        },
-        error: function (XMLHttpRequest) {
-            console.log(XMLHttpRequest);
-        }
-    });
+    if (departmentId == "") {
+        $("#downloadBtn").prop('disabled', true);
+        $("#tableContent").empty();
+        $("#DepartmentName").text(dropDown.options[dropDown.selectedIndex].text);
+    } else {
+        $.ajax({
+            url: "/Reports/GetEmployeesByDepartment",
+            type: "POST",
+            data: {
+                __RequestVerificationToken: token,
+                "departmentId": departmentId
+            },
+            cache: false,
+            success: function (result) {
+                $("#DepartmentName").text(dropDown.options[dropDown.selectedIndex].text);
+                var tableContent = $("#tableContent");
+                tableContent.html(result);
+                $("#downloadBtn").prop('disabled', false);
+                if (result.length == "2") {
+                    $("#downloadBtn").prop('disabled', true);
+                }
+            },
+            error: function (XMLHttpRequest) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
     return false;
 }
 

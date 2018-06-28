@@ -95,7 +95,6 @@ namespace RedPetroleum.Models
         public string SelectedRole { get; set; }
         public IEnumerable<SelectList> Roles { get; set; }
     }
-  
 
     public class ResetPasswordViewModel
     {
