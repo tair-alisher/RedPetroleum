@@ -30,26 +30,22 @@ namespace RedPetroleum.Controllers
                 "Name"
             );
 
-            return View(emplist);
+            //ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
+            return View();
         }
 
         public void ExportToExcel(string departmentId, string reportType)
         {
             Guid? department;
+
             if (departmentId == "*")
             {
-                department = null;
-            }
-            else
-            {
-                department = Guid.Parse(departmentId);
+               department = null;
             }
 
-
+            department = Guid.Parse(departmentId);
             XlsReport report = new XlsReport(unit, department, reportType);
             ExcelPackage package = report.FormReport();
-
-
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             Response.AddHeader("content-disposition", "attachment: filename=ExcelReport.xlsx");
@@ -61,11 +57,12 @@ namespace RedPetroleum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GetEmployeesByDepartment(string departmentId)
         {
-            
-            Guid id = Guid.Parse(departmentId);
+            if (departmentId == "")
+            {
+                return PartialView();
+            }
             IEnumerable<Employee> employees = unit.Employees
-                .GetEmployeesByDepartmentId(id);
-
+                .GetEmployeesByDepartmentId(Guid.Parse(departmentId));
             return PartialView(employees);
         }
 

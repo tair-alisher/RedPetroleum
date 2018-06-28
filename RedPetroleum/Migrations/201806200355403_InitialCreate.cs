@@ -66,8 +66,7 @@ namespace RedPetroleum.Migrations
                         TaskName = c.String(),
                         TaskDuration = c.String(),
                         CommentEmployer = c.String(),
-                        CommentEmployees = c.String(),
-                        Mark = c.Double(nullable: false),
+                        CommentEmployees = c.String()
                     })
                 .PrimaryKey(t => t.TaskListId)
                 .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
