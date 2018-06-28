@@ -4,54 +4,139 @@
 @using X.PagedList.Mvc.Bootstrap4
 
 @{
-    ViewBag.Title = "Roles";
+    ViewBag.Title = "Роли";
 }
 
-<h2>Roles</h2>
+<h2>Роли</h2>
 
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a type="button" class="btn btn-primary" href="@Url.Action("Create", "Roles")">
+        <i class="fa fa-plus"></i>
+        Добавить роль
+    </a>
 </p>
 @using (Html.BeginForm("Index", "Roles", FormMethod.Get))
 {
 
     @Html.AntiForgeryToken()
     <!-- Search  -->
-    <div class="col-md-11 search-div" style="margin-bottom: 2%;">
-        <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование компании" onchange="form.submit();"
-               style="border: 1px solid; border-color: #eb5e28;" />
-    </div>
-    <div class="col-md-1 search-div">
-        <button type="submit" class="btn btn-default default-btn">
-            <i class="fa fa-search"></i>
-            Поиск
-        </button>
+    <div class="row">
+        <div class="col-md-11 search-div">
+            <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование роли" onchange="form.submit();"
+                   style="border: 1px solid; border-color: #008cba;" />
+        </div>
+        <div class="col-md-1 search-div-btn">
+            <button type="submit" class="btn btn-default default-btn">
+                <i class="fa fa-search"></i>
+                Поиск
+            </button>
 
+        </div>
     </div>
-}
-<table class="table">
-    <tr>
-        <th>
-            Имя роли
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(model => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
+            <th>
+                Имя роли
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr id="row_@item.Id">
+                <td>
+                    @Html.DisplayFor(model => item.Name)
+                </td>
+                <td></td>
+                <td></td>
+                <td style="text-align:right;">
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "Roles", new { id = item.Id})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top" data-original-title="Tooltip on top"><span style="padding: 5px;">Редактировать</span></i></a>
+                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "Roles", new { id = item.Id})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Просмотреть</span></i></a>
+                        <a data-id="@item.Id" href="@Url.Action("Delete", "Roles", new { id = item.Id})" data-target="#exampleModalCenter" data-toggle="modal" class="btn btn-danger element"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Удалить</span></i></a>
+                    </div>
+                </td>
+            </tr>
+        }
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </table>
+    @Html.Hidden("itemid", "", new { id = "itemid" })
+}
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure that you want to delete this?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="Delete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="modal">
+    <div class="modal-dialog" tabindex="-1" role="dialog" id="exampleModalCenter" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="Delete" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/mvc/4.0/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+$(function(){
+	$('.element').click(function (e) {
+
+        e.preventDefault();
+	    $('#exampleModalCenter').modal('show');
+		console.log($(this).data('id'));
+
+        var id = $(this).data('id').toString();
+        $('#itemid').val(id);
+	    console.log($('#itemid').val());
+});
+
+
+    $('#Delete').click(function () {
+        var id = $('#itemid').val().toString();
+        console.log(id);
+       $.post("@Url.Action("Delete", "Roles")", { id: id }, function (data) {
+           
+       });
+
+       $('#exampleModalCenter').modal('hide');
+    });
+});
+
+</script>

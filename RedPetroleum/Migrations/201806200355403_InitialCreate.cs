@@ -43,8 +43,8 @@ namespace RedPetroleum.Migrations
                         Dismissed = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.EmployeeId)
-                .ForeignKey("dbo.Departments", t => t.DepartmentId, cascadeDelete: true)
-                .ForeignKey("dbo.Positions", t => t.PositionId, cascadeDelete: true)
+                .ForeignKey("dbo.Departments", t => t.DepartmentId, cascadeDelete: false)
+                .ForeignKey("dbo.Positions", t => t.PositionId, cascadeDelete: false)
                 .Index(t => t.DepartmentId)
                 .Index(t => t.PositionId);
             
@@ -69,7 +69,7 @@ namespace RedPetroleum.Migrations
                         CommentEmployees = c.String()
                     })
                 .PrimaryKey(t => t.TaskListId)
-                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
+                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: false)
                 .Index(t => t.EmployeeId);
             
             CreateTable(
@@ -90,8 +90,8 @@ namespace RedPetroleum.Migrations
                         RoleId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: false)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
             
@@ -129,7 +129,7 @@ namespace RedPetroleum.Migrations
                         ClaimValue = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId);
             
             CreateTable(
@@ -141,7 +141,7 @@ namespace RedPetroleum.Migrations
                         UserId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId);
             
         }
