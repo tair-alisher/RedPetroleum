@@ -30,10 +30,10 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Roles)
+            @Html.DisplayNameFor(model => model.Roles.SingleOrDefault().RoleId)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Roles)
+            @Html.DisplayFor(model => model.Roles.SingleOrDefault().RoleId)
         </dd>
 
     </dl>
