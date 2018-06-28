@@ -148,4 +148,3 @@ function removeTask(taskId) {
     });
     return false;
 }
-

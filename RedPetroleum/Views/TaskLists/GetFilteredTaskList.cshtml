@@ -4,6 +4,7 @@
 @using X.PagedList.Mvc.Bootstrap4
 @{
     ViewBag.Title = "Задачи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Задачи</h2>
@@ -52,11 +53,11 @@
             @Html.DropDownList("EmployeeId", ViewBag.EmployeeId as SelectList, "Выберите сотрудника", htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
         </div>
         <div class="col-md-2">
-            <input class="form-control" id="taskDate" type="month" name="TaskDate">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" @(ViewBag.Month != null ? "value=" + ViewBag.Month : null)>
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
-            <a href="@Url.Action("Index", "TaskLists")" id="resetFilter" class="btn btn-default">Сбросить</a>
+            <a href="@Url.Action("Index", "TaskLists")" id="resetFilter" class="btn ifn-default">Сбросить</a>
         </div>
     </div>
 }

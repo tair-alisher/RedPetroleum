@@ -76,9 +76,9 @@ namespace RedPetroleum.Models.Repositories
                 return new PagedList<TaskList>(null, 1, 1);
         }
 
-        public IPagedList<TaskList> GetEmployeesByDepartmentId(int pageNumber, int pageSize, string search, string departmentId)
+        public IPagedList<TaskList> GetEmployeeTasksByDepartmentId(int pageNumber, int pageSize, string search, string departmentId)
         {
-            IEnumerable<TaskList> departmentEmployees = db.TaskLists
+            IEnumerable<TaskList> taskList = db.TaskLists
                 .Include(e => e.Employee)
                 .Where(t =>
                     t.Employee.DepartmentId.ToString() == departmentId &&
@@ -86,8 +86,8 @@ namespace RedPetroleum.Models.Repositories
                 )
                 .OrderBy(t => t.TaskName);
 
-            if (!(departmentEmployees.Count() <= 0))
-                return departmentEmployees.ToPagedList(pageNumber, pageSize);
+            if (!(taskList.Count() <= 0))
+                return taskList.ToPagedList(pageNumber, pageSize);
             else
                 return new PagedList<TaskList>(null, 1, 1);
         }
@@ -99,6 +99,25 @@ namespace RedPetroleum.Models.Repositories
                 .Include(t => t.Employee)
                 .Where(x => x.TaskName.Contains(search) || search == null)
                 .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
+        }
+
+        public IEnumerable<TaskList> GetFilteredTaskList(string departmentId, string employeeId, DateTime? month)
+        {
+            IEnumerable<TaskList> taskList = db.TaskLists.Include(e => e.Employee);
+            if (!String.IsNullOrEmpty(departmentId))
+                taskList = taskList
+                    .Where(t => t.Employee.DepartmentId.ToString() == departmentId);
+            if (!String.IsNullOrEmpty(employeeId))
+                taskList = taskList
+                    .Where(t => t.EmployeeId.ToString() == employeeId);
+            if (month != null)
+                taskList = taskList
+                    .Where(t =>
+                        ((DateTime)t.TaskDate).Year == ((DateTime)month).Year &&
+                        ((DateTime)t.TaskDate).Month == ((DateTime)month).Month
+                    );
+
+            return taskList;
         }
     }
 }

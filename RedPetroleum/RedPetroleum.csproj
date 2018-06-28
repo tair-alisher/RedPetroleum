@@ -3445,6 +3445,7 @@
     <Content Include="Views\Marks\Delete.cshtml" />
     <Content Include="Views\TaskMarks\Index.cshtml" />
     <Content Include="Views\TaskMarks\Details.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

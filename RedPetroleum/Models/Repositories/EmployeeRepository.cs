@@ -30,6 +30,11 @@ namespace RedPetroleum.Models.Repositories
 
         public IEnumerable<Employee> GetAll() => db.Employees.Include(e => e.Department).Include(e => e.Position);
 
+        public IEnumerable<Employee> GetAllWithoutRelations()
+        {
+            return db.Employees;
+        }
+
         public IPagedList<Employee> GetAllIndex(int pageNumber, int pageSize, string search) => db.Employees.Where(x => x.EFullName.Contains(search) || search == null).Include(e => e.Department).Include(e => e.Position).OrderBy(x=>x.EFullName).ToPagedList(pageNumber, pageSize);
 
         public async Task<Employee> GetAsync(Guid? id) => await db.Employees.FindAsync(id);
