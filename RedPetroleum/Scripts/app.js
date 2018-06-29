@@ -1,6 +1,8 @@
+//This function for show and update DataTable ReportByDepartment on View
 function updateEmployeeTable(dropDown) {
     var departmentId = $("#departmentsDropdown").val();
     var token = $('input[name="__RequestVerificationToken"]').val();
+    //Check if DropDown is empty disabled button. 
     if (departmentId == "") {
         $("#downloadBtn").prop('disabled', true);
         $("#tableContent").empty();
@@ -15,10 +17,12 @@ function updateEmployeeTable(dropDown) {
             },
             cache: false,
             success: function (result) {
+                //If DropDown not empty written the select item on head of Table
                 $("#DepartmentName").text(dropDown.options[dropDown.selectedIndex].text);
                 var tableContent = $("#tableContent");
                 tableContent.html(result);
                 $("#downloadBtn").prop('disabled', false);
+                //Check If DataTable is Empty disabled button
                 if (result.length == "2") {
                     $("#downloadBtn").prop('disabled', true);
                 }
