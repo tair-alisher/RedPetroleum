@@ -33,10 +33,50 @@ namespace RedPetroleum.Controllers.CRUD
             IPagedList<TaskList> taskLists;
             if (User.IsInRole("admin"))
             {
-                taskLists = unitOfWork.TaskLists.GetEmployeesAdmin(pageNumber, pageSize, searching);
+                taskLists = unitOfWork
+                    .TaskLists
+                    .GetEmployeesAdmin(pageNumber, pageSize, searching);
+
+                ViewBag.EmployeeId = new SelectList(
+                        unitOfWork
+                            .Employees
+                            .GetAllWithoutRelations(),
+                        "EmployeeId",
+                        "EFullName"
+                    );
+
+                ViewBag.DepartmentId = new SelectList(
+                        unitOfWork
+                            .Departments
+                            .GetAll(),
+                        "DepartmentId",
+                        "Name"
+                    );
             }
-            taskLists = unitOfWork.TaskLists.GetEmployeesById(pageNumber, pageSize, searching, currentUser.Id);
-            return View(taskLists);
+            else
+            {
+                taskLists = unitOfWork
+                .TaskLists
+                .GetEmployeeTasksByDepartmentId(pageNumber, pageSize, searching, currentUser.DepartmentId);
+
+                ViewBag.EmployeeId = new SelectList(
+                    unitOfWork
+                        .Employees
+                        .GetAvailableEmployees(User.Identity.GetUserId()),
+                    "EmployeeId",
+                    "EFullName"
+                    );
+
+                ViewBag.Department = unitOfWork
+                    .Departments
+                    .GetDepartmentByUserId(User.Identity.GetUserId());
+            }
+
+
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+
+            return View(taskLists.ToPagedList(pageNumber, pageSize));
+
         }
 
         // GET: TaskLists/Details/5
@@ -80,6 +120,57 @@ namespace RedPetroleum.Controllers.CRUD
             ViewBag.EmployeeName = taskEmployeeName;
 
             return PartialView(task);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GetFilteredTaskList(int? page, DateTime? TaskDate, string DepartmentId, string EmployeeId)
+        {
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            IEnumerable<TaskList> taskList = unitOfWork
+                .TaskLists
+                .GetFilteredTaskList(DepartmentId, EmployeeId, TaskDate);
+
+            if (User.IsInRole("admin"))
+            {
+                ViewBag.DepartmentId = new SelectList(
+                        unitOfWork
+                            .Departments
+                            .GetAll(),
+                        "DepartmentId",
+                        "Name",
+                        DepartmentId
+                    );
+                ViewBag.EmployeeId = new SelectList(
+                        unitOfWork
+                            .Employees
+                            .GetAllWithoutRelations(),
+                        "EmployeeId",
+                        "EFullName",
+                        EmployeeId
+                    );
+            }
+            else
+            {
+                ViewBag.Department = unitOfWork
+                    .Departments
+                    .GetDepartmentByUserId(User.Identity.GetUserId());
+                ViewBag.EmployeeId = new SelectList(
+                        unitOfWork
+                        .Employees
+                        .GetAvailableEmployees(User.Identity.GetUserId()),
+                        "EmployeeId",
+                        "EFullName",
+                        EmployeeId
+                    );
+            }
+
+            if (TaskDate != null)
+                ViewBag.Month = ((DateTime)TaskDate).ToString("yyyy-MM");
+
+            return View(taskList.ToPagedList(pageNumber, pageSize));
         }
 
         // POST: TaskLists/Create
@@ -178,6 +269,34 @@ namespace RedPetroleum.Controllers.CRUD
                 unitOfWork.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public double RateTask(string taskId, string skillMark, string effectivenessMark, string disciplineMark, string timelinessMark)
+        {
+            double skill = ConvertMarkToDouble(skillMark);
+            double effectiveness = ConvertMarkToDouble(effectivenessMark);
+            double discipline = ConvertMarkToDouble(disciplineMark);
+            double timeliness = ConvertMarkToDouble(timelinessMark);
+
+            double average = (skill + effectiveness + discipline + timeliness) / 4;
+
+            unitOfWork
+                .TaskLists
+                .RateTask(
+                    taskId,
+                    skill,
+                    effectiveness,
+                    discipline,
+                    timeliness,
+                    average
+                );
+
+            return average;
+        }
+
+        private double ConvertMarkToDouble(string mark)
+        {
+            return double.Parse(mark.Replace(".", ","));
         }
     }
 }

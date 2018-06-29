@@ -60,17 +60,38 @@ namespace RedPetroleum.Models.Repositories
         {
             return db.Users.Find(id);
         }
+
         public IPagedList<TaskList> GetEmployeesById(int pageNumber, int pageSize, string search, string id)
         {
             var currentUser = db.Users.Find(id);
-            var employees = currentUser.EmployeeId;
-            return
-                db.TaskLists
+            var employees = currentUser.EmployeeId == null ? null : currentUser.EmployeeId.Split(',').Select(i => Guid.Parse(i));
+
+            if (employees != null)
+                return db.TaskLists
                 .Include(t => t.Employee)
-                .Where(d => employees.Contains(d.Employee.EmployeeId.ToString()))
+                .Where(d => employees.Contains(d.Employee.EmployeeId))
                 .Where(x => x.TaskName.Contains(search) || search == null)
                 .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
+            else
+                return new PagedList<TaskList>(null, 1, 1);
         }
+
+        public IPagedList<TaskList> GetEmployeeTasksByDepartmentId(int pageNumber, int pageSize, string search, string departmentId)
+        {
+            IEnumerable<TaskList> taskList = db.TaskLists
+                .Include(e => e.Employee)
+                .Where(t =>
+                    t.Employee.DepartmentId.ToString() == departmentId &&
+                    (t.TaskName.Contains(search) || search == null)
+                )
+                .OrderBy(t => t.TaskName);
+
+            if (!(taskList.Count() <= 0))
+                return taskList.ToPagedList(pageNumber, pageSize);
+            else
+                return new PagedList<TaskList>(null, 1, 1);
+        }
+
         public IPagedList<TaskList> GetEmployeesAdmin(int pageNumber, int pageSize, string search)
         {
             return
@@ -78,6 +99,41 @@ namespace RedPetroleum.Models.Repositories
                 .Include(t => t.Employee)
                 .Where(x => x.TaskName.Contains(search) || search == null)
                 .OrderBy(x => x.TaskName).ToPagedList(pageNumber, pageSize);
+        }
+
+        public IEnumerable<TaskList> GetFilteredTaskList(string departmentId, string employeeId, DateTime? month)
+        {
+            IEnumerable<TaskList> taskList = db.TaskLists.Include(e => e.Employee);
+            if (!String.IsNullOrEmpty(departmentId))
+                taskList = taskList
+                    .Where(t => t.Employee.DepartmentId.ToString() == departmentId);
+            if (!String.IsNullOrEmpty(employeeId))
+                taskList = taskList
+                    .Where(t => t.EmployeeId.ToString() == employeeId);
+            if (month != null)
+                taskList = taskList
+                    .Where(t =>
+                        ((DateTime)t.TaskDate).Year == ((DateTime)month).Year &&
+                        ((DateTime)t.TaskDate).Month == ((DateTime)month).Month
+                    );
+
+            return taskList;
+        }
+
+        public void RateTask(
+            string taskId, double skill, double effectiveness,
+            double discipline, double timeliness, double average
+            )
+        {
+            TaskList task = db.TaskLists.Find(Guid.Parse(taskId));
+            task.SkillMark = skill;
+            task.EffectivenessMark = effectiveness;
+            task.DisciplineMark = discipline;
+            task.TimelinessMark = timeliness;
+            task.AverageMark = average;
+
+            db.Entry(task).State = EntityState.Modified;
+            db.SaveChanges();
         }
     }
 }
