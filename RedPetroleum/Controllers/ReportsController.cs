@@ -29,6 +29,7 @@ namespace RedPetroleum.Controllers
                 "DepartmentId",
                 "Name"
             );
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
 
             //ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
             return View();
@@ -76,7 +77,7 @@ namespace RedPetroleum.Controllers
                 "DepartmentId",
                 "Name"
             );
-
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return View(emplist);
         }
     }

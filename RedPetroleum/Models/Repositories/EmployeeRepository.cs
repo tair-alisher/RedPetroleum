@@ -71,5 +71,14 @@ namespace RedPetroleum.Models.Repositories
             var employees = currentUser.EmployeeId;
             return db.Employees.Where(d => employees.Contains(d.EmployeeId.ToString()));
         }
+
+        public IEnumerable<Employee> GetEmployeesByTaskDate(DateTime taskDate)
+        {
+            return db.Employees.Include(t => t.TaskLists)
+                .Where(e =>
+                    ((DateTime)e.TaskLists.SingleOrDefault().TaskDate).Month == taskDate.Month &&
+                    ((DateTime)e.TaskLists.SingleOrDefault().TaskDate).Year == taskDate.Year
+                );
+        }
     }
 }

@@ -6,14 +6,24 @@
 }
 
 <div class="container">
-    @Html.DropDownList("Departments", null,"Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable(this);" })
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
+        </div>
+    </div>
+    <br />
+    @Html.DropDownList("Departments", null, "Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable(this);" })
+
     <table class="table table-striped">
         <thead>
             <tr>
                 <th colspan="5" class="text-center">
                     ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
                 </th>
-             
+
             </tr>
             <tr>
                 <th colspan="5" class="text-center" id="nameDep">
