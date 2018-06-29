@@ -3435,6 +3435,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

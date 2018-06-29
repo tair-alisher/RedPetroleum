@@ -119,5 +119,21 @@ namespace RedPetroleum.Models.Repositories
 
             return taskList;
         }
+
+        public void RateTask(
+            string taskId, double skill, double effectiveness,
+            double discipline, double timeliness, double average
+            )
+        {
+            TaskList task = db.TaskLists.Find(Guid.Parse(taskId));
+            task.SkillMark = skill;
+            task.EffectivenessMark = effectiveness;
+            task.DisciplineMark = discipline;
+            task.TimelinessMark = timeliness;
+            task.AverageMark = average;
+
+            db.Entry(task).State = EntityState.Modified;
+            db.SaveChanges();
+        }
     }
 }

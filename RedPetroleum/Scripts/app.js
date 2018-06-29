@@ -156,24 +156,25 @@ function removeTask(taskId) {
 function rate(id) {
     var button = $("#" + id).find(button);
     button.prop('disabled', true);
-    var firstMark = $("#" + id).find(".firstMark").val();
-    var secondMark = $("#" + id).find(".secondMark").val();
-    var thirdMark = $("#" + id).find(".thirdMark").val();
-    var fourthMark = $("#" + id).find(".fourthMark").val();
+    var skillMark = $("#" + id).find(".SkillMark").val();
+    var effectivenessMark = $("#" + id).find(".EffectivenessMark").val();
+    var disciplineMark = $("#" + id).find(".DisciplineMark").val();
+    var timelinessMark = $("#" + id).find(".TimelinessMark").val();
+    var averageMark = $("#" + id).find(".AverageMark");
 
     $.ajax({
-        url: "/TaskMarks/RateTask",
+        url: "/TaskLists/RateTask",
         type: "POST",
         data: {
             "taskId": id,
-            "firstMark": firstMark,
-            "secondMark": secondMark,
-            "thirdMark": thirdMark,
-            "fourthMark": fourthMark
+            "skillMark": skillMark,
+            "effectivenessMark": effectivenessMark,
+            "disciplineMark": disciplineMark,
+            "timelinessMark": timelinessMark
         },
         cache: false,
         success: function (average) {
-            $("#average").val(average);
+            averageMark.val(average);
             button.prop('disabled', false);
         },
         error: function (XMLHttpRequest) {

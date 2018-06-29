@@ -90,28 +90,53 @@
         @foreach (var item in Model)
         {
 
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Employee.EFullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TaskName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TaskDuration)
-                </td>
-                <td>
-                    @(((DateTime)item.TaskDate).ToString("MM.yyyy"))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CommentEmployees)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.EFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskDuration)
+            </td>
+            <td>
+                @(((DateTime)item.TaskDate).ToString("MM.yyyy"))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentEmployees)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
+            </td>
+        </tr>
+        <tr id="@item.TaskListId">
+            <td>
+                <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
+                <small class="form-text text-muted">Компетентность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
+                <small class="form-text text-muted">Результативность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
+                <small class="form-text text-muted">Дисциплинированность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
+                <small class="form-text text-muted">Своевременность</small>
+            </td>
+            <td>
+                <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
+                <small class="form-text text-muted">Среднее</small>
+            </td>
+            <td>
+                <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+            </td>
+        </tr>
 
         }
     </tbody>
@@ -124,4 +149,5 @@
 
 @section Scripts {
     @Scripts.Render("~/Scripts/app.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
 }

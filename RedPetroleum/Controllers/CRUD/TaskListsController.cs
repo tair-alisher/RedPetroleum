@@ -268,5 +268,33 @@ namespace RedPetroleum.Controllers.CRUD
             }
             base.Dispose(disposing);
         }
+
+        public double RateTask(string taskId, string skillMark, string effectivenessMark, string disciplineMark, string timelinessMark)
+        {
+            double skill = ConvertMarkToDouble(skillMark);
+            double effectiveness = ConvertMarkToDouble(effectivenessMark);
+            double discipline = ConvertMarkToDouble(disciplineMark);
+            double timeliness = ConvertMarkToDouble(timelinessMark);
+
+            double average = (skill + effectiveness + discipline + timeliness) / 4;
+
+            unitOfWork
+                .TaskLists
+                .RateTask(
+                    taskId,
+                    skill,
+                    effectiveness,
+                    discipline,
+                    timeliness,
+                    average
+                );
+
+            return average;
+        }
+
+        private double ConvertMarkToDouble(string mark)
+        {
+            return double.Parse(mark.Replace(".", ","));
+        }
     }
 }
