@@ -1,34 +1,35 @@
 ﻿@model RedPetroleum.Models.Entities.Department
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Подробно";
 }
 
-<h2>Details</h2>
+<h2>Подробная информация</h2>
 
 <div>
     <h4>Department</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Departments.Name)
+            Имя отдела
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+           Имя управляющего отдела
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Departments.Name)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DepartmentId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <a href="@Url.Action("Edit", "Departments", new { id = Model.DepartmentId})" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Редактировать</span></i></a>
+        <a href="@Url.Action("Index", "Departments")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+    </div>
+</div>

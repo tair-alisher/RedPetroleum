@@ -1,15 +1,14 @@
 ﻿@model RedPetroleum.Models.Entities.TaskList
 
 @{
-    ViewBag.Title = "Задачи";
+    ViewBag.Title = "Добавление";
 }
 
-<h2>Добавление задач</h2>
+<h2>Добавление задачи</h2>
 
 @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>Добавьте задачи</h4>
     <hr />
     <div class="row">
         <div class="col-md-3">
@@ -49,18 +48,19 @@
 </div>
 
 <hr />
-<button type="button" class="btn btn-info col-md-12" onclick="addTask()"><span class="oi oi-plus" aria-hidden="true"></span> Добавить задачу</button>
-
-<br /><br />
-<div>
-    @Html.ActionLink("Назад", "Index")
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success col-md-12" onclick="addTask()"><i class="fa fa-plus" aria-hidden="true" title="Добавить задачу</" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Добавить задачу</</span></i></button>
+    </div>
 </div>
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <a href="@Url.Action("Index", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+    </div>
+</div>
+<br /><br />
+<script src="~/Scripts/app.js"></script>
+<script>
+    saveOnEnter();
+</script>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/app.js")
-
-    <script>
-        saveOnEnter();
-    </script>
-}

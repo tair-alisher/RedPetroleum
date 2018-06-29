@@ -72,9 +72,11 @@ namespace RedPetroleum.Controllers.CRUD
                     .GetDepartmentByUserId(User.Identity.GetUserId());
             }
 
+
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
 
             return View(taskLists.ToPagedList(pageNumber, pageSize));
+
         }
 
         // GET: TaskLists/Details/5
@@ -176,7 +178,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees,Mark")] TaskList taskList)
+        public async Task<ActionResult> Create([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees")] TaskList taskList)
         {
             if (ModelState.IsValid)
             {
@@ -211,7 +213,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees,Mark")] TaskList taskList)
+        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees")] TaskList taskList)
         {
             if (ModelState.IsValid)
             {

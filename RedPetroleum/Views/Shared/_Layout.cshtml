@@ -7,10 +7,13 @@
     <title>@ViewBag.Title – приложение ASP.NET</title>
     <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" media="screen">
     <link rel="stylesheet" href="@Url.Content("~/Content/custom.min.css")">
+
     <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="@Url.Content("~/Content/open-iconic/font/css/open-iconic-bootstrap.css")" />
-
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+    
 </head>
 <body>
     <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
@@ -21,32 +24,54 @@
             @Html.ActionLink("RedPetroleum", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active"><a class="nav-link" href="@Url.Action("Index", "Roles")">Роли</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li class="nav-item active"><a class="nav-link" href="@Url.Action("Index", "Roles")">Роли</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
 
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Departments")">Отделы</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Positions")">Должности</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Marks")">Критерии</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Departments")">Отделы</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Positions")">Должности</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+                    }
+                    else if (User.IsInRole("manager"))
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+                    }
+                    else if (User.IsInRole("employee"))
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+                    }
+
 
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
-          </div>
         </div>
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year – приложение ASP.NET</p>
-            </footer>
-        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year – Brother's</p>
+        </footer>
+    </div>
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/modal.js"></script>
 </body>
 </html>

@@ -25,6 +25,20 @@ namespace RedPetroleum.Controllers.CRUD
             return View(roles.ToPagedList(pageNumber, pageSize));
         }
 
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var role = db.Roles.Find(id);
+            if (role == null)
+            {
+                return HttpNotFound();
+            }
+            return View(role);
+        }
+
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -49,7 +63,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 db.Entry(role).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("UserList");
+                return RedirectToAction("Index");
             }
             return View(role);
         }
@@ -86,9 +100,9 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View("Index");
         }
-
+        
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -96,7 +110,10 @@ namespace RedPetroleum.Controllers.CRUD
         {
             var role = db.Roles.Find(id);
             if (role != null)
+            {
                 db.Roles.Remove(role);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
         //public async Task<ActionResult> Details(Guid? id)

@@ -244,13 +244,10 @@ namespace RedPetroleum.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            var users = db.Employees.Select(c => new {
-                c.EmployeeId,
-                EFullname = c.EFullName
-            }).ToList();
+           
             
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+            ViewBag.Employee = new SelectList(db.Employees, "EmployeeId", "EFullName");
             return View();
         }
 
