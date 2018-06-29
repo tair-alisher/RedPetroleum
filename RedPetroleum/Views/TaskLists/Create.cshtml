@@ -58,15 +58,9 @@
         <a href="@Url.Action("Index", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
     </div>
 </div>
+<br /><br />
+<script src="~/Scripts/app.js"></script>
+<script>
+    saveOnEnter();
+</script>
 
-
-    <br /><br />
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-        @Scripts.Render("~/Scripts/app.js")
-
-        <script>
-            saveOnEnter();
-        </script>
-    }
