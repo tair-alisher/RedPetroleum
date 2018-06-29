@@ -32,7 +32,7 @@ namespace RedPetroleum.Controllers.CRUD
             int pageNumber = (page ?? 1);
 
             var mark = unitOfWork.Marks.GetAllIndex(pageNumber, pageSize, searching);
-            return View(mark.ToPagedList(pageNumber, pageSize));
+            return View(mark);
         }
 
         public async Task<ActionResult> Details(Guid? id)
