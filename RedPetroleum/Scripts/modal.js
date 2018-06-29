@@ -1,20 +1,52 @@
-﻿//$('.element').click(function (e) {
-//    e.preventDefault();
-//    $('#exampleModalCenter').modal('show');
+﻿//$(function () {
+//    $('.element').click(function (e) {
 
-//    var id = $(this).data('id');
-//    $('#itemid').val(id);
-//});
+//        e.preventDefault();
+//        $('#delete').modal('show');
+//        console.log($(this).data('id'));
 
-
-//$('#Delete').click(function () {
-//    var studentId = $('#itemid').val();
-
-//    $.post(@Url.Action("Delete", "Delete"), { id: studentId }, function (data) {
-//        // do something after calling delete action method
-//        // this alert box just an example
-//        alert("Deleted StudentId: " + studentId);
+//        var id = $(this).data('id').toString();
+//        $('#itemid').val(id);
+//        console.log($('#itemid').val());
 //    });
 
-//$('#exampleModalCenter').modal('hide');
+
+//    $('#Delete').click(function () {
+//        var id = $('#itemid').val().toString();
+//        console.log(id);
+//        $.post("@Url.Action("Delete", "Roles", new { id = "+ id +"})", { id: id }, function (data) {
+
+//        });
+
+//        $('#exampleModalCenter').modal('hide');
+//    });
 //});
+
+$(document).ready(function () {
+    $('.element').click(function (e) {
+        e.preventDefault();
+        var itemid = $(this).data('id');
+        $('#itemid').val(id);
+        console.log(id);
+    });
+
+    //$('#action').click(function () {
+    //    var itemId = $('#itemid').val();
+
+    //    var actionLink = "/Roles/Delete/" + itemId.toString();
+    //    window.location.href = actionLink;
+    //    console.log(itemId);
+    //    console.log(actionLink);
+    //});
+    $('#action').click(function () {
+        var itemId = $('#itemid').val();
+        //var urlAction = @Url.Action("Delete", "Roles");
+        $.post("/Roles/Delete", { itemId: itemId }, function (data) {
+
+            alert("Deleted");
+
+        });
+        console.log(actionUrl);
+    $('#exampleModalCenter').modal('hide');
+});
+});

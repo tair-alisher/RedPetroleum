@@ -102,18 +102,7 @@ namespace RedPetroleum.Controllers.CRUD
             }
             return View("Index");
         }
-        public JsonResult DeleteInModal(string id)
-        {
-            
-            var user = db.Roles.SingleOrDefault(x=>x.Id == id);
-            bool result = false;
-            if (user != null)
-            {
-                db.SaveChanges();
-                result = true;
-            }
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
+        
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

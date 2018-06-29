@@ -3339,6 +3339,7 @@
     <Content Include="Content\open-iconic\webp\zoom-out-6x.webp" />
     <Content Include="Content\open-iconic\webp\zoom-out-8x.webp" />
     <Content Include="Content\open-iconic\webp\zoom-out.webp" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -3416,7 +3417,6 @@
     <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByCompany.cshtml" />
-    <Content Include="Views\Home\GetEmployeesByDepartment.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Account\UserList.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
