@@ -21,6 +21,10 @@ namespace RedPetroleum.Models.Entities
 
         public string CommentEmployees { get; set; }
 
-        public ICollection<TaskMark> TaskMarks { get; set; }
+        public double? SkillMark { get; set; }
+        public double? EffectivenessMark { get; set; }
+        public double? DisciplineMark { get; set; }
+        public double? TimelinessMark { get; set; }
+        public double? AverageMark { get; set; }
     }
 }
