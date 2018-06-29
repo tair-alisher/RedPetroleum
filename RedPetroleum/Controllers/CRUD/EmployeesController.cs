@@ -28,7 +28,7 @@ namespace RedPetroleum.Controllers.CRUD
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var employees = unitOfWork.Employees.GetAllIndex(pageNumber, pageSize, searching);
-            return View(employees.ToPagedList(pageNumber, pageSize));
+            return View(employees);
         }
 
         // GET: Employees/Details/5

@@ -36,7 +36,7 @@ namespace RedPetroleum.Controllers.CRUD
                 taskLists = unitOfWork.TaskLists.GetEmployeesAdmin(pageNumber, pageSize, searching);
             }
             taskLists = unitOfWork.TaskLists.GetEmployeesById(pageNumber, pageSize, searching, currentUser.Id);
-            return View(taskLists.ToPagedList(pageNumber, pageSize));
+            return View(taskLists);
         }
 
         // GET: TaskLists/Details/5
@@ -87,7 +87,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees,Mark")] TaskList taskList)
+        public async Task<ActionResult> Create([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees")] TaskList taskList)
         {
             if (ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees,Mark")] TaskList taskList)
+        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees")] TaskList taskList)
         {
             if (ModelState.IsValid)
             {

@@ -28,7 +28,7 @@ namespace RedPetroleum.Controllers.CRUD
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var departments = unitOfWork.Departments.GetAllIndex(pageNumber, pageSize, searching);
-            return View(departments.ToPagedList(pageNumber, pageSize));
+            return View(departments);
         }
 
         // GET: Departments/Details/5
