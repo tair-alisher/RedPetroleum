@@ -16,9 +16,7 @@ namespace RedPetroleum.Migrations
             AddColumn("dbo.TaskLists", "DisciplineMark", c => c.Double());
             AddColumn("dbo.TaskLists", "TimelinessMark", c => c.Double());
             AddColumn("dbo.TaskLists", "AverageMark", c => c.Double());
-            DropTable("dbo.ACL");
-            DropTable("dbo.TaskMarks");
-            DropTable("dbo.Marks");
+            
         }
         
         public override void Down()
