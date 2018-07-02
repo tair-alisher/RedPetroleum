@@ -147,7 +147,4 @@
     @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
 }
 
-@section Scripts {
-    @Scripts.Render("~/Scripts/app.js")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
-}
+    <script src="~/Scripts/app.js"></script>
