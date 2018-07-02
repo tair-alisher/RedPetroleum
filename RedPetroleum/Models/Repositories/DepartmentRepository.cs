@@ -50,5 +50,13 @@ namespace RedPetroleum.Models.Repositories
             var user = currentUser.DepartmentId;
             return db.Departments.Where(d => user.Contains(d.DepartmentId.ToString()));
         }
+
+        public Department GetDepartmentByUserId(string userId)
+        {
+            ApplicationUser currentUser = db.Users.Find(userId);
+            return db.Departments
+                .Where(d => d.DepartmentId.ToString() == currentUser.DepartmentId)
+                .SingleOrDefault();
+        }
     }
 }

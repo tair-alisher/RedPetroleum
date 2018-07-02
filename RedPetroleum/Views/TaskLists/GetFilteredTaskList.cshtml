@@ -1,0 +1,153 @@
+﻿@model IEnumerable<RedPetroleum.Models.Entities.TaskList>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
+@{
+    ViewBag.Title = "Задачи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Задачи</h2>
+
+<p>
+    @Html.ActionLink("Добавить задачи", "Create")
+</p>
+@using (Html.BeginForm("Index", "TaskLists", FormMethod.Get))
+{
+
+    @Html.AntiForgeryToken()
+    <!-- Search  -->
+    <div class="row">
+        <div class="col-md-11 search-div" style="margin-bottom: 2%;">
+            <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование компании" onchange="form.submit();"
+                   style="border: 1px solid; border-color: #eb5e28;" />
+        </div>
+        <div class="col-md-1 search-div">
+            <button type="submit" class="btn btn-default default-btn">
+                <i class="fa fa-search"></i>
+                Поиск
+            </button>
+
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("GetFilteredTaskList", "TaskLists", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-1">Фильтры</div>
+        <div class="col-md-3">
+            @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
+            {
+                @Html.DropDownList("DepartmentId", ViewBag.DepartmentId as SelectList, "Выберите отдел", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
+            }
+            else
+            {
+                <select class="form-control" id="departmentsDropdown" name="DepartmentId">
+                    <option value="@ViewBag.Department.DepartmentId">@ViewBag.Department.Name</option>
+                </select>
+            }
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("EmployeeId", ViewBag.EmployeeId as SelectList, "Выберите сотрудника", htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" @(ViewBag.Month != null ? "value=" + ViewBag.Month : null)>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
+            <a href="@Url.Action("Index", "TaskLists")" id="resetFilter" class="btn ifn-default">Сбросить</a>
+        </div>
+    </div>
+}
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ФИО Сотрудника
+            </th>
+            <th>
+                Задача
+            </th>
+            <th>
+                Длительность
+            </th>
+            <th>
+                Дата задачи
+            </th>
+            <th>
+                Комментарии сотрудника(?)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody id="tableContent">
+        @foreach (var item in Model)
+        {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.EFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskDuration)
+            </td>
+            <td>
+                @(((DateTime)item.TaskDate).ToString("MM.yyyy"))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentEmployees)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TaskListId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TaskListId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TaskListId })
+            </td>
+        </tr>
+        <tr id="@item.TaskListId">
+            <td>
+                <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
+                <small class="form-text text-muted">Компетентность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
+                <small class="form-text text-muted">Результативность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
+                <small class="form-text text-muted">Дисциплинированность</small>
+            </td>
+            <td>
+                <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
+                <small class="form-text text-muted">Своевременность</small>
+            </td>
+            <td>
+                <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
+                <small class="form-text text-muted">Среднее</small>
+            </td>
+            <td>
+                <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+            </td>
+        </tr>
+
+        }
+    </tbody>
+
+</table>
+@if (!(Model.Count() <= 0))
+{
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/app.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
+}

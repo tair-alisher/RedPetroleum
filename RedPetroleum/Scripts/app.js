@@ -146,10 +146,40 @@ function removeTask(taskId) {
         success: function () {
             $(`#${taskId}`).remove()
         },
-        error: function (XMLHTtpRequest) {
+        error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
         }
     });
     return false;
 }
 
+function rate(id) {
+    var button = $("#" + id).find(button);
+    button.prop('disabled', true);
+    var skillMark = $("#" + id).find(".SkillMark").val();
+    var effectivenessMark = $("#" + id).find(".EffectivenessMark").val();
+    var disciplineMark = $("#" + id).find(".DisciplineMark").val();
+    var timelinessMark = $("#" + id).find(".TimelinessMark").val();
+    var averageMark = $("#" + id).find(".AverageMark");
+
+    $.ajax({
+        url: "/TaskLists/RateTask",
+        type: "POST",
+        data: {
+            "taskId": id,
+            "skillMark": skillMark,
+            "effectivenessMark": effectivenessMark,
+            "disciplineMark": disciplineMark,
+            "timelinessMark": timelinessMark
+        },
+        cache: false,
+        success: function (average) {
+            averageMark.val(average);
+            button.prop('disabled', false);
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}

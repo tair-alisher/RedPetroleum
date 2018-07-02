@@ -7,6 +7,7 @@
     ViewBag.Title = "Задачи";
 }
 
+
 <h2>Список задач</h2>
 
 <p>
@@ -14,6 +15,7 @@
         <i class="fa fa-plus"></i>
         Добавить задачу
     </a>
+
 </p>
 @using (Html.BeginForm("Index", "TaskLists", FormMethod.Get))
 {
@@ -26,64 +28,130 @@
                    style="border: 1px solid; border-color: #008cba;" />
         </div>
         <div class="col-md-1 search-div-btn">
+
             <button type="submit" class="btn btn-default default-btn">
                 <i class="fa fa-search"></i>
                 Поиск
             </button>
 
+
         </div>
     </div>
 }
-<table class="table">
-    <tr>
-        <th>
-            ФИО Сотрудника
-        </th>
-        <th>
-            Задача
-        </th>
-        <th>
-            Длительность
-        </th>
-        <th>
-            Дата задачи
-        </th>
-        <th>
-            Комментарии сотрудника(?)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+@using (Html.BeginForm("GetFilteredTaskList", "TaskLists", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-1">Фильтры</div>
+        <div class="col-md-3">
+            @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
+            {
+                @Html.DropDownList("DepartmentId", ViewBag.DepartmentId as SelectList, "Выберите отдел", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
+            }
+            else
+            {
+                <select class="form-control" id="departmentsDropdown" name="DepartmentId">
+                    <option value="@ViewBag.Department.DepartmentId">@ViewBag.Department.Name</option>
+                </select>
+            }
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("EmployeeId", ViewBag.EmployeeId as SelectList, "Выберите сотрудника", htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="taskDate" type="month" name="TaskDate">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
+            <a href="@Url.Action("Index", "TaskLists")" id="resetFilter" class="btn btn-default">Сбросить</a>
+        </div>
+    </div>
+}
 
+
+<hr />
+
+<table class="table table-striped">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.EFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskDuration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CommentEmployees)
-            </td>
-            <td style="text-align:right;">
+
+            <th>
+                ФИО Сотрудника
+            </th>
+            <th>
+                Задача
+            </th>
+            <th>
+                Длительность
+            </th>
+            <th>
+                Дата задачи
+            </th>
+            <th>
+                Комментарии сотрудника(?)
+            </th>
+            <th></th>
+
+        </tr>
+    </thead>
+
+    <tbody id="tableContent">
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.Employee.EFullName)</b>
+                </td>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.TaskName)</b>
+                </td>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.TaskDuration)</b>
+                </td>
+                <td>
+                    <b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b>
+                </td>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b>
+                </td>
+                <td style="text-align:right;">
                 <div class="btn-group" role="group">
                     <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
                     <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
                     <a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"></i></a>
                 </div>
             </td>
-        </tr>
-
-    }
+            </tr>
+            <tr id="@item.TaskListId">
+                <td>
+                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
+                    <small class="form-text text-muted">Компетентность</small>
+                </td>
+                <td>
+                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
+                    <small class="form-text text-muted">Результативность</small>
+                </td>
+                <td>
+                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
+                    <small class="form-text text-muted">Дисциплинированность</small>
+                </td>
+                <td>
+                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
+                    <small class="form-text text-muted">Своевременность</small>
+                </td>
+                <td>
+                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
+                    <small class="form-text text-muted">Среднее</small>
+                </td>
+                <td>
+                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
-
     @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+
