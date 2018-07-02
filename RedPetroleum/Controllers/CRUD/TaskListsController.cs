@@ -80,13 +80,13 @@ namespace RedPetroleum.Controllers.CRUD
         }
 
         // GET: TaskLists/Details/5
-        public async Task<ActionResult> Details(Guid? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TaskList taskList = await unitOfWork.TaskLists.GetAsync(id);
+            TaskList taskList = unitOfWork.TaskLists.GetTaskWithEmployeeById((Guid)id);
             if (taskList == null)
             {
                 return HttpNotFound();

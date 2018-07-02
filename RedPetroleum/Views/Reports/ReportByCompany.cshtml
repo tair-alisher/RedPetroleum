@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 
 @{
     ViewBag.Title = "Главная";
@@ -42,11 +42,11 @@
                 {
                     <tr>
                         <td>@(i++)</td>
-                        <td>@item.EFullName</td>
-                        <td>@item.Department.Name</td>
-                        <td>@item.Position.Name</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Department</td>
+                        <td>@item.Position</td>
                         <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
-                        <td></td>
+                        <td>@item.AverageMark</td>
                         <td></td>
                         <td></td>
                     </tr>

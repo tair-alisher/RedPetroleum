@@ -1,5 +1,5 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
-
+﻿@*@model IEnumerable<RedPetroleum.Models.Entities.Employee>*@
+@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 @{
     ViewBag.Title = "Главная";
     int i = 1;
@@ -47,9 +47,9 @@
                 {
                     <tr>
                         <td class="text-center">@(i++)</td>
-                        <td>@item.EFullName</td>
-                        <td>@item.Position.Name</td>
-                        <td></td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Position</td>
+                        <td>@item.AverageMark</td>
                         <td></td>
                     </tr>
                 }

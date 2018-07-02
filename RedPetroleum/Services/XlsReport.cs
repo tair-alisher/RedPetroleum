@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using RedPetroleum.Models.Entities;
@@ -186,7 +187,7 @@ namespace RedPetroleum.Services
             }
 
 
-            IEnumerable<Employee> employees = unit.Employees.GetDepartment();
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesWithRelations();
             int rowStart = 3;
             int i = 1;
             int j = 3;
@@ -203,6 +204,8 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
                 worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
+                worksheet.Cells[$"F{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average();
+
                 rowStart++;
                 j++;
             }
