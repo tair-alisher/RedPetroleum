@@ -99,7 +99,7 @@
     <tbody id="tableContent">
         @foreach (var item in Model)
         {
-
+            var myModal = "myModal" + item.TaskListId;
             <tr>
                 <td>
                     <b>@Html.DisplayFor(modelItem => item.Employee.EFullName)</b>
@@ -117,12 +117,38 @@
                     <b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b>
                 </td>
                 <td style="text-align:right;">
-                <div class="btn-group" role="group">
-                    <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
-                    <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
-                    <a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"></i></a>
-                </div>
-            </td>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","TaskLists", new {id = item.TaskListId})" data-toggle="modal" data-target="#@myModal"
+                           data-whatever="@item.TaskListId"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Удалить</span></i></a>
+                    </div>
+                    <!-- Confirmation modal -->
+                    <div class="modal fade" id="@myModal" tabindex="-1" role="dialog" aria-labelledby="confirmdelete" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmdelete">Action Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Вы точно хотите удалить: <span><b>@item.TaskName</b></span>
+                                </div>
+                                @using (Html.BeginForm("Delete", "TaskLists", FormMethod.Post, new { enctype = "multipart/form-data", @class = "delete-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.TaskListId" />
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                        <input type="submit" value="Удалить" class="btn btn-danger" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr id="@item.TaskListId">
                 <td>
