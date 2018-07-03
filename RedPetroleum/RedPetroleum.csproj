@@ -89,9 +89,6 @@
     <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
@@ -3440,6 +3437,7 @@
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
     <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
     <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

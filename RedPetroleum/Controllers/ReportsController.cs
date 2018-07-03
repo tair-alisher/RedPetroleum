@@ -23,30 +23,33 @@ namespace RedPetroleum.Controllers
             this.unit = new UnitOfWork();
         }
 
-        public ActionResult ReportByDepartment(string Departments)
+        public ActionResult ReportByDepartment(string departmentId, DateTime? dateValue)
         {
+            //IEnumerable<Employee> emplist = unit.Employees
+            //   .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dt);
             IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             if (User.IsInRole("admin"))
             {
-
                 ViewBag.Departments = new SelectList(
                          unit.Departments.GetAll(),
                          "DepartmentId",
                          "Name"
                      );
-                if (Departments != null)
+                if (departmentId != null)
                 {
                     var employeeList = new List<ReportByCompanyViewModel>();
 
                     ReportByCompanyViewModel model;
                     foreach (Employee employee in emplist)
                     {
-                        model = new ReportByCompanyViewModel();
-                        model.EmployeeId = employee.EmployeeId;
-                        model.EmployeeName = employee.EFullName;
-                        model.Position = employee.Position.Name;
-                        model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+                        model = new ReportByCompanyViewModel
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            EmployeeName = employee.EFullName,
+                            Position = employee.Position.Name,
+                            AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                        };
 
                         employeeList.Add(model);
                     }
@@ -68,91 +71,118 @@ namespace RedPetroleum.Controllers
                 ReportByCompanyViewModel model;
                 foreach (Employee employee in emplist)
                 {
-                    model = new ReportByCompanyViewModel();
-                    model.EmployeeId = employee.EmployeeId;
-                    model.EmployeeName = employee.EFullName;
-                    model.Position = employee.Position.Name;
-                    model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+                    model = new ReportByCompanyViewModel
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        EmployeeName = employee.EFullName,
+                        Position = employee.Position.Name,
+                        AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                    };
 
                     employeeList.Add(model);
                 }
                 return View(employeeList);
-            }
-         
-          
-
+            }                 
             ////ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
             //return View();
-        }
-
-        public void ExportToExcel(string departmentId, string reportType)
-        {
-            Guid? department;
-
-            if (departmentId == "*")
-            {
-               department = null;
-            }
-            else
-            {
-                department = Guid.Parse(departmentId);
-            }
-            XlsReport report = new XlsReport(unit, department, reportType);
-            ExcelPackage package = report.FormReport();
-            Response.Clear();
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment: filename=ExcelReport.xlsx");
-            Response.BinaryWrite(package.GetAsByteArray());
-            Response.End();
-        }
-
+        }    
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult GetEmployeesByDepartment(string departmentId)
+        public ActionResult GetEmployeesByDepartment(string departmentId, DateTime? dateValue)
         {
             if (departmentId == "")
             {
                 return PartialView();
             }
             IEnumerable<Employee> employees = unit.Employees
-                .GetEmployeesByDepartmentId(Guid.Parse(departmentId));
+                .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dateValue);
             var empList = new List<ReportByCompanyViewModel>();
             ReportByCompanyViewModel model;
             foreach (var item in employees)
             {
-                model = new ReportByCompanyViewModel();
-                model.EmployeeId = item.EmployeeId;
-                model.EmployeeName = item.EFullName;
-                model.Position = item.Position.Name;
-                model.AverageMark = item.TaskLists.Select(t => t.AverageMark).Average();
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = item.EmployeeId,
+                    EmployeeName = item.EFullName,
+                    Position = item.Position.Name,
+                    AverageMark = item.TaskLists.Select(t => t.AverageMark).Average()
+                };
 
                 empList.Add(model);
-
             }
             return PartialView(empList);
         }
 
-        public ActionResult ReportByCompany()
+        public ActionResult ReportByCompany(DateTime? dateValue)
         {
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(DateTime.Today);
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
 
             var employeeList = new List<ReportByCompanyViewModel>();
 
             ReportByCompanyViewModel model;
             foreach (Employee employee in employees)
             {
-                model = new ReportByCompanyViewModel();
-                model.EmployeeId = employee.EmployeeId;
-                model.EmployeeName = employee.EFullName;
-                model.Department = employee.Department.Name;
-                model.Position = employee.Position.Name;
-                model.AdoptionDate = employee.AdoptionDate;
-                model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
 
                 employeeList.Add(model);
             }
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return View(employeeList);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GetEmployeesByCompany(DateTime? dateValue)
+        {
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
+
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return PartialView(employeeList);
+        }
+
+        public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
+        {
+            Guid? department;
+
+            if (departmentId == "*")
+            {
+                department = null;
+            }
+            else
+            {
+                department = Guid.Parse(departmentId);
+            }
+            XlsReport report = new XlsReport(unit, department, reportType, dateValue);
+            ExcelPackage package = report.FormReport();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment: filename=ExcelReport.xlsx");
+            Response.BinaryWrite(package.GetAsByteArray());
+            Response.End();
         }
     }
 }

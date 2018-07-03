@@ -11,16 +11,16 @@
             <label for="taskDate">Выберите месяц</label>
         </div>
         <div class="col-md-3">
-            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateEmployeeTable()">
         </div>
     </div>
     <br />
-    @Html.DropDownList("Departments", null, "Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable(this);" })
+    @Html.DropDownList("Departments", null, "Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable();" })
 
     <table class="table table-striped">
         <thead>
             <tr>
-                <th colspan="5" class="text-center">
+                <th colspan="5" class="text-center" id="dt">
                     ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
                 </th>
 
@@ -49,7 +49,7 @@
                         <td class="text-center">@(i++)</td>
                         <td>@item.EmployeeName</td>
                         <td>@item.Position</td>
-                        <td>@item.AverageMark</td>
+                        <td class="text-center">@item.AverageMark</td>
                         <td></td>
                     </tr>
                 }

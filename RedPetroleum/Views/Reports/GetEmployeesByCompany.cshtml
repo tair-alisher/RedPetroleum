@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<RedPetroleum.Models.Entities.Employee>*@
-@model List<RedPetroleum.Models.ReportByCompanyViewModel>
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 @{
     int i = 1;
 }
@@ -10,8 +9,11 @@
         <tr>
             <td class="text-center">@(i++)</td>
             <td>@employee.EmployeeName</td>
+            <td>@employee.Department</td>
             <td>@employee.Position</td>
+            <td class="text-center">@employee.AdoptionDate.ToString("dd.MM.yyyy")</td>
             <td class="text-center">@employee.AverageMark</td>
+            <td></td>
             <td></td>
         </tr>
     }
