@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
+using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 using RedPetroleum.Services;
@@ -21,17 +23,66 @@ namespace RedPetroleum.Controllers
             this.unit = new UnitOfWork();
         }
 
-        public ActionResult ReportByDepartment()
+        public ActionResult ReportByDepartment(string Departments)
         {
-            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithPositions();
-            ViewBag.Departments = new SelectList(
-                unit.Departments.GetAvailableDepartments(User.Identity.GetUserId()),
-                "DepartmentId",
-                "Name"
-            );
+            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            if (User.IsInRole("admin"))
+            {
 
-            //ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
-            return View();
+                ViewBag.Departments = new SelectList(
+                         unit.Departments.GetAll(),
+                         "DepartmentId",
+                         "Name"
+                     );
+                if (Departments != null)
+                {
+                    var employeeList = new List<ReportByCompanyViewModel>();
+
+                    ReportByCompanyViewModel model;
+                    foreach (Employee employee in emplist)
+                    {
+                        model = new ReportByCompanyViewModel();
+                        model.EmployeeId = employee.EmployeeId;
+                        model.EmployeeName = employee.EFullName;
+                        model.Position = employee.Position.Name;
+                        model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+
+                        employeeList.Add(model);
+                    }
+                    return View(employeeList);
+                }
+                return View();
+                
+            }
+            else
+            {
+                ViewBag.Departments = new SelectList(
+                             unit.Departments.GetAvailableDepartments(User.Identity.GetUserId()),
+                             "DepartmentId",
+                             "Name"
+                         );
+
+                var employeeList = new List<ReportByCompanyViewModel>();
+
+                ReportByCompanyViewModel model;
+                foreach (Employee employee in emplist)
+                {
+                    model = new ReportByCompanyViewModel();
+                    model.EmployeeId = employee.EmployeeId;
+                    model.EmployeeName = employee.EFullName;
+                    model.Position = employee.Position.Name;
+                    model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+
+                    employeeList.Add(model);
+                }
+                return View(employeeList);
+            }
+         
+          
+
+            ////ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
+            //return View();
         }
 
         public void ExportToExcel(string departmentId, string reportType)
@@ -65,19 +116,43 @@ namespace RedPetroleum.Controllers
             }
             IEnumerable<Employee> employees = unit.Employees
                 .GetEmployeesByDepartmentId(Guid.Parse(departmentId));
-            return PartialView(employees);
+            var empList = new List<ReportByCompanyViewModel>();
+            ReportByCompanyViewModel model;
+            foreach (var item in employees)
+            {
+                model = new ReportByCompanyViewModel();
+                model.EmployeeId = item.EmployeeId;
+                model.EmployeeName = item.EFullName;
+                model.Position = item.Position.Name;
+                model.AverageMark = item.TaskLists.Select(t => t.AverageMark).Average();
+
+                empList.Add(model);
+
+            }
+            return PartialView(empList);
         }
 
         public ActionResult ReportByCompany()
         {
-            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithPositions();
-            ViewBag.Departments = new SelectList(
-                unit.Departments.GetAll(),
-                "DepartmentId",
-                "Name"
-            );
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(DateTime.Today);
 
-            return View(emplist);
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel();
+                model.EmployeeId = employee.EmployeeId;
+                model.EmployeeName = employee.EFullName;
+                model.Department = employee.Department.Name;
+                model.Position = employee.Position.Name;
+                model.AdoptionDate = employee.AdoptionDate;
+                model.AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average();
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return View(employeeList);
         }
     }
 }

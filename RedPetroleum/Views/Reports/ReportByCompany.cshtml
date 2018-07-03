@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 
 @{
     ViewBag.Title = "Главная";
@@ -6,6 +6,15 @@
 }
 
 <div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
+        </div>
+    </div>
+    <br/>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -14,7 +23,7 @@
                 </th>
             </tr>
         </thead>
-        <thead>          
+        <thead>
             <tr>
                 <th class="w-10 text-center">№</th>
                 <th class="w-25 text-center">Ф.И.О</th>
@@ -31,16 +40,16 @@
             {
                 foreach (var item in Model)
                 {
-                <tr>
-                    <td>@(i++)</td>
-                    <td>@item.EFullName</td>
-                    <td>@item.Department.Name</td>
-                    <td>@item.Position.Name</td>
-                    <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                    <tr>
+                        <td>@(i++)</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Department</td>
+                        <td>@item.Position</td>
+                        <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
+                        <td>@item.AverageMark</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 }
             }
         </tbody>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+﻿@*@model IEnumerable<RedPetroleum.Models.Entities.Employee>*@
+@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 @{
     int i = 1;
 }
@@ -8,9 +9,9 @@
     {
         <tr>
             <td class="text-center">@(i++)</td>
-            <td>@employee.EFullName</td>
-            <td>@employee.Position.Name</td>
-            <td></td>
+            <td>@employee.EmployeeName</td>
+            <td>@employee.Position</td>
+            <td>@employee.AverageMark</td>
             <td></td>
         </tr>
     }

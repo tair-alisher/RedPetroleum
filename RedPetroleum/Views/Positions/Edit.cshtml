@@ -17,7 +17,7 @@
         @Html.HiddenFor(model => model.PositionId)
 
         <div class="form-group">
-            <label class="control-label col-md-2">Имя должности</label>
+            <label class="control-label col-md-2">Наименование должности</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })

@@ -51,13 +51,16 @@ namespace RedPetroleum.Models.Repositories
         {
             return db.Employees
                 .Include(p => p.Position)
+                .Include(t=>t.TaskLists)
+                .Include(d=>d.Department)
                 .Where(e => e.DepartmentId == id);
         }
 
-        public IEnumerable<Employee> GetDepartment()
+        public IEnumerable<Employee> GetEmployeesWithRelations()
         {
             return db.Employees
                 .Include(e => e.Department)
+                .Include(t=> t.TaskLists)
                 .Include(p => p.Position);
              
         }
@@ -76,6 +79,15 @@ namespace RedPetroleum.Models.Repositories
             return db.Employees
                 .Where(e =>
                     e.DepartmentId.ToString() == currentUser.DepartmentId
+                );
+        }
+
+        public IEnumerable<Employee> GetEmployeesByTaskDate(DateTime taskDate)
+        {
+            return db.Employees.Include(t => t.TaskLists).Include(p => p.Position).Include(d => d.Department)
+                .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Month == taskDate.Month &&
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Year == taskDate.Year 
                 );
         }
     }

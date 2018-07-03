@@ -36,7 +36,7 @@
 <table class="table">
     <tr>
         <th>
-            Должность
+            Наименование должности
         </th>
         <th></th>
     </tr>
@@ -60,13 +60,13 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="confirmdelete">Action Confirmation</h5>
+                                <h5 class="modal-title" id="confirmdelete">Удаление</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                Вы точно хотите удалить: <span><b>@item.Name</b></span>
+                                Вы действительно хотите удалить: <span><b>@item.Name</b></span>
                             </div>
                             @using (Html.BeginForm("Delete", "Positions", FormMethod.Post, new { enctype = "multipart/form-data", @class = "delete-form" }))
                             {

@@ -358,6 +358,7 @@
     <Compile Include="Models\Entities\Employee.cs" />
     <Compile Include="Models\Entities\Position.cs" />
     <Compile Include="Models\Entities\TaskList.cs" />
+    <Compile Include="Models\ReportByCompanyViewModel.cs" />
     <Compile Include="Models\Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Repositories\EmployeeRepository.cs" />
     <Compile Include="Models\Repositories\PositionRepository.cs" />

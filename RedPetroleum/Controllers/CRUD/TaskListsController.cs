@@ -23,7 +23,7 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        [Authorize(Roles ="admin, manager")]
+        [Authorize(Roles ="admin, manager, employee")]
         public ActionResult Index(int? page, string searching)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
@@ -80,13 +80,13 @@ namespace RedPetroleum.Controllers.CRUD
         }
 
         // GET: TaskLists/Details/5
-        public async Task<ActionResult> Details(Guid? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TaskList taskList = await unitOfWork.TaskLists.GetAsync(id);
+            TaskList taskList = unitOfWork.TaskLists.GetTaskWithEmployeeById((Guid)id);
             if (taskList == null)
             {
                 return HttpNotFound();
@@ -97,7 +97,14 @@ namespace RedPetroleum.Controllers.CRUD
         // GET: TaskLists/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
+            if (User.IsInRole("admin"))
+            {
+                ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName");
+            } else
+            {
+                ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
+            }
+            
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
 
             return View();
