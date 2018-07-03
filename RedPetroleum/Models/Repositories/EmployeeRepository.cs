@@ -3,9 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
-using System.Linq;
 using X.PagedList;
-
 using RedPetroleum.Models.Interfaces;
 using RedPetroleum.Models.Entities;
 
@@ -47,19 +45,23 @@ namespace RedPetroleum.Models.Repositories
             return db.Employees.Include(p => p.Position).Include(e => e.Department);
         }
 
-        public IEnumerable<Employee> GetEmployeesByDepartmentId(Guid id)
+        public IEnumerable<Employee> GetEmployeesByDepartmentId(Guid id, DateTime? taskDate)
         {
             return db.Employees
                 .Include(p => p.Position)
-                .Where(e => e.DepartmentId == id);
+                .Include(t=>t.TaskLists)
+                .Include(d=>d.Department)
+                .Where(e => e.DepartmentId == id).Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) == taskDate
+                ); 
         }
 
-        public IEnumerable<Employee> GetDepartment()
+        public IEnumerable<Employee> GetEmployeesWithRelations()
         {
             return db.Employees
                 .Include(e => e.Department)
-                .Include(p => p.Position);
-             
+                .Include(t=> t.TaskLists)
+                .Include(p => p.Position);          
         }
 
         public string GetEmployeeNameById(Guid id)
@@ -76,6 +78,20 @@ namespace RedPetroleum.Models.Repositories
             return db.Employees
                 .Where(e =>
                     e.DepartmentId.ToString() == currentUser.DepartmentId
+                );
+        }
+
+        public IEnumerable<Employee> GetEmployeesByTaskDate(DateTime? taskDate)
+        {
+            return taskDate == null 
+                ? db.Employees.Include(t => t.TaskLists).Include(p => p.Position).Include(d => d.Department)
+                .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Month == DateTime.Now.Month &&
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Year == DateTime.Now.Year
+                ) 
+                : db.Employees.Include(t => t.TaskLists).Include(p => p.Position).Include(d => d.Department)
+                .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate)== taskDate
                 );
         }
     }

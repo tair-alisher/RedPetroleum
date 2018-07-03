@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using RedPetroleum.Models.Entities;
@@ -14,11 +15,13 @@ namespace RedPetroleum.Services
         UnitOfWork unit;
         Guid? departmentId;
         string reportType;
-        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType)
+        DateTime? dt;
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt)
         {
             this.unit = unit;
             this.departmentId = departmentId;
             this.reportType = reportType;
+            this.dt = dt;
         }
 
         public ExcelPackage FormReport()
@@ -61,7 +64,7 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["A1:E1"].Merge = true;
 
-            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, DateTimeOffset.Now);
+            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt);
             worksheet.Cells["A1"].Style.Font.Bold = true;
             worksheet.Cells["A1"].Style.Font.Size = 16;
 
@@ -76,7 +79,6 @@ namespace RedPetroleum.Services
             worksheet.Cells["B3"].Value = "Ф.И.О";
             worksheet.Cells["B3"].Style.Font.Bold = true;
             
-
             worksheet.Cells["C3"].Value = "Должность";
             worksheet.Cells["C3"].Style.Font.Bold = true;
 
@@ -85,15 +87,13 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["E3"].Value = "Подпись";
             worksheet.Cells["E3"].Style.Font.Bold = true;
-
-            
+          
             for (int k = 1; k <= 3; k++)
             {
                 BorderLines(worksheet,k);
             }
             
-
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId);
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId,dt);
             int rowStart = 4;
             int i = 1;
             int j = 4;
@@ -106,6 +106,8 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"C{rowStart}"].Value = employee.Position.Name;
                 worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average();
+                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                 rowStart++;
                 j++;
             }
@@ -152,7 +154,7 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["A1:H1"].Merge = true;
 
-            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, DateTimeOffset.Now);
+            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt);
             worksheet.Cells["A1"].Style.Font.Bold = true;
             worksheet.Cells["A1"].Style.Font.Size = 16;
 
@@ -185,8 +187,7 @@ namespace RedPetroleum.Services
                 BorderLines2(worksheet, k);
             }
 
-
-            IEnumerable<Employee> employees = unit.Employees.GetDepartment();
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
             int rowStart = 3;
             int i = 1;
             int j = 3;
@@ -203,6 +204,8 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
                 worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
+                worksheet.Cells[$"F{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average();
+
                 rowStart++;
                 j++;
             }

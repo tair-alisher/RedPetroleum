@@ -80,58 +80,118 @@ namespace RedPetroleum.Controllers
             return View(user);
         }
 
-        //Edit
-        public ActionResult Edit(string id)
+        [HttpGet]
+        public async Task<ActionResult> Edit(string id)
         {
-            
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var user = UserManager.FindById(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
             ViewBag.Rol = new SelectList(db.Roles, "Id", "Name", user.Roles.SingleOrDefault().RoleId);
             ViewBag.Emp = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
-            return View(user);
+            if (user != null)
+            {
+                return View(user);
+            }
+           
+            return RedirectToAction("Login", "Account");
         }
 
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(ApplicationUser user, string RoleId, string EmployeeId)
+        public async Task<ActionResult> Edit(ApplicationUser model, string RoleId)
         {
+            ApplicationUser user = await UserManager.FindByNameAsync(model.UserName);
             var users = db.Employees.Select(c => new {
                 c.EmployeeId,
                 EFullname = c.EFullName
             }).ToList();
-            
-            ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
-            if (ModelState.IsValid)
-            {
-                var oldUser = UserManager.FindById(user.Id);
-                var oldRoleId = oldUser.Roles.SingleOrDefault().RoleId;
-                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
-                var newRoleName = db.Roles.SingleOrDefault(r => r.Id == RoleId).Name;
 
-                if (oldRoleName != newRoleName)
-                {
-                    UserManager.RemoveFromRole(user.Id, oldRoleName);
-                    UserManager.AddToRole(user.Id, newRoleName);
-                }
+            ViewBag.Rol = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+            var role = db.Roles.Find(RoleId);
+
+            
                 
-                user.EmployeeId = EmployeeId;
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("UserList");
+            if (user != null)
+            {
+                var oldRoleId = user.Roles.SingleOrDefault().RoleId;
+                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                
+
+                if (oldRoleName != role.Name)
+                {
+                    await UserManager.RemoveFromRoleAsync(user.Id, oldRoleName);
+                    await UserManager.AddToRoleAsync(user.Id, role.Name);
+                }
+                var employee = db.Employees.Where(x => x.EmployeeId.ToString() == model.EmployeeId).FirstOrDefault();
+                user.EmployeeId = employee.EmployeeId.ToString();
+                user.DepartmentId = employee.DepartmentId.ToString();
+                IdentityResult result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("UserList", "Account");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Что-то пошло не так");
+                }
             }
-            return View(user);
+            else
+            {
+                ModelState.AddModelError("", "Пользователь не найден");
+            }
+
+            return View(model);
         }
+        ////Edit
+        //public ActionResult Edit(string id)
+        //{
+            
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    var user = UserManager.FindById(id);
+        //    if (user == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    ViewBag.Rol = new SelectList(db.Roles, "Id", "Name", user.Roles.SingleOrDefault().RoleId);
+        //    ViewBag.Emp = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
+        //    return View(user);
+        //}
+
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(ApplicationUser user, string RoleId, string EmployeeId)
+        //{
+        //    var users = db.Employees.Select(c => new {
+        //        c.EmployeeId,
+        //        EFullname = c.EFullName
+        //    }).ToList();
+            
+        //    ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+        //    ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+        //    if (ModelState.IsValid)
+        //    {
+        //        var oldUser = UserManager.FindById(user.Id);
+        //        var oldRoleId = oldUser.Roles.SingleOrDefault().RoleId;
+        //        var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+        //        var newRoleName = db.Roles.SingleOrDefault(r => r.Id == RoleId).Name;
+
+        //        if (oldRoleName != newRoleName)
+        //        {
+        //            UserManager.RemoveFromRole(user.Id, oldRoleName);
+        //            UserManager.AddToRole(user.Id, newRoleName);
+        //        }
+                
+        //        user.EmployeeId = EmployeeId;
+        //        db.Entry(user).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("UserList");
+        //    }
+        //    return View(user);
+        //}
 
         public ActionResult Delete(string id)
         {
