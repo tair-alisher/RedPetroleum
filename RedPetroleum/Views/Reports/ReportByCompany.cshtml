@@ -11,14 +11,14 @@
             <label for="taskDate">Выберите месяц</label>
         </div>
         <div class="col-md-3">
-            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateEmployeeTableCompany()">
         </div>
     </div>
     <br/>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th colspan="8" class="text-center">
+                <th colspan="8" class="text-center" id="dt">
                     ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
                 </th>
             </tr>
@@ -46,7 +46,7 @@
                         <td>@item.Department</td>
                         <td>@item.Position</td>
                         <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
-                        <td>@item.AverageMark</td>
+                        <td class="text-center">@item.AverageMark</td>
                         <td></td>
                         <td></td>
                     </tr>
