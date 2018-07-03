@@ -18,17 +18,6 @@ namespace RedPetroleum.Migrations
         public override void Down()
         {
            
-            CreateTable(
-                "dbo.ACL",
-                c => new
-                    {
-                        AclId = c.Guid(nullable: false),
-                        UserId = c.String(),
-                        RoleId = c.Int(nullable: false),
-                        GrandUrl = c.String(),
-                        DenyUrl = c.String(),
-                    })
-                .PrimaryKey(t => t.AclId);
             
             DropColumn("dbo.TaskLists", "AverageMark");
             DropColumn("dbo.TaskLists", "TimelinessMark");
