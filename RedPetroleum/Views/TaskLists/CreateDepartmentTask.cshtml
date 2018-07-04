@@ -1,21 +1,28 @@
 ﻿@model RedPetroleum.Models.Entities.TaskList
-
 @{
     ViewBag.Title = "Задачи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Добавление задачи</h2>
-
 @Html.AntiForgeryToken()
-
 <div class="form-horizontal">
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <label for="employee">Выберите сотрудника</label>
+            <label for="department">Выберите отдел</label>
         </div>
         <div class="col-md-3">
-            @Html.DropDownList("EmployeeId", null, htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
+            @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
+            {
+                @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
+            }
+            else
+            {
+                <select class="form-control" id="departmentsDropdown" name="DepartmentId">
+                    <option value="@ViewBag.Department.DepartmentId">@ViewBag.Department.Name</option>
+                </select>
+            }
         </div>
     </div>
     <br />
@@ -46,21 +53,19 @@
 <div id="createArea">
 
 </div>
-
 <hr />
 <div class="form-group">
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-success col-md-12" onclick="addTask()"><i class="fa fa-plus" aria-hidden="true" title="Добавить задачу</" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Добавить задачу</</span></i></button>
+        <button type="button" class="btn btn-success col-md-12" onclick="addTask(true)"><i class="fa fa-plus" aria-hidden="true" title="Добавить задачу</" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Добавить задачу</</span></i></button>
     </div>
 </div>
 <div class="form-group">
     <div class="btn-group" role="group">
-        <a href="@Url.Action("Index", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+        <a href="@Url.Action("DepartmentTasks", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
     </div>
 </div>
 <br /><br />
 <script src="~/Scripts/app.js"></script>
 <script>
-    saveOnEnter();
+    saveOnEnter(true);
 </script>
-
