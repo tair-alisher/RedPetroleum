@@ -111,7 +111,7 @@ function addTask(forDepartment = null) {
             <div class="row">
                 <label class="control-label col-md-4" for="TaskName">Задача</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control text-box single-line" id="TaskName" name="TaskName">
+                    <input type="text" class="form-control text-box single-line" id="TaskName" name="TaskName" required>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@ function addTask(forDepartment = null) {
             <div class="row">
                 <label class="control-label col-md-4" for="TaskDuration">Продолжительность</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control text-box single-line" id="TaskDuration" name="TaskDuration">
+                    <input type="text" class="form-control text-box single-line" id="TaskDuration" name="TaskDuration" required>
                 </div>
             </div>
         </div>
