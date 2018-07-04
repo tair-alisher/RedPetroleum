@@ -7,17 +7,6 @@ namespace RedPetroleum.Migrations
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.ACL",
-                c => new
-                    {
-                        AclId = c.Guid(nullable: false),
-                        UserId = c.String(),
-                        RoleId = c.Int(nullable: false),
-                        GrandUrl = c.String(),
-                        DenyUrl = c.String(),
-                    })
-                .PrimaryKey(t => t.AclId);
             
             CreateTable(
                 "dbo.Departments",
@@ -177,7 +166,6 @@ namespace RedPetroleum.Migrations
             DropTable("dbo.Positions");
             DropTable("dbo.Employees");
             DropTable("dbo.Departments");
-            DropTable("dbo.ACL");
         }
     }
 }
