@@ -65,7 +65,12 @@ namespace RedPetroleum.Controllers.CRUD
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
 
             return View(taskLists.ToPagedList(pageNumber, pageSize));
+        }
 
+        [HttpPost]
+        public void CommentTask(string taskId, string comment)
+        {
+            unitOfWork.TaskLists.CommentTask(taskId, comment);
         }
 
         // GET: TaskLists/Details/5
@@ -244,7 +249,6 @@ namespace RedPetroleum.Controllers.CRUD
         {
             unitOfWork.TaskLists.Delete(id);
             await unitOfWork.SaveAsync();
-            // return RedirectToAction("Index");
             return Redirect(Request.UrlReferrer.ToString());
         }
 

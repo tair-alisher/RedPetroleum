@@ -75,14 +75,15 @@
         @foreach (var item in Model)
         {
             var myModal = "myModal" + item.TaskListId;
-            <tr>
+            <tr id="comment_@item.TaskListId" class="task-row">
                 <td><b>@Html.DisplayFor(modelItem => item.Department.Name)</b></td>
                 <td><b>@Html.DisplayFor(modelItem => item.TaskName)</b></td>
                 <td><b>@Html.DisplayFor(motelItem => item.TaskDuration)</b></td>
                 <td><b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b></td>
-                <td><b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b></td>
+                <td class="comment-field"><b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b></td>
                 <td style="text-align:right;">
                     <div class="btn-group" role="group">
+                        <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button></span>
                         <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
                         <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
                         <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","TaskLists", new {id = item.TaskListId})" data-toggle="modal" data-target="#@myModal"
@@ -146,3 +147,6 @@
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
 
 <script src="~/Scripts/app.js"></script>
+<script>
+    submitCommentOnEnter()
+</script>

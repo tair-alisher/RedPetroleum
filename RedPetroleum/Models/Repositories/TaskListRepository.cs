@@ -179,6 +179,14 @@ namespace RedPetroleum.Models.Repositories
                 .OrderBy(t => t.TaskName);
         }
 
+        public void CommentTask(string taskId, string comment)
+        {
+            TaskList taskToUpdate = db.TaskLists.Find(Guid.Parse(taskId));
+            taskToUpdate.CommentEmployees = comment;
+            db.Entry(taskToUpdate).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
         private IEnumerable<TaskList> FilterTaskListByMonth(IEnumerable<TaskList> taskList, DateTime? month)
         {
             return taskList
