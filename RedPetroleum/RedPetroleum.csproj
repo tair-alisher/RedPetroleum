@@ -293,22 +293,6 @@
     <Compile Include="Migrations\201806200355403_InitialCreate.Designer.cs">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806200730495_NewGuid.cs" />
-    <Compile Include="Migrations\201806200730495_NewGuid.Designer.cs">
-      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806200749064_deletedRelation.cs" />
-    <Compile Include="Migrations\201806200749064_deletedRelation.Designer.cs">
-      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806201048272_ad.cs" />
-    <Compile Include="Migrations\201806201048272_ad.Designer.cs">
-      <DependentUpon>201806201048272_ad.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806201106321_deletedViewModel.cs" />
-    <Compile Include="Migrations\201806201106321_deletedViewModel.Designer.cs">
-      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806220900336_UpdateTaskTable.cs" />
     <Compile Include="Migrations\201806220900336_UpdateTaskTable.Designer.cs">
       <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
@@ -325,25 +309,17 @@
     <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.cs" />
-    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.Designer.cs">
-      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806250907296_Id.cs" />
     <Compile Include="Migrations\201806250907296_Id.Designer.cs">
       <DependentUpon>201806250907296_Id.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806260309265_OneToOneRelationship.cs" />
-    <Compile Include="Migrations\201806260309265_OneToOneRelationship.Designer.cs">
-      <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806270323200_Update.cs" />
-    <Compile Include="Migrations\201806270323200_Update.Designer.cs">
-      <DependentUpon>201806270323200_Update.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.cs" />
     <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.Designer.cs">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.cs" />
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.Designer.cs">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -3444,6 +3420,11 @@
     <Content Include="Views\Reports\PartialReportByConsolidated.cshtml" />
     <Content Include="Views\Reports\PartialReportByInstructionsDG.cshtml" />
     <Content Include="Views\Reports\PartialReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
+    <Content Include="Views\TaskLists\DepartmentTasks.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -3455,18 +3436,6 @@
     <EmbeddedResource Include="Migrations\201806200355403_InitialCreate.resx">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200730495_NewGuid.resx">
-      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200749064_deletedRelation.resx">
-      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806201048272_ad.resx">
-      <DependentUpon>201806201048272_ad.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806201106321_deletedViewModel.resx">
-      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806220900336_UpdateTaskTable.resx">
       <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
     </EmbeddedResource>
@@ -3476,23 +3445,17 @@
     <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806251123474_Add two tables Mark and TaskMark.resx">
-      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250440061_DepartmentOnRegistration.resx">
       <DependentUpon>201806250440061_DepartmentOnRegistration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250907296_Id.resx">
       <DependentUpon>201806250907296_Id.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806260309265_OneToOneRelationship.resx">
-      <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806270323200_Update.resx">
-      <DependentUpon>201806270323200_Update.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806290936037_delete Tables Marks TaskMark.resx">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807040252248_NullableEmployeeId.resx">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -8,12 +8,10 @@ namespace RedPetroleum.Migrations
         public override void Up()
         {
             AddColumn("dbo.AspNetUsers", "EmployeeId", c => c.String());
-            DropColumn("dbo.AspNetUsers", "EmployeeNames");
         }
         
         public override void Down()
         {
-            AddColumn("dbo.AspNetUsers", "EmployeeNames", c => c.String());
             DropColumn("dbo.AspNetUsers", "EmployeeId");
         }
     }

@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="@Url.Content("~/Content/open-iconic/font/css/open-iconic-bootstrap.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
-    
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
 </head>
 <body>
     <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
@@ -42,7 +46,14 @@
                     }
                     else if (User.IsInRole("manager"))
                     {
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Задачи</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">... для сотрудников</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
+                            </div>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
 
@@ -69,11 +80,7 @@
         <footer>
             <p>&copy; @DateTime.Now.Year</p>
         </footer>
-    </div>
-
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    </div>    
     
     @*<script src="~/Scripts/popper.min.js"></script>*@
     <script src="~/Scripts/bootstrap.min.js"></script>

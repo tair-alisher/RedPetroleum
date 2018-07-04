@@ -178,7 +178,8 @@ function downloadReport(reportType) {
     window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue;
 }
 
-function addTask() {
+
+function addTask(forDepartment = null) {
     $("#emptyTaskList").remove();
 
     var createArea = $("#createArea");
@@ -213,7 +214,7 @@ function addTask() {
             </div>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-success" id="submitTask" onclick="submitTask()" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-success" id="submitTask" onclick="submitTask(${forDepartment})" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
             <button type="button" class="btn btn-danger" id="removeGeneratedHtml" onclick="removeGeneratedHtml()"><span class="oi oi-x" title="Удалить" aria-hidden="true"></span></button>
         </div>
     </div>
@@ -226,23 +227,35 @@ function removeGeneratedHtml() {
     $("#generatedHtml").remove();
 }
 
-function submitTask() {
+function submitTask(forDepartment = null) {
     var token = $('input[name="__RequestVerificationToken"]').val();
     var employeeId = $("#employeesDropdown").val();
     var taskName = $("#TaskName").val();
     var taskDuration = $("#TaskDuration").val();
     var taskDate = $("#taskDate").val();
 
+    var sendData = {
+        __RequestVerificationToken: token,
+        "taskName": taskName,
+        "taskDuration": taskDuration,
+        "taskDate": taskDate
+    };
+
+    if (forDepartment != null) {
+        var departmentId = $("#departmentsDropdown").val();
+        var targetUrl = "/TaskLists/CreateDepartmentTaskPost";
+        sendData["departmentId"] = departmentId;
+    }
+    else {
+        var employeeId = $("#employeesDropdown").val();
+        var targetUrl = "/TaskLists/CreateTask";
+        sendData["employeeId"] = employeeId;
+    }
+
     $.ajax({
-        url: "/TaskLists/CreateTask",
+        url: targetUrl,
         type: "POST",
-        data: {
-            __RequestVerificationToken: token,
-            "employeeId": employeeId,
-            "taskName": taskName,
-            "taskDuration": taskDuration,
-            "taskDate": taskDate
-        },
+        data: sendData,
         cache: false,
         success: function (createdTask) {
             removeGeneratedHtml();
@@ -257,10 +270,10 @@ function submitTask() {
     return false;
 }
 
-function saveOnEnter() {
+function saveOnEnter(forDepartment = null) {
     $("#createArea").keypress(function (e) {
         if (e.keyCode === 13 && $("#submitTask").length > 0) {
-            submitTask();
+            submitTask(forDepartment);
         }
     });
 }
@@ -314,4 +327,65 @@ function rate(id) {
         }
     });
     return false;
+}
+
+function taskComment(taskId) {
+    var taskRow = $("#comment_" + taskId);
+    var commentField = taskRow.find(".comment-field");
+    var oldCommentFieldText = commentField.text().trim();
+
+    var submitButton = taskRow.find(".submit-button");
+
+    var commentBtnTemplate = submitButton.html();
+
+    var commentFieldTemplate = `
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" name="comment" class="form-control comment-input" value="${oldCommentFieldText}" autofocus>
+        </div>
+    </div>
+`;
+
+    var saveBtnTemplate = `
+    <button type="button" class="btn btn-success" onclick="submitComment('${taskId}')" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+`;
+    
+    submitButton.html(saveBtnTemplate);
+    commentField.html(commentFieldTemplate);
+
+    taskRow.find('.comment-input').focus();
+}
+
+function submitComment(taskId) {
+    var taskRow = $("#comment_" + taskId);
+    var commentMessage = taskRow.find(".comment-input").val();
+    var commentBtnTemplate = `
+    <button type="button" class="btn btn-primary" onclick="taskComment('${taskId}')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button>
+`;
+
+    $.ajax({
+        url: "/TaskLists/CommentTask",
+        type: "POST",
+        data: {
+            "taskId": taskId,
+            "comment": commentMessage
+        },
+        cache: false,
+        success: function (average) {
+            taskRow.find(".comment-field").html("<b>" + commentMessage + "</b>");
+            taskRow.find(".submit-button").html(commentBtnTemplate);
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+
+function submitCommentOnEnter() {
+    $(".task-row").keypress(function (e) {
+        if (e.keyCode === 13) {
+            submitComment(this.id.split('_')[1]);
+        }
+    });
 }

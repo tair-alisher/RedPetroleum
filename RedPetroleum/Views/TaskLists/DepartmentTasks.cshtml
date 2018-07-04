@@ -4,24 +4,20 @@
 @using X.PagedList.Mvc.Bootstrap4
 
 @{
-    ViewBag.Title = "Задачи Сотрудников";
+    ViewBag.Title = "Задачи Отделов";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <h2>Список задач</h2>
 
 <p>
-    <a type="button" class="btn btn-primary" href="@Url.Action("Create", "TaskLists")">
-        <i class="fa fa-plus"></i>
-        Добавить задачу
+    <a href="@Url.Action("CreateDepartmentTask", "TaskLists")" class="btn btn-primary" type="button">
+        <i class="fa fa-plus"></i> Добавить задачу
     </a>
-
 </p>
-@using (Html.BeginForm("Index", "TaskLists", FormMethod.Get))
+@using (Html.BeginForm("DepartmentTasks", "TaskLists", FormMethod.Get))
 {
-
     @Html.AntiForgeryToken()
-    <!-- Search  -->
     <div class="row">
         <div class="col-md-11 search-div">
             <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование задачи" onchange="form.submit();"
@@ -36,12 +32,12 @@
     </div>
 }
 <hr />
-@using (Html.BeginForm("GetFilteredTaskList", "TaskLists", FormMethod.Post))
+@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-1">Фильтры</div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
             {
                 @Html.DropDownList("DepartmentId", ViewBag.DepartmentId as SelectList, "Выберите отдел", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
@@ -53,64 +49,37 @@
                 </select>
             }
         </div>
-        <div class="col-md-3">
-            @Html.DropDownList("EmployeeId", ViewBag.EmployeeId as SelectList, "Выберите сотрудника", htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
             <input class="form-control" id="taskDate" type="month" name="TaskDate">
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
-            <a href="@Url.Action("Index", "TaskLists")" id="resetFilter" class="btn btn-default">Сбросить</a>
+            <a href="@Url.Action("DepartmentTasks", "TaskLists")" id="resetFilter" class="btn btn-default">Сбросить</a>
         </div>
     </div>
 }
-
 <hr />
 <table class="table table-striped">
     <thead>
         <tr>
-
-            <th>
-                ФИО Сотрудника
-            </th>
-            <th>
-                Задача
-            </th>
-            <th>
-                Длительность
-            </th>
-            <th>
-                Дата задачи
-            </th>
-            <th>
-                Комментарии сотрудника(?)
-            </th>
+            <th>Отдел</th>
+            <th>Задача</th>
+            <th>Длительность</th>
+            <th>Дата задачи</th>
+            <th>Комментарии(?)</th>
             <th></th>
-
         </tr>
     </thead>
-
     <tbody id="tableContent">
         @foreach (var item in Model)
         {
             var myModal = "myModal" + item.TaskListId;
             <tr id="comment_@item.TaskListId" class="task-row">
-                <td>
-                    <b>@Html.DisplayFor(modelItem => item.Employee.EFullName)</b>
-                </td>
-                <td>
-                    <b>@Html.DisplayFor(modelItem => item.TaskName)</b>
-                </td>
-                <td>
-                    <b>@Html.DisplayFor(modelItem => item.TaskDuration)</b>
-                </td>
-                <td>
-                    <b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b>
-                </td>
-                <td class="comment-field">
-                    <b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b>
-                </td>
+                <td><b>@Html.DisplayFor(modelItem => item.Department.Name)</b></td>
+                <td><b>@Html.DisplayFor(modelItem => item.TaskName)</b></td>
+                <td><b>@Html.DisplayFor(modelItem => item.TaskDuration)</b></td>
+                <td><b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b></td>
+                <td class="comment-field"><b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b></td>
                 <td style="text-align:right;">
                     <div class="btn-group" role="group">
                         <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button></span>
@@ -173,8 +142,8 @@
             </tr>
         }
     </tbody>
-
 </table>
+
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
 
 <script src="~/Scripts/app.js"></script>
