@@ -238,3 +238,64 @@ function rate(id) {
     });
     return false;
 }
+
+function taskComment(taskId) {
+    var taskRow = $("#comment_" + taskId);
+    var commentField = taskRow.find(".comment-field");
+    var oldCommentFieldText = commentField.text().trim();
+
+    var submitButton = taskRow.find(".submit-button");
+
+    var commentBtnTemplate = submitButton.html();
+
+    var commentFieldTemplate = `
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" name="comment" class="form-control comment-input" value="${oldCommentFieldText}" autofocus>
+        </div>
+    </div>
+`;
+
+    var saveBtnTemplate = `
+    <button type="button" class="btn btn-success" onclick="submitComment('${taskId}')" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+`;
+    
+    submitButton.html(saveBtnTemplate);
+    commentField.html(commentFieldTemplate);
+
+    taskRow.find('.comment-input').focus();
+}
+
+function submitComment(taskId) {
+    var taskRow = $("#comment_" + taskId);
+    var commentMessage = taskRow.find(".comment-input").val();
+    var commentBtnTemplate = `
+    <button type="button" class="btn btn-primary" onclick="taskComment('${taskId}')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button>
+`;
+
+    $.ajax({
+        url: "/TaskLists/CommentTask",
+        type: "POST",
+        data: {
+            "taskId": taskId,
+            "comment": commentMessage
+        },
+        cache: false,
+        success: function (average) {
+            taskRow.find(".comment-field").html("<b>" + commentMessage + "</b>");
+            taskRow.find(".submit-button").html(commentBtnTemplate);
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+
+function submitCommentOnEnter() {
+    $(".task-row").keypress(function (e) {
+        if (e.keyCode === 13) {
+            submitComment(this.id.split('_')[1]);
+        }
+    });
+}
