@@ -1,5 +1,5 @@
 //This function for show and update DataTable ReportByDepartment on View
-function updateEmployeeTable() {
+function updateDepartmentTable() {
     var token = $('input[name="__RequestVerificationToken"]').val();
     var dropDown = document.getElementById("departmentsDropdown");
     var departmentId = $("#departmentsDropdown").val();
@@ -17,7 +17,7 @@ function updateEmployeeTable() {
 
     } else {
         $.ajax({
-            url: "/Reports/GetEmployeesByDepartment",
+            url: "/Reports/PartialReportByDepartment",
             type: "POST",
             data: {
                 __RequestVerificationToken: token,
@@ -45,13 +45,13 @@ function updateEmployeeTable() {
     return false;
 }
 //This function for show and update DataTable ReportByCompany on View
-function updateEmployeeTableCompany() {
+function updateCompanyTable() {
     var options = { month: 'long', year: 'numeric' };
     var dateValue = $("#taskDate").val();
     var dateFormat = new Date(dateValue);
     var token = $('input[name="__RequestVerificationToken"]').val();
     $.ajax({
-        url: "/Reports/GetEmployeesByCompany",
+        url: "/Reports/PartialReportByCompany",
         type: "POST",
         data: {
             __RequestVerificationToken: token,
@@ -62,17 +62,107 @@ function updateEmployeeTableCompany() {
             $("#dt").text("ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
             var tableContent = $("#tableContent");
             tableContent.html(result);
-            $("#downloadBtn").prop('disabled', false);
-            //Check If DataTable is Empty disabled button
-            if (result.length === "2") {
-                $("#downloadBtn").prop('disabled', true);
-            }
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
         }
     });
+    return false;
+}
+//This function for show and update DataTable ReportByDepartmentAverageMarkTable on View
+function updateDepartmentAverageMarkTable() {
+    var options = { month: 'long', year: 'numeric' };
+    var dateValue = $("#taskDate").val();
+    var dateFormat = new Date(dateValue);
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    $.ajax({
+        url: "/Reports/PartialReportByDepartmentAverageMark",
+        type: "POST",
+        data: {
+            __RequestVerificationToken: token,
+            "dateValue": dateValue
+        },
+        cache: false,
+        success: function (result) {
+            $("#dt").text("Отчет средних показателей по отделам - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
+            var tableContent = $("#tableContent");
+            tableContent.html(result);
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+//This function for show and update DataTable ReportByConsolidated on View
+function updateConsolidatedTable() {
+    var options = { month: 'long', year: 'numeric' };
+    var dateValue = $("#taskDate").val();
+    var dateFormat = new Date(dateValue);
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    $.ajax({
+        url: "/Reports/PartialReportByConsolidated",
+        type: "POST",
+        data: {
+            __RequestVerificationToken: token,
+            "dateValue": dateValue
+        },
+        cache: false,
+        success: function (result) {
+            $("#dt").text("Консолидированный анализ по оценке эффективности - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
+            var tableContent = $("#tableContent");
+            tableContent.html(result);
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+//This function for show and update DataTable ReportByInstructionsDGon View
+function updateInstructionsDGTable() {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var dropDown = document.getElementById("departmentsDropdown");
+    var departmentId = $("#departmentsDropdown").val();
 
+    var dateValue = $("#taskDate").val();
+    var dateFormat = new Date(dateValue);
+
+    var options = { month: 'long', year: 'numeric' };
+    //Check if DropDown is empty disabled button. 
+    if (departmentId === "") {
+        $("#downloadBtn").prop('disabled', true);
+        $("#tableContent").empty();
+        $("#DepartmentName").text(dropDown.options[dropDown.selectedIndex].text);
+        $("#dt").text("Оценка выполнения поручений Генерального Директора по отчету о проделанной работе - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
+
+    } else {
+        $.ajax({
+            url: "/Reports/PartialReportByInstructionsDG",
+            type: "POST",
+            data: {
+                __RequestVerificationToken: token,
+                "departmentId": departmentId,
+                "dateValue": dateValue
+            },
+            cache: false,
+            success: function (result) {
+                $("#dt").text("Оценка выполнения поручений Генерального Директора по отчету о проделанной работе - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
+                //If DropDown not empty written the select item on head of Table
+                $("#DepartmentName").text(dropDown.options[dropDown.selectedIndex].text);
+                var tableContent = $("#tableContent");
+                tableContent.html(result);
+                $("#downloadBtn").prop('disabled', false);
+                //Check If DataTable is Empty disabled button
+                if (result.length === "2") {
+                    $("#downloadBtn").prop('disabled', true);
+                }
+            },
+            error: function (XMLHttpRequest) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
     return false;
 }
 
@@ -87,7 +177,6 @@ function downloadReport(reportType) {
     }
     window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue;
 }
-
 
 function addTask() {
     $("#emptyTaskList").remove();

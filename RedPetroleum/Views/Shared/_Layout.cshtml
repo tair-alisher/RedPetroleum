@@ -35,12 +35,20 @@
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
                     }
                     else if (User.IsInRole("manager"))
                     {
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
                     }
                     else if (User.IsInRole("employee"))
                     {
@@ -50,8 +58,6 @@
                     {
 
                     }
-
-
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

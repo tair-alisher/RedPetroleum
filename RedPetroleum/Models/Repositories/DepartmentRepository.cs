@@ -57,5 +57,19 @@ namespace RedPetroleum.Models.Repositories
                 .Where(d => d.DepartmentId.ToString() == currentUser.DepartmentId)
                 .SingleOrDefault();
         }
+
+        public IEnumerable<Department> GetDepartmentsByTaskDate(DateTime? taskDate)
+        {
+            return taskDate == null
+                ? db.Departments.Include(e => e.Employees).Include(t => t.TaskLists)
+                .Where(d =>
+                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate).Month == DateTime.Now.Month &&
+                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate).Year == DateTime.Now.Year
+                )
+                : db.Departments.Include(e => e.Employees).Include(t => t.TaskLists)
+                .Where(d =>
+                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate
+                );
+        }
     }
 }
