@@ -3390,7 +3390,7 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
-    <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByCompany.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
@@ -3413,6 +3413,13 @@
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
     <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
     <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Reports\PartialReportByCompany.cshtml" />
+    <Content Include="Views\Reports\ReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\Reports\ReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\ReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\PartialReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartmentAverageMark.cshtml" />
     <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
     <Content Include="Views\TaskLists\DepartmentTasks.cshtml" />
     <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />

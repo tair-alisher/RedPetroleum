@@ -1,0 +1,52 @@
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
+
+@{
+    ViewBag.Title = "Главная";
+    int i = 1;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateDepartmentAverageMarkTable()">
+        </div>
+    </div>
+    <br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="8" class="text-center" id="dt">
+                    Отчет средних показателей по отделам - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="text-center">№</th>
+                <th class="w-50">Отдел</th>
+                <th>Наличие оценки</th>
+                <th class="w-25 text-center">Средние показатели по отделу</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@(i++)</td>
+                        <td>@item.Department</td>
+                        <td>@item.Position</td>
+                        <td class="text-center">@item.AverageMark %</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartmentAverageMark')">Скачать отчет</button>
+</div>
+<script src="~/Scripts/app.js"></script>

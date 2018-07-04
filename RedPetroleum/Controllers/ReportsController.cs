@@ -88,7 +88,7 @@ namespace RedPetroleum.Controllers
         }    
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult GetEmployeesByDepartment(string departmentId, DateTime? dateValue)
+        public ActionResult PartialReportByDepartment(string departmentId, DateTime? dateValue)
         {
             if (departmentId == "")
             {
@@ -139,7 +139,7 @@ namespace RedPetroleum.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult GetEmployeesByCompany(DateTime? dateValue)
+        public ActionResult PartialReportByCompany(DateTime? dateValue)
         {
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
 
@@ -163,6 +163,199 @@ namespace RedPetroleum.Controllers
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return PartialView(employeeList);
         }
+
+        public ActionResult ReportByDepartmentAverageMark(DateTime? dateValue)
+        {
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
+
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return View(employeeList);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PartialReportByDepartmentAverageMark(DateTime? dateValue)
+        {
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
+
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return PartialView(employeeList);
+        }
+
+        public ActionResult ReportByConsolidated(DateTime? dateValue)
+        {
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
+
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return View(employeeList);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PartialReportByConsolidated(DateTime? dateValue)
+        {
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
+
+            var employeeList = new List<ReportByCompanyViewModel>();
+
+            ReportByCompanyViewModel model;
+            foreach (Employee employee in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.EFullName,
+                    Department = employee.Department.Name,
+                    Position = employee.Position.Name,
+                    AdoptionDate = employee.AdoptionDate,
+                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                employeeList.Add(model);
+            }
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            return PartialView(employeeList);
+        }
+
+        public ActionResult ReportByInstructionsDG(string departmentId, DateTime? dateValue)
+        {
+            //IEnumerable<Employee> emplist = unit.Employees
+            //   .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dt);
+            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
+            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            if (User.IsInRole("admin"))
+            {
+                ViewBag.Departments = new SelectList(
+                         unit.Departments.GetAll(),
+                         "DepartmentId",
+                         "Name"
+                     );
+                if (departmentId != null)
+                {
+                    var employeeList = new List<ReportByCompanyViewModel>();
+
+                    ReportByCompanyViewModel model;
+                    foreach (Employee employee in emplist)
+                    {
+                        model = new ReportByCompanyViewModel
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            EmployeeName = employee.EFullName,
+                            Position = employee.Position.Name,
+                            AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                        };
+
+                        employeeList.Add(model);
+                    }
+                    return View(employeeList);
+                }
+                return View();
+
+            }
+            else
+            {
+                ViewBag.Departments = new SelectList(
+                             unit.Departments.GetAvailableDepartments(User.Identity.GetUserId()),
+                             "DepartmentId",
+                             "Name"
+                         );
+
+                var employeeList = new List<ReportByCompanyViewModel>();
+
+                ReportByCompanyViewModel model;
+                foreach (Employee employee in emplist)
+                {
+                    model = new ReportByCompanyViewModel
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        EmployeeName = employee.EFullName,
+                        Position = employee.Position.Name,
+                        AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                    };
+
+                    employeeList.Add(model);
+                }
+                return View(employeeList);
+            }
+            ////ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
+            //return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PartialReportByInstructionsDG(string departmentId, DateTime? dateValue)
+        {
+            if (departmentId == "")
+            {
+                return PartialView();
+            }
+            IEnumerable<Employee> employees = unit.Employees
+                .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dateValue);
+            var empList = new List<ReportByCompanyViewModel>();
+            ReportByCompanyViewModel model;
+            foreach (var item in employees)
+            {
+                model = new ReportByCompanyViewModel
+                {
+                    EmployeeId = item.EmployeeId,
+                    EmployeeName = item.EFullName,
+                    Position = item.Position.Name,
+                    AverageMark = item.TaskLists.Select(t => t.AverageMark).Average()
+                };
+
+                empList.Add(model);
+            }
+            return PartialView(empList);
+        }
+
 
         public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
         {

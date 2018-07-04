@@ -1,0 +1,20 @@
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
+@{
+                /**/
+
+                int i = 1;
+}
+@if (Model != null)
+{
+    foreach (var employee in Model)
+    {
+        <tr>
+            <td>@(i++)</td>
+            <td>Выдать тому то кому то два стульчика из имеющихся на складе.Выдать тому то кому то два стульчика из имеющихся на складе.</td>
+            <td class="text-center">@employee.AverageMark %</td>
+            <td>
+                Работы ведутся. Задача поставлена до конца августа
+            </td>
+        </tr>
+    }
+}

@@ -91,7 +91,7 @@ namespace RedPetroleum.Models.Repositories
                 ) 
                 : db.Employees.Include(t => t.TaskLists).Include(p => p.Position).Include(d => d.Department)
                 .Where(e =>
-                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate)== taskDate
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) == taskDate
                 );
         }
     }
