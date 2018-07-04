@@ -317,6 +317,10 @@
     <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.Designer.cs">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.cs" />
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.Designer.cs">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -3410,6 +3414,10 @@
     <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
     <Content Include="Views\Roles\Details.cshtml" />
     <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
+    <Content Include="Views\TaskLists\DepartmentTasks.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -3438,6 +3446,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806290936037_delete Tables Marks TaskMark.resx">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807040252248_NullableEmployeeId.resx">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
