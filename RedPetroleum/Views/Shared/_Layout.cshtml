@@ -37,12 +37,21 @@
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Positions")">Должности</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TaskLists")">Задачи</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
 
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Отчеты</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("ReportByCompany", "Reports")">Отчет по компании</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartment", "Reports")">Отчет по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">Отчет средних показателей по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByConsolidated", "Reports")">Отчет консолидированный</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByInstructionsDG", "Reports")">Отчет по задачам ГД</a>
+                            </div>
+                        </li>
                     }
                     else if (User.IsInRole("manager"))
                     {
@@ -54,12 +63,21 @@
                                 <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
 
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Отчеты</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("ReportByCompany", "Reports")">Отчет по компании</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartment", "Reports")">Отчет по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">Отчет средних показателей по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByConsolidated", "Reports")">Отчет консолидированный</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByInstructionsDG", "Reports")">Отчет по задачам ГД</a>
+                            </div>
+                        </li>
                     }
                     else if (User.IsInRole("employee"))
                     {

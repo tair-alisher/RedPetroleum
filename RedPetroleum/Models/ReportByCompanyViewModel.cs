@@ -14,4 +14,12 @@ namespace RedPetroleum.Models
         public DateTime AdoptionDate;
         public double? AverageMark;
     }
+
+    public class ReportByInstructionsDGViewModel
+    {
+        public string Department;
+        public string TaskName;
+        public double? AverageMark;
+        public string CommentEmployees;
+    }
 }
