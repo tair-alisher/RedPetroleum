@@ -10,10 +10,8 @@ namespace RedPetroleum.Models.Entities
     public class Department
     {
         public Guid DepartmentId { get; set; }
-
-        [Required(ErrorMessage = "Заполните поле!")]
+        
         [StringLength(200, ErrorMessage = "Длина строки не должна превышать 200 символов")]
-        [RegularExpression(@"^[a-zA-ZЁёӨөҮүҢңА-Яа-я ]+$", ErrorMessage = "Ввод цифр запрещен")]
         [Display(Name = "Наименование отдела")]
         public string Name { get; set; }
 

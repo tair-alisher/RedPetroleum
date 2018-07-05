@@ -20,7 +20,7 @@ namespace RedPetroleum.Migrations
             DropIndex("dbo.TaskLists", new[] { "EmployeeId" });
             AlterColumn("dbo.TaskLists", "EmployeeId", c => c.Guid(nullable: false));
             CreateIndex("dbo.TaskLists", "EmployeeId");
-            AddForeignKey("dbo.TaskLists", "EmployeeId", "dbo.Employees", "EmployeeId", cascadeDelete: true);
+            AddForeignKey("dbo.TaskLists", "EmployeeId", "dbo.Employees", "EmployeeId", cascadeDelete: false);
         }
     }
 }
