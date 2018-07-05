@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 
@@ -273,23 +274,20 @@ namespace RedPetroleum.Services
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, k);
             }
+            IEnumerable<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren();
 
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
+            IEnumerable<Department> d = unit.Departments.GetDepartmentsWithoutParentWithChildren();
+           // IEnumerable<Department> s = unit.Departments.GetDepartmentsByParentId(Guid? parentId);
+
+           
             int rowStart = 3;
             int i = 1;
             int j = 3;
-            foreach (Employee employee in employees)
+            foreach (Department item in d)
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, j);
-
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = employee.Department.Name;
+                worksheet.Cells[$"B{rowStart}"].Value = item.Name;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"C{rowStart}"].Value = employee.EFullName;
-                //worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
-                //worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
                 rowStart++;
                 j++;
             }
