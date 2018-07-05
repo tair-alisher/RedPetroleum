@@ -11,6 +11,8 @@ using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 using X.PagedList;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
@@ -60,16 +62,47 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "DepartmentId,Name,ParentId")] Department department)
         {
-            if (ModelState.IsValid)
+            try
             {
-                department.DepartmentId = Guid.NewGuid();
-                unitOfWork.Departments.Create(department);
-                await unitOfWork.SaveAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    department.DepartmentId = Guid.NewGuid();
+                    unitOfWork.Departments.Create(department);
+                    await unitOfWork.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                return View(department);
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(department);
+                            default:
+                                return View(department);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
-            return View(department);
         }
 
         // GET: Departments/Edit/5
@@ -95,14 +128,45 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "DepartmentId,Name,ParentId")] Department department)
         {
-            if (ModelState.IsValid)
+            try
             {
-                unitOfWork.Departments.Update(department);
-                await unitOfWork.SaveAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Departments.Update(department);
+                    await unitOfWork.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                return View(department);
             }
-            ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
-            return View(department);
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(department);
+                            default:
+                                return View(department);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
         }
 
         // GET: Departments/Delete/5

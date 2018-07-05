@@ -1,10 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title – приложение ASP.NET</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>RedPetroleum</title>
     <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" media="screen">
     <link rel="stylesheet" href="@Url.Content("~/Content/custom.min.css")">
 
@@ -12,11 +15,11 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="@Url.Content("~/Content/open-iconic/font/css/open-iconic-bootstrap.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
 
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -44,12 +47,21 @@
                                 <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
-
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
+                       
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Отчеты</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("ReportByCompany", "Reports")">Отчет по компании</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartment", "Reports")">Отчет по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">Отчет средних показателей по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByConsolidated", "Reports")">Отчет консолидированный</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByInstructionsDG", "Reports")">Отчет по задачам ГД</a>
+                            </div>
+                        </li>
                     }
                     else if (User.IsInRole("manager"))
                     {
@@ -61,12 +73,21 @@
                                 <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByCompany", "Reports")">Репорт компании</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartment", "Reports")">Репорт Отделов</a></li>
 
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">ABD</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByConsolidated", "Reports")">C</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("ReportByInstructionsDG", "Reports")">DG</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Отчеты</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("ReportByCompany", "Reports")">Отчет по компании</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartment", "Reports")">Отчет по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByDepartmentAverageMark", "Reports")">Отчет средних показателей по отделам</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByConsolidated", "Reports")">Отчет консолидированный</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("ReportByInstructionsDG", "Reports")">Отчет по задачам ГД</a>
+                            </div>
+                        </li>
                     }
                     else if (User.IsInRole("employee"))
                     {
@@ -94,9 +115,7 @@
         <footer>
             <p>&copy; @DateTime.Now.Year</p>
         </footer>
-    </div>    
-    
-    @*<script src="~/Scripts/popper.min.js"></script>*@
-    <script src="~/Scripts/bootstrap.min.js"></script>
+    </div>
+
 </body>
 </html>

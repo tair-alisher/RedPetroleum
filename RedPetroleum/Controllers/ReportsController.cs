@@ -25,8 +25,6 @@ namespace RedPetroleum.Controllers
 
         public ActionResult ReportByDepartment(string departmentId, DateTime? dateValue)
         {
-            //IEnumerable<Employee> emplist = unit.Employees
-            //   .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dt);
             IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             if (User.IsInRole("admin"))
@@ -56,7 +54,6 @@ namespace RedPetroleum.Controllers
                     return View(employeeList);
                 }
                 return View();
-                
             }
             else
             {
@@ -65,27 +62,30 @@ namespace RedPetroleum.Controllers
                              "DepartmentId",
                              "Name"
                          );
-
-                var employeeList = new List<ReportByCompanyViewModel>();
-
-                ReportByCompanyViewModel model;
-                foreach (Employee employee in emplist)
+                if (departmentId != null)
                 {
-                    model = new ReportByCompanyViewModel
-                    {
-                        EmployeeId = employee.EmployeeId,
-                        EmployeeName = employee.EFullName,
-                        Position = employee.Position.Name,
-                        AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
-                    };
+                    var employeeList = new List<ReportByCompanyViewModel>();
 
-                    employeeList.Add(model);
+                    ReportByCompanyViewModel model;
+                    foreach (Employee employee in emplist)
+                    {
+                        model = new ReportByCompanyViewModel
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            EmployeeName = employee.EFullName,
+                            Position = employee.Position.Name,
+                            AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                        };
+
+                        employeeList.Add(model);
+                    }
+                    return View(employeeList);
                 }
-                return View(employeeList);
-            }                 
+                return View();
+            }
             ////ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
             //return View();
-        }    
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PartialReportByDepartment(string departmentId, DateTime? dateValue)
@@ -268,9 +268,7 @@ namespace RedPetroleum.Controllers
 
         public ActionResult ReportByInstructionsDG(string departmentId, DateTime? dateValue)
         {
-            //IEnumerable<Employee> emplist = unit.Employees
-            //   .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dt);
-            IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
+            IEnumerable<TaskList> taskLists = unit.TaskLists.GetTaskListsWithRelations();
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             if (User.IsInRole("admin"))
             {
@@ -281,22 +279,21 @@ namespace RedPetroleum.Controllers
                      );
                 if (departmentId != null)
                 {
-                    var employeeList = new List<ReportByCompanyViewModel>();
+                    var taskList = new List<ReportByInstructionsDGViewModel>();
 
-                    ReportByCompanyViewModel model;
-                    foreach (Employee employee in emplist)
+                    ReportByInstructionsDGViewModel model;
+                    foreach (TaskList item in taskLists)
                     {
-                        model = new ReportByCompanyViewModel
+                        model = new ReportByInstructionsDGViewModel
                         {
-                            EmployeeId = employee.EmployeeId,
-                            EmployeeName = employee.EFullName,
-                            Position = employee.Position.Name,
-                            AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
+                            TaskName = item.TaskName,
+                            AverageMark = item.AverageMark,
+                            CommentEmployees = item.CommentEmployees
                         };
 
-                        employeeList.Add(model);
+                        taskList.Add(model);
                     }
-                    return View(employeeList);
+                    return View(taskList);
                 }
                 return View();
 
@@ -308,26 +305,26 @@ namespace RedPetroleum.Controllers
                              "DepartmentId",
                              "Name"
                          );
-
-                var employeeList = new List<ReportByCompanyViewModel>();
-
-                ReportByCompanyViewModel model;
-                foreach (Employee employee in emplist)
+                if (departmentId != null)
                 {
-                    model = new ReportByCompanyViewModel
-                    {
-                        EmployeeId = employee.EmployeeId,
-                        EmployeeName = employee.EFullName,
-                        Position = employee.Position.Name,
-                        AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
-                    };
+                    var taskList = new List<ReportByInstructionsDGViewModel>();
 
-                    employeeList.Add(model);
+                    ReportByInstructionsDGViewModel model;
+                    foreach (TaskList item in taskLists)
+                    {
+                        model = new ReportByInstructionsDGViewModel
+                        {
+                            TaskName = item.TaskName,
+                            AverageMark = item.AverageMark,
+                            CommentEmployees = item.CommentEmployees
+                        };
+
+                        taskList.Add(model);
+                    }
+                    return View(taskList);
                 }
-                return View(employeeList);
+                return View();
             }
-            ////ViewBag.DepName = unit.Departments.GetDepartmentNameById(ViewBag.Departments);
-            //return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -337,23 +334,22 @@ namespace RedPetroleum.Controllers
             {
                 return PartialView();
             }
-            IEnumerable<Employee> employees = unit.Employees
-                .GetEmployeesByDepartmentId(Guid.Parse(departmentId), dateValue);
-            var empList = new List<ReportByCompanyViewModel>();
-            ReportByCompanyViewModel model;
-            foreach (var item in employees)
+            IEnumerable<TaskList> taskLists = unit.TaskLists
+                .GetTaskListsByDepartmentId(Guid.Parse(departmentId), dateValue);
+            var taskList = new List<ReportByInstructionsDGViewModel>();
+            ReportByInstructionsDGViewModel model;
+            foreach (var item in taskLists)
             {
-                model = new ReportByCompanyViewModel
+                model = new ReportByInstructionsDGViewModel
                 {
-                    EmployeeId = item.EmployeeId,
-                    EmployeeName = item.EFullName,
-                    Position = item.Position.Name,
-                    AverageMark = item.TaskLists.Select(t => t.AverageMark).Average()
+                    TaskName = item.TaskName,
+                    AverageMark = item.AverageMark,
+                    CommentEmployees = item.CommentEmployees
                 };
 
-                empList.Add(model);
+                taskList.Add(model);
             }
-            return PartialView(empList);
+            return PartialView(taskList);
         }
 
 

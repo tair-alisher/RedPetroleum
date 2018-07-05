@@ -321,6 +321,14 @@
     <Compile Include="Migrations\201807040252248_NullableEmployeeId.Designer.cs">
       <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807050246576_EditedModels.cs" />
+    <Compile Include="Migrations\201807050246576_EditedModels.Designer.cs">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807050439194_AddedInexes.cs" />
+    <Compile Include="Migrations\201807050439194_AddedInexes.Designer.cs">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -3457,6 +3465,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807040252248_NullableEmployeeId.resx">
       <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050246576_EditedModels.resx">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050439194_AddedInexes.resx">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

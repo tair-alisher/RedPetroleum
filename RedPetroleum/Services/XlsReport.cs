@@ -62,7 +62,7 @@ namespace RedPetroleum.Services
             worksheet.Column(2).Width = 31.00; //Width = 30.29 in excel
             worksheet.Column(3).Width = 25.69; //Width = 25.00 in excel
             worksheet.Column(4).Width = 11.00; //Width = 10.29 in excel
-            worksheet.Column(5).Width = 14.69; //Width = 14.00 in excel
+            worksheet.Column(5).Width = 14.00; //Width = 13.29 in excel
 
             worksheet.Column(2).Style.WrapText = true;
             worksheet.Column(3).Style.WrapText = true;
@@ -146,7 +146,7 @@ namespace RedPetroleum.Services
             worksheet.Column(1).Width = 5.69; //Width = 5.00 in excel
             worksheet.Column(2).Width = 32.59; //Width = 31.86 in excel
             worksheet.Column(3).Width = 26.23; //Width = 25.57 in excel
-            worksheet.Column(4).Width = 28.69; //Width = 28.00 in excel
+            worksheet.Column(4).Width = 27.49; //Width = 26.71 in excel
             worksheet.Column(5).Width = 13.49; //Width = 12.71 in excel
             worksheet.Column(6).Width = 11.29; //Width = 10.57 in excel
             worksheet.Column(7).Width = 14.69; //Width = 14.00 in excel
@@ -245,7 +245,7 @@ namespace RedPetroleum.Services
             worksheet.Column(1).Width = 5.69; //Width = 5.00 in excel
             worksheet.Column(2).Width = 53.00; //Width = 52.29 in excel
             worksheet.Column(3).Width = 8.84; //Width = 8.14 in excel
-            worksheet.Column(4).Width = 20.74; //Width = 20.00 in excel
+            worksheet.Column(4).Width = 19.89; //Width = 19.14 in excel
 
             worksheet.Column(2).Style.WrapText = true;
             worksheet.Column(3).Style.WrapText = true;
@@ -320,11 +320,11 @@ namespace RedPetroleum.Services
                 .Center;
 
             worksheet.Column(1).Width = 5.69; //Width = 5.00 in excel
-            worksheet.Column(2).Width = 29.84; //Width = 29.14 in excel
-            worksheet.Column(3).Width = 8.84; //Width = 8.14 in excel
-            worksheet.Column(4).Width = 13.64; //Width = 12.86 in excel
+            worksheet.Column(2).Width = 31.49; //Width = 30.71 in excel 
+            worksheet.Column(3).Width = 8.84; //Width = 8.14 in excel 
+            worksheet.Column(4).Width = 11.49; //Width = 10.71 in excel 
             worksheet.Column(5).Width = 13.69; //Width = 13.00 in excel
-            worksheet.Column(6).Width = 16.54; //Width = 15.86 in excel
+            worksheet.Column(6).Width = 16.23; //Width = 15.57 in excel 
 
             worksheet.Column(2).Style.WrapText = true;
             worksheet.Column(3).Style.WrapText = true;
@@ -416,7 +416,7 @@ namespace RedPetroleum.Services
 
             worksheet.Column(1).Width = 5.69; //Width = 5.00 in excel
             worksheet.Column(2).Width = 42.69; //Width = 42.00 in excel
-            worksheet.Column(3).Width = 8.84; //Width = 8.14 in excel
+            worksheet.Column(3).Width = 8.00; //Width = 7.29 in excel
             worksheet.Column(4).Width = 31.00; //Width = 30.29 in excel
 
             worksheet.Column(1).Style.WrapText = true;
@@ -459,21 +459,21 @@ namespace RedPetroleum.Services
                 BorderLinesForReportByInstructionsDG(worksheet, k);
             }
 
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
-           // IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId, dt);
+            IEnumerable<TaskList> taskLists = unit.TaskLists.GetTaskListsByDepartmentId((Guid)departmentId, dt);
             int rowStart = 5;
             int i = 1;
             int j = 5;
-            foreach (Employee employee in employees)
+            foreach (TaskList item in taskLists)
             {
                 BorderLinesForReportByInstructionsDG(worksheet, j);
 
                 worksheet.Cells[$"A{rowStart}"].Value = i++;
-                //worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                //worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"C{rowStart}"].Value = employee.Position.Name;
-                //worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"D{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average() + "%";
+                worksheet.Cells[$"B{rowStart}"].Value = item.TaskName;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{rowStart}"].Value = item.AverageMark + "%";
+                worksheet.Cells[$"D{rowStart}"].Value = item.CommentEmployees;
+                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
                 rowStart++;
                 j++;
             }

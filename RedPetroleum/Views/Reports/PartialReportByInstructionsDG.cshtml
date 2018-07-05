@@ -1,8 +1,8 @@
-﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
+﻿@model List<RedPetroleum.Models.ReportByInstructionsDGViewModel>
 @{
-                /**/
+    /**/
 
-                int i = 1;
+    int i = 1;
 }
 @if (Model != null)
 {
@@ -10,11 +10,9 @@
     {
         <tr>
             <td>@(i++)</td>
-            <td>Выдать тому то кому то два стульчика из имеющихся на складе.Выдать тому то кому то два стульчика из имеющихся на складе.</td>
+            <td>@employee.TaskName</td>
             <td class="text-center">@employee.AverageMark %</td>
-            <td>
-                Работы ведутся. Задача поставлена до конца августа
-            </td>
+            <td>@employee.CommentEmployees</td>
         </tr>
     }
 }

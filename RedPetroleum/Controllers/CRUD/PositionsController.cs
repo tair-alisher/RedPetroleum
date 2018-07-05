@@ -9,6 +9,8 @@ using X.PagedList;
 using RedPetroleum.Models.Entities;
 using System.Threading.Tasks;
 using System.Net;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
@@ -69,10 +71,31 @@ namespace RedPetroleum.Controllers.CRUD
                 }
                 return View(position);
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(position);
+                            default:
+                                return View(position);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
 
         }
@@ -106,10 +129,31 @@ namespace RedPetroleum.Controllers.CRUD
                 return View(position);
 
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(position);
+                            default:
+                                return View(position);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
         

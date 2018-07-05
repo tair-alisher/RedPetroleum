@@ -195,5 +195,19 @@ namespace RedPetroleum.Models.Repositories
                     ((DateTime)t.TaskDate).Month == ((DateTime)month).Month
                 );
         }
+        public IEnumerable<TaskList> GetTaskListsWithRelations()
+        {
+            return db.TaskLists
+                .Include(d => d.Department);
+        }
+
+        public IEnumerable<TaskList> GetTaskListsByDepartmentId(Guid id, DateTime? taskDate)
+        {
+            return db.TaskLists
+                .Include(d => d.Department)
+                .Where(e => e.DepartmentId == id).Where(e =>
+                    ((DateTime)e.TaskDate) == taskDate
+                );
+        }
     }
 }
