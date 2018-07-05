@@ -183,7 +183,7 @@ function addTask(forDepartment = null) {
     $("#emptyTaskList").remove();
 
     var createArea = $("#createArea");
-
+    
     if ($("#submitTask").length > 0) {
         var warningMessage = `
     <div class="alert alert-warning  alert-dismissible" role="alert">
@@ -201,7 +201,7 @@ function addTask(forDepartment = null) {
             <div class="row">
                 <label class="control-label col-md-4" for="TaskName">Задача</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control text-box single-line" id="TaskName" name="TaskName" required>
+                    <input type="text" class="form-control text-box single-line" id="TaskName" name="TaskName" required />
                 </div>
             </div>
         </div>
@@ -209,7 +209,7 @@ function addTask(forDepartment = null) {
             <div class="row">
                 <label class="control-label col-md-4" for="TaskDuration">Продолжительность</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control text-box single-line" id="TaskDuration" name="TaskDuration" required>
+                    <input type="text" class="form-control text-box single-line" id="TaskDuration" name="TaskDuration" required />
                 </div>
             </div>
         </div>
@@ -233,7 +233,20 @@ function submitTask(forDepartment = null) {
     var taskName = $("#TaskName").val();
     var taskDuration = $("#TaskDuration").val();
     var taskDate = $("#taskDate").val();
+    var createArea = $("#createArea");
 
+    var warningMessageOnEmptyFields = `
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Все поля для задачи обязательны к заполнению!
+    </div>
+`;
+    if (taskName == "" || taskDuration == "") {
+        createArea.prepend(warningMessageOnEmptyFields);
+        return false;
+    }
     var sendData = {
         __RequestVerificationToken: token,
         "taskName": taskName,
