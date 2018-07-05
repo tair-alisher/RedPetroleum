@@ -15,12 +15,14 @@ namespace RedPetroleum.Services
         Guid? departmentId;
         string reportType;
         DateTime? dt;
-        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt)
+        Guid? parentId;
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt, Guid? parentId)
         {
             this.unit = unit;
             this.departmentId = departmentId;
             this.reportType = reportType;
             this.dt = dt;
+            this.parentId = parentId;
         }
 
         public ExcelPackage FormReport()
@@ -274,20 +276,48 @@ namespace RedPetroleum.Services
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, k);
             }
-            IEnumerable<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren();
-
-            IEnumerable<Department> d = unit.Departments.GetDepartmentsWithoutParentWithChildren();
-           // IEnumerable<Department> s = unit.Departments.GetDepartmentsByParentId(Guid? parentId);
-
            
             int rowStart = 3;
             int i = 1;
             int j = 3;
-            foreach (Department item in d)
+
+            IEnumerable<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren();
+            foreach (Department department in DepsWithoutParentAndChildren)
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, j);
-                worksheet.Cells[$"B{rowStart}"].Value = item.Name;
+                worksheet.Cells[$"A{rowStart}"].Value = i++;
+                worksheet.Cells[$"B{rowStart}"].Value = department.Name;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{rowStart}"].Value = "+";
+                worksheet.Cells[$"D{rowStart}"].Value = "average";
+                rowStart++;
+                j++;
+            }
+
+            IEnumerable<Department> DepartmentsWithoutParentWithChildren = unit.Departments.GetDepartmentsWithoutParentWithChildren();
+            IEnumerable<DepartmentsWithChildren> result = new List<DepartmentsWithChildren>();
+            DepartmentsWithChildren item = null;
+            IEnumerable<Department> children = null;
+
+            foreach (Department parent in DepartmentsWithoutParentWithChildren)
+            {
+                BorderLinesForReportByDepartmentAverageMark(worksheet, j);
+                worksheet.Cells[$"B{rowStart}"].Value = parent.Name;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"B{rowStart}"].Style.Font.Bold = true;
+
+                children = unit.Departments.GetDepartmentsByParentId(parentId);
+                foreach (Department child in children)
+                {
+                    BorderLinesForReportByDepartmentAverageMark(worksheet, j);
+                    worksheet.Cells[$"A{rowStart}"].Value = i++;
+                    worksheet.Cells[$"B{rowStart}"].Value = child.Name;
+                    worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    worksheet.Cells[$"C{rowStart}"].Value = "+";
+                    worksheet.Cells[$"D{rowStart}"].Value = "average";
+                    rowStart++;
+                    j++;
+                }
                 rowStart++;
                 j++;
             }
