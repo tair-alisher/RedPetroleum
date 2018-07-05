@@ -195,6 +195,7 @@ namespace RedPetroleum.Controllers.CRUD
                 return HttpNotFound();
             }
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
+            ViewBag.TaskDate = ((DateTime)taskList.TaskDate).ToString("yyyy-MM");
             return View(taskList);
         }
 
@@ -203,15 +204,18 @@ namespace RedPetroleum.Controllers.CRUD
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,CommentEmployer,CommentEmployees")] TaskList taskList)
+        public async Task<ActionResult> Edit([Bind(Include = "TaskListId,EmployeeId,TaskName,TaskDuration,TaskDate,CommentEmployees")] TaskList taskList)
         {
+            if (taskList.TaskDate == null)
+                taskList.TaskDate = DateTime.Today;
+
             if (ModelState.IsValid)
             {
                 unitOfWork.TaskLists.Update(taskList);
                 await unitOfWork.SaveAsync();
                 return RedirectToAction("Index");
             }
-            //ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
+            ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
             return View(taskList);
         }
 
@@ -378,6 +382,51 @@ namespace RedPetroleum.Controllers.CRUD
             ViewBag.DepartmentName = taskDepartmentName;
 
             return PartialView(task);
+        }
+
+        public async Task<ActionResult> EditDepartmentTask(Guid? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            TaskList taskList = await unitOfWork.TaskLists.GetAsync(id);
+            if (taskList == null)
+                return HttpNotFound();
+
+            if (User.IsInRole("admin"))
+                ViewBag.DepartmentId = CreateDepartmentSelectList(taskList.DepartmentId.ToString());
+            else
+                ViewBag.Department = unitOfWork
+                    .Departments
+                    .GetDepartmentByUserId(User.Identity.GetUserId());
+
+            ViewBag.TaskDate = ((DateTime)taskList.TaskDate).ToString("yyyy-MM");
+
+            return View(taskList);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditDepartmentTask([Bind(Include = "TaskListId,DepartmentId,TaskName,TaskDuration,TaskDate,CommentEmployees")] TaskList taskList)
+        {
+            if (taskList.TaskDate == null)
+                taskList.TaskDate = DateTime.Today;
+
+            if (ModelState.IsValid)
+            {
+                unitOfWork.TaskLists.Update(taskList);
+                await unitOfWork.SaveAsync();
+                return RedirectToAction("DepartmentTasks");
+            }
+
+            if (User.IsInRole("admin"))
+                ViewBag.DepartmentId = CreateDepartmentSelectList(taskList.DepartmentId.ToString());
+            else
+                ViewBag.Department = unitOfWork
+                    .Departments
+                    .GetDepartmentByUserId(User.Identity.GetUserId());
+
+            return View(taskList);
         }
 
         private SelectList CreateDepartmentSelectList(string selected = null)
