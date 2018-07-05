@@ -13,6 +13,7 @@ namespace RedPetroleum.Models.Entities
         
         [StringLength(200, ErrorMessage = "Длина строки не должна превышать 200 символов")]
         [Display(Name = "Наименование отдела")]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
 
         [Display(Name = "Наименование управляющего отдела")]
