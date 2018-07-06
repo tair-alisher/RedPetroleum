@@ -3434,6 +3434,7 @@
     <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
     <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
     <Content Include="Views\TaskLists\EditDepartmentTask.cshtml" />
+    <Content Include="Views\TaskLists\DepartmentTaskDetails.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

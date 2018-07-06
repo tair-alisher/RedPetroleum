@@ -384,6 +384,17 @@ namespace RedPetroleum.Controllers.CRUD
             return PartialView(task);
         }
 
+        public ActionResult DepartmentTaskDetails(Guid? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            TaskList taskList = unitOfWork.TaskLists.GetTaskWithDepartmentById((Guid)id);
+            if (taskList == null)
+                return HttpNotFound();
+
+            return View(taskList);
+        }
+
         public async Task<ActionResult> EditDepartmentTask(Guid? id)
         {
             if (id == null)

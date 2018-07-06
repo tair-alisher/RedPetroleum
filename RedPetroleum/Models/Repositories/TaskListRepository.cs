@@ -120,14 +120,21 @@ namespace RedPetroleum.Models.Repositories
             return taskList
                 .OrderBy(t => t.TaskName);
         }
+
         public TaskList GetTaskWithEmployeeById(Guid id)
         {
-            return
-                db.TaskLists
+            return db.TaskLists
                  .Include(e => e.Employee)
                  .Where(t => t.TaskListId == id).FirstOrDefault();
-                 
         }
+
+        public TaskList GetTaskWithDepartmentById(Guid id)
+        {
+            return db.TaskLists
+                .Include(d => d.Department)
+                .Where(t => t.TaskListId == id).FirstOrDefault();
+        }
+
         public void RateTask(
             string taskId, double skill, double effectiveness,
             double discipline, double timeliness, double average
