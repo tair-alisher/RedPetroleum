@@ -1,16 +1,43 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
-
+﻿@*@model IEnumerable<RedPetroleum.Models.Entities.Employee>*@
+@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 @{
     ViewBag.Title = "Главная";
+    int i = 1;
 }
 
 <div class="container">
-    @Html.DropDownList("Departments", null, htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateEmployeeTable()" })
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateDepartmentTable()">
+        </div>
+    </div>
+    <br />
+    @Html.DropDownList("Departments", null, "Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateDepartmentTable();" })
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>EFullName</th>
-                <th>Position</th>
+                <th colspan="5" class="text-center" id="dt">
+                    ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+
+            </tr>
+            <tr>
+                <th colspan="5" class="text-center" id="nameDep">
+                    <p id="DepartmentName">Выберите отдел...</p>
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="w-10 text-center">№</th>
+                <th class="w-25 text-center">Ф.И.О</th>
+                <th class="w-25 text-center">Должность</th>
+                <th class="text-center">Средний показатель</th>
+                <th class="text-center">Подпись</th>
             </tr>
         </thead>
         <tbody id="tableContent">
@@ -19,22 +46,68 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.EFullName</td>
-                        <td>@item.Position.Name</td>
+                        <td class="text-center">@(i++)</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Position</td>
+                        <td class="text-center">@item.AverageMark %</td>
+                        <td></td>
                     </tr>
                 }
             }
         </tbody>
     </table>
     @Html.AntiForgeryToken()
-    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartment')" >Скачать отчет</button>
+    <button type="button" id="downloadBtn" disabled class="btn btn-success" onclick="downloadReport('ReportByDepartment')">Скачать отчет</button>
 
 </div>
+<script>
+    window.onload = function () {
 
-@section Scripts {
-    @Scripts.Render("~/Scripts/app.js")
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
 
-    <script>
+            title: {
+                text: "Fortune 500 Companies by Country"
+            },
+            axisX: {
+                interval: 1
+            },
+            axisY2: {
+                interlacedColor: "rgba(1,77,101,.2)",
+                gridColor: "rgba(1,77,101,.1)",
+                title: "Number of Companies"
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#014D65",
+                dataPoints: [
+                    { y: 3, label: "Sweden" },
+                    { y: 7, label: "Taiwan" },
+                    { y: 5, label: "Russia" },
+                    { y: 9, label: "Spain" },
+                    { y: 7, label: "Brazil" },
+                    { y: 7, label: "India" },
+                    { y: 9, label: "Italy" },
+                    { y: 8, label: "Australia" },
+                    { y: 11, label: "Canada" },
+                    { y: 15, label: "South Korea" },
+                    { y: 12, label: "Netherlands" },
+                    { y: 15, label: "Switzerland" },
+                    { y: 25, label: "Britain" },
+                    { y: 28, label: "Germany" },
+                    { y: 29, label: "France" },
+                    { y: 52, label: "Japan" },
+                    { y: 103, label: "China" },
+                    { y: 134, label: "US" }
+                ]
+            }]
+        });
+        chart.render();
 
-    </script>
-}
+    }
+</script>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="~/Scripts/app.js"></script>

@@ -1,0 +1,63 @@
+﻿@model List<RedPetroleum.Models.ReportByInstructionsDGViewModel>
+
+@{
+    ViewBag.Title = "Главная";
+    int i = 1;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateInstructionsDGTable()">
+        </div>
+    </div>
+    <br />
+    @Html.DropDownList("Departments", null, "Выберите отдел...", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown", @onChange = "updateInstructionsDGTable();" })
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="8" class="text-center" id="dt">
+                    Оценка выполнения поручений Генерального Директора по отчету о проделанной работе - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+            <tr>
+                <th colspan="5" class="text-center" id="nameDep">
+                    <p id="DepartmentName">Выберите отдел...</p>
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th rowspan="2">№</th>
+                <th class="w-50" rowspan="2">Поручение</th>
+                <th class="w-25 text-center" colspan="2">Выполнение</th>
+            </tr>
+            <tr>
+                <th class="w-25 text-center">%</th>
+                <th class="w-50 text-center">Комментарии</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(i++)</td>
+                        <td>@item.TaskName</td>
+                        <td class="text-center">@item.AverageMark %</td>
+                        <td>@item.CommentEmployees</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="button" id="downloadBtn" disabled class="btn btn-success" onclick="downloadReport('ReportByInstructionsDG')">Скачать отчет</button>
+
+</div>
+<script src="~/Scripts/app.js"></script>

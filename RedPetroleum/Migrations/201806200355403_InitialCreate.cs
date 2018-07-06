@@ -7,17 +7,6 @@ namespace RedPetroleum.Migrations
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.ACL",
-                c => new
-                    {
-                        AclId = c.Guid(nullable: false),
-                        UserId = c.String(),
-                        RoleId = c.Int(nullable: false),
-                        GrandUrl = c.String(),
-                        DenyUrl = c.String(),
-                    })
-                .PrimaryKey(t => t.AclId);
             
             CreateTable(
                 "dbo.Departments",
@@ -43,8 +32,8 @@ namespace RedPetroleum.Migrations
                         Dismissed = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.EmployeeId)
-                .ForeignKey("dbo.Departments", t => t.DepartmentId, cascadeDelete: true)
-                .ForeignKey("dbo.Positions", t => t.PositionId, cascadeDelete: true)
+                .ForeignKey("dbo.Departments", t => t.DepartmentId, cascadeDelete: false)
+                .ForeignKey("dbo.Positions", t => t.PositionId, cascadeDelete: false)
                 .Index(t => t.DepartmentId)
                 .Index(t => t.PositionId);
             
@@ -66,11 +55,10 @@ namespace RedPetroleum.Migrations
                         TaskName = c.String(),
                         TaskDuration = c.String(),
                         CommentEmployer = c.String(),
-                        CommentEmployees = c.String(),
-                        Mark = c.Double(nullable: false),
+                        CommentEmployees = c.String()
                     })
                 .PrimaryKey(t => t.TaskListId)
-                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: true)
+                .ForeignKey("dbo.Employees", t => t.EmployeeId, cascadeDelete: false)
                 .Index(t => t.EmployeeId);
             
             CreateTable(
@@ -79,7 +67,7 @@ namespace RedPetroleum.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Name = c.String(nullable: false, maxLength: 256),
-                    })
+                })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
@@ -91,34 +79,30 @@ namespace RedPetroleum.Migrations
                         RoleId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: false)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
-            
+
             CreateTable(
                 "dbo.AspNetUsers",
                 c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        EmployeId = c.Guid(nullable: false),
-                        Email = c.String(maxLength: 256),
-                        EmailConfirmed = c.Boolean(nullable: false),
-                        PasswordHash = c.String(),
-                        SecurityStamp = c.String(),
-                        PhoneNumber = c.String(),
-                        PhoneNumberConfirmed = c.Boolean(nullable: false),
-                        TwoFactorEnabled = c.Boolean(nullable: false),
-                        LockoutEndDateUtc = c.DateTime(),
-                        LockoutEnabled = c.Boolean(nullable: false),
-                        AccessFailedCount = c.Int(nullable: false),
-                        UserName = c.String(nullable: false, maxLength: 256),
-                        Employees_EmployeeId = c.Guid(),
-                    })
+                {
+                    Id = c.String(nullable: false, maxLength: 128),
+                    Email = c.String(maxLength: 256),
+                    EmailConfirmed = c.Boolean(nullable: false),
+                    PasswordHash = c.String(),
+                    SecurityStamp = c.String(),
+                    PhoneNumber = c.String(),
+                    PhoneNumberConfirmed = c.Boolean(nullable: false),
+                    TwoFactorEnabled = c.Boolean(nullable: false),
+                    LockoutEndDateUtc = c.DateTime(),
+                    LockoutEnabled = c.Boolean(nullable: false),
+                    AccessFailedCount = c.Int(nullable: false),
+                    UserName = c.String(nullable: false, maxLength: 256),
+                })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Employees", t => t.Employees_EmployeeId)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.Employees_EmployeeId);
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -130,7 +114,7 @@ namespace RedPetroleum.Migrations
                         ClaimValue = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId);
             
             CreateTable(
@@ -142,7 +126,7 @@ namespace RedPetroleum.Migrations
                         UserId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: false)
                 .Index(t => t.UserId);
             
         }
@@ -151,7 +135,6 @@ namespace RedPetroleum.Migrations
         {
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUsers", "Employees_EmployeeId", "dbo.Employees");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.TaskLists", "EmployeeId", "dbo.Employees");
@@ -160,7 +143,6 @@ namespace RedPetroleum.Migrations
             DropForeignKey("dbo.Departments", "ParentId", "dbo.Departments");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "Employees_EmployeeId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
@@ -178,7 +160,6 @@ namespace RedPetroleum.Migrations
             DropTable("dbo.Positions");
             DropTable("dbo.Employees");
             DropTable("dbo.Departments");
-            DropTable("dbo.ACL");
         }
     }
 }

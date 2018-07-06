@@ -1,12 +1,10 @@
 ﻿@model RedPetroleum.Models.Entities.Employee
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Удаление";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>Вы действительно хотите удалить сотрудника?</h3>
 <div>
     <h4>Employee</h4>
     <hr />
@@ -56,9 +54,9 @@
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div class="form-actions no-color">
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a href="@Url.Action("Index", "Employees")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+    </div>
     }
 </div>

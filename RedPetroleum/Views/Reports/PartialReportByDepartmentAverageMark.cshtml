@@ -1,0 +1,35 @@
+﻿@using RedPetroleum.Models;
+@model List<RedPetroleum.Models.DepartmentsWithChildren>
+@{
+    int i = 1;
+}
+@if (Model != null)
+{
+    foreach (CustomDepartment department in ViewBag.DepartmentsWithoutParentAndChildren)
+    {
+        <tr>
+            <td class="text-center">@(i++)</td>
+            <td>@department.Name</td>
+            <td class="text-center">+</td>
+            <td class="text-center">@department.AverageMark %</td>
+        </tr>
+    }
+    foreach (var item in Model)
+    {
+        <tr>
+            <td></td>
+            <td style="font-weight:bold">@item.Department.Name</td>
+            <td></td>
+            <td></td>
+        </tr>
+        foreach (var child in item.Children)
+        {
+            <tr>
+                <td class="text-center">@(i++)</td>
+                <td>@child.Name</td>
+                <td class="text-center">+</td>
+                <td class="text-center">@child.AverageMark %</td>
+            </tr>
+        }
+    }
+}

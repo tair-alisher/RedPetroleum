@@ -1,30 +1,30 @@
 ﻿@model RedPetroleum.Models.Entities.Department
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Добавление";
 }
 
-<h2>Create</h2>
+<h2>Добавление отдела</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Departments", FormMethod.Post, new {  @id = "Form" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Department</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Наименование отдела</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Введите наименование отдела", @required = "required" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                <h6 class="text-danger">@ViewBag.Message</h6>
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ParentId, "ParentId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ParentId, "Управляющий отдел", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ParentId", null, "Выбор управляющего отдела", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ParentId, "", new { @class = "text-danger" })
@@ -32,17 +32,14 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-success"><i class="fa fa-save" aria-hidden="true" title="Сохранить" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Сохранить</span></i></button>
+                <a href="@Url.Action("Index", "Departments")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script>
+    $("#Form").validate();
+    $("#Form").removeAttr("novalidate");
+</script>

@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "Form" }))
             {
                 @Html.AntiForgeryToken()
                 <h4>Используйте локальную учетную запись для входа.</h4>
@@ -17,14 +17,14 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Введите логин", @required = "required", @pattern = "[^'\x22<>/]+", @title = "Ввод некоторых символов запрещён" })
                         @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Введите пароль", @required = "required" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -41,9 +41,7 @@
                         <input type="submit" value="Выполнить вход" class="btn btn-default" />
                     </div>
                 </div>
-                <p>
-                    @Html.ActionLink("Регистрация нового пользователя", "Register")
-                </p>
+                
                 @* Включите, когда будет включено подтверждение учетной записи для функции сброса пароля
                     <p>
                         @Html.ActionLink("Забыли пароль?", "ForgotPassword")
@@ -51,13 +49,8 @@
             }
         </section>
     </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
-    </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script>
+    $("#Form").validate();
+    $("#Form").removeAttr("novalidate");
+</script>

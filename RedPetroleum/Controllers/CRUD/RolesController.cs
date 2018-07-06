@@ -4,6 +4,9 @@ using RedPetroleum.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -12,17 +15,33 @@ using X.PagedList;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-    
+
         // GET: Roles
         public ActionResult Index(int? page, string searching)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var roles = db.Roles.Where(x => x.Name.Contains(searching) || searching == null).OrderBy(x=>x.Name);
+            var roles = db.Roles.Where(x => x.Name.Contains(searching) || searching == null).OrderBy(x => x.Name);
             return View(roles.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var role = db.Roles.Find(id);
+            if (role == null)
+            {
+                return HttpNotFound();
+            }
+            
+            return View(role);
         }
 
         public ActionResult Edit(string id)
@@ -45,13 +64,28 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public ActionResult Edit(IdentityRole role)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(role).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("UserList");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(role).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(role);
             }
-            return View(role);
+            catch (DbEntityValidationException ex)
+            {
+                if (ex.TargetSite.Name == "SaveChanges")
+                {
+                    ViewBag.Message = "Такая запись уже существует!";
+                    return View(role);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         //Edit
@@ -66,13 +100,28 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public ActionResult Create(IdentityRole role)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Roles.Add(role);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Roles.Add(role);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(role);
             }
-            return View(role);
+            catch (DbEntityValidationException ex)
+            {
+                if (ex.TargetSite.Name == "SaveChanges")
+                {
+                    ViewBag.Message = "Такая запись уже существует!";
+                    return View(role);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         public ActionResult Delete(string id)
@@ -86,7 +135,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View("Index");
         }
 
 
@@ -96,7 +145,10 @@ namespace RedPetroleum.Controllers.CRUD
         {
             var role = db.Roles.Find(id);
             if (role != null)
+            {
                 db.Roles.Remove(role);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
         //public async Task<ActionResult> Details(Guid? id)

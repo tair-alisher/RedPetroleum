@@ -10,6 +10,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using X.PagedList;
 using RedPetroleum.Models;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers
 {
@@ -73,38 +76,125 @@ namespace RedPetroleum.Controllers
             {
                 return HttpNotFound();
             }
+            var roleid = user.Roles.SingleOrDefault().RoleId;
+            var roleList = db.Roles.Where(x=>x.Id == roleid).SingleOrDefault();
+           
+            ViewBag.RoleName = roleList == null ? "Нет" : roleList.Name;
             return View(user);
         }
 
-        //Edit
-        public ActionResult Edit(string id)
+        [HttpGet]
+        public async Task<ActionResult> Edit(string id)
         {
-            if (id == null)
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            ViewBag.Rol = new SelectList(db.Roles, "Id", "Name", user.Roles.SingleOrDefault().RoleId);
+            ViewBag.Emp = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
+            if (user != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return View(user);
             }
-            var user = UserManager.FindById(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            return View(user);
+           
+            return RedirectToAction("Login", "Account");
         }
 
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(ApplicationUser user)
+        public async Task<ActionResult> Edit(ApplicationUser model, string RoleId)
         {
-            if (ModelState.IsValid)
+            ApplicationUser user = await UserManager.FindByNameAsync(model.UserName);
+            var users = db.Employees.Select(c => new {
+                c.EmployeeId,
+                EFullname = c.EFullName
+            }).ToList();
+
+            ViewBag.Rol = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+            var role = db.Roles.Find(RoleId);
+
+            
+                
+            if (user != null)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("UserList");
+                var oldRoleId = user.Roles.SingleOrDefault().RoleId;
+                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                
+
+                if (oldRoleName != role.Name)
+                {
+                    await UserManager.RemoveFromRoleAsync(user.Id, oldRoleName);
+                    await UserManager.AddToRoleAsync(user.Id, role.Name);
+                }
+                var employee = db.Employees.Where(x => x.EmployeeId.ToString() == model.EmployeeId).FirstOrDefault();
+                user.EmployeeId = employee.EmployeeId.ToString();
+                user.DepartmentId = employee.DepartmentId.ToString();
+                IdentityResult result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("UserList", "Account");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Что-то пошло не так");
+                }
             }
-            return View(user);
+            else
+            {
+                ModelState.AddModelError("", "Пользователь не найден");
+            }
+
+            return View(model);
         }
+        ////Edit
+        //public ActionResult Edit(string id)
+        //{
+            
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    var user = UserManager.FindById(id);
+        //    if (user == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    ViewBag.Rol = new SelectList(db.Roles, "Id", "Name", user.Roles.SingleOrDefault().RoleId);
+        //    ViewBag.Emp = new SelectList(db.Employees, "EmployeeId", "EFullName", user.EmployeeId);
+        //    return View(user);
+        //}
+
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(ApplicationUser user, string RoleId, string EmployeeId)
+        //{
+        //    var users = db.Employees.Select(c => new {
+        //        c.EmployeeId,
+        //        EFullname = c.EFullName
+        //    }).ToList();
+            
+        //    ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+        //    ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+        //    if (ModelState.IsValid)
+        //    {
+        //        var oldUser = UserManager.FindById(user.Id);
+        //        var oldRoleId = oldUser.Roles.SingleOrDefault().RoleId;
+        //        var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+        //        var newRoleName = db.Roles.SingleOrDefault(r => r.Id == RoleId).Name;
+
+        //        if (oldRoleName != newRoleName)
+        //        {
+        //            UserManager.RemoveFromRole(user.Id, oldRoleName);
+        //            UserManager.AddToRole(user.Id, newRoleName);
+        //        }
+                
+        //        user.EmployeeId = EmployeeId;
+        //        db.Entry(user).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("UserList");
+        //    }
+        //    return View(user);
+        //}
 
         public ActionResult Delete(string id)
         {
@@ -146,6 +236,9 @@ namespace RedPetroleum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            if(User.Identity.IsAuthenticated){
+                return RedirectToAction("Index", "Home");
+            }
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -217,13 +310,10 @@ namespace RedPetroleum.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            var users = db.Employees.Select(c => new {
-                c.EmployeeId,
-                EFullname = c.EFullName
-            }).ToList();
+           
             
             ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+            ViewBag.Employee = new SelectList(db.Employees, "EmployeeId", "EFullName");
             return View();
         }
 
@@ -240,10 +330,12 @@ namespace RedPetroleum.Controllers
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeId = model.EmployeeId, DepartmentId = employee.DepartmentId.ToString()};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var role = db.Roles.Find(SelectedRole);
+
+                
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, role.Name);
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                   //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
                     // Отправка сообщения электронной почты с этой ссылкой
@@ -251,8 +343,16 @@ namespace RedPetroleum.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("UserList", "Account");
                 }
+                var users = db.Employees.Select(c => new {
+                    c.EmployeeId,
+                    EFullname = c.EFullName
+                }).ToList();
+
+                ViewBag.SelectedRole = new SelectList(db.Roles, "Id", "Name");
+                ViewBag.EmployeeId = new SelectList(users, "EmployeeId", "EFullName");
+
                 AddErrors(result);
             }
 

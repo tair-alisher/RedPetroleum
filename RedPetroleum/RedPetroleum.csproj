@@ -89,9 +89,6 @@
     <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
@@ -283,7 +280,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CRUD\DepartmentsController.cs" />
     <Compile Include="Controllers\CRUD\EmployeesController.cs" />
-    <Compile Include="Controllers\CRUD\MarksController.cs" />
     <Compile Include="Controllers\CRUD\PositionsController.cs" />
     <Compile Include="Controllers\CRUD\RolesController.cs" />
     <Compile Include="Controllers\CRUD\TaskListsController.cs" />
@@ -296,26 +292,6 @@
     <Compile Include="Migrations\201806200355403_InitialCreate.cs" />
     <Compile Include="Migrations\201806200355403_InitialCreate.Designer.cs">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806200447139_Init.cs" />
-    <Compile Include="Migrations\201806200447139_Init.Designer.cs">
-      <DependentUpon>201806200447139_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806200730495_NewGuid.cs" />
-    <Compile Include="Migrations\201806200730495_NewGuid.Designer.cs">
-      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806200749064_deletedRelation.cs" />
-    <Compile Include="Migrations\201806200749064_deletedRelation.Designer.cs">
-      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806201048272_ad.cs" />
-    <Compile Include="Migrations\201806201048272_ad.Designer.cs">
-      <DependentUpon>201806201048272_ad.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806201106321_deletedViewModel.cs" />
-    <Compile Include="Migrations\201806201106321_deletedViewModel.Designer.cs">
-      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201806220900336_UpdateTaskTable.cs" />
     <Compile Include="Migrations\201806220900336_UpdateTaskTable.Designer.cs">
@@ -333,47 +309,51 @@
     <Compile Include="Migrations\201806250342571_Add Required in Entities.Designer.cs">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806250421418_Names.cs" />
-    <Compile Include="Migrations\201806250421418_Names.Designer.cs">
-      <DependentUpon>201806250421418_Names.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.cs" />
-    <Compile Include="Migrations\201806251123474_Add two tables Mark and TaskMark.Designer.cs">
-      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806250907296_Id.cs" />
     <Compile Include="Migrations\201806250907296_Id.Designer.cs">
       <DependentUpon>201806250907296_Id.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806260309265_OneToOneRelationship.cs" />
-    <Compile Include="Migrations\201806260309265_OneToOneRelationship.Designer.cs">
-      <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
+    <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.cs" />
+    <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.Designer.cs">
+      <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.cs" />
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.Designer.cs">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807050246576_EditedModels.cs" />
+    <Compile Include="Migrations\201807050246576_EditedModels.Designer.cs">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807050439194_AddedInexes.cs" />
+    <Compile Include="Migrations\201807050439194_AddedInexes.Designer.cs">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Entities\Mark.cs" />
-    <Compile Include="Models\Entities\TaskMark.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Interfaces\IRepository.cs" />
     <Compile Include="Models\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Entities\ACL.cs" />
     <Compile Include="Models\Entities\Department.cs" />
     <Compile Include="Models\Entities\Employee.cs" />
     <Compile Include="Models\Entities\Position.cs" />
     <Compile Include="Models\Entities\TaskList.cs" />
+    <Compile Include="Models\ReportByCompanyViewModel.cs" />
     <Compile Include="Models\Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Repositories\EmployeeRepository.cs" />
-    <Compile Include="Models\Repositories\MarkRepository.cs" />
     <Compile Include="Models\Repositories\PositionRepository.cs" />
     <Compile Include="Models\Repositories\TaskListRepository.cs" />
-    <Compile Include="Models\Repositories\TaskMarkRepository.cs" />
     <Compile Include="Models\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\XlsReport.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\RedPetroleum.mdf" />
+    <Content Include="App_Data\RedPetroleum_log.ldf">
+      <DependentUpon>RedPetroleum.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -3342,6 +3322,8 @@
     <Content Include="Content\open-iconic\webp\zoom-out-6x.webp" />
     <Content Include="Content\open-iconic\webp\zoom-out-8x.webp" />
     <Content Include="Content\open-iconic\webp\zoom-out.webp" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -3352,6 +3334,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -3415,10 +3398,9 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
-    <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByCompany.cshtml" />
-    <Content Include="Views\Home\GetEmployeesByDepartment.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Account\UserList.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
@@ -3437,15 +3419,23 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
-    <Content Include="Views\Marks\Index.cshtml" />
-    <Content Include="Views\Marks\Details.cshtml" />
-    <Content Include="Views\Marks\Create.cshtml" />
-    <Content Include="Views\Marks\Edit.cshtml" />
-    <Content Include="Views\Marks\Delete.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
+    <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Reports\PartialReportByCompany.cshtml" />
+    <Content Include="Views\Reports\ReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\Reports\ReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\ReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\PartialReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
+    <Content Include="Views\TaskLists\DepartmentTasks.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
+    <Content Include="Views\TaskLists\EditDepartmentTask.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
@@ -3454,21 +3444,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201806200355403_InitialCreate.resx">
       <DependentUpon>201806200355403_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200447139_Init.resx">
-      <DependentUpon>201806200447139_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200730495_NewGuid.resx">
-      <DependentUpon>201806200730495_NewGuid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806200749064_deletedRelation.resx">
-      <DependentUpon>201806200749064_deletedRelation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806201048272_ad.resx">
-      <DependentUpon>201806201048272_ad.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806201106321_deletedViewModel.resx">
-      <DependentUpon>201806201106321_deletedViewModel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806220900336_UpdateTaskTable.resx">
       <DependentUpon>201806220900336_UpdateTaskTable.cs</DependentUpon>
@@ -3479,20 +3454,23 @@
     <EmbeddedResource Include="Migrations\201806250342571_Add Required in Entities.resx">
       <DependentUpon>201806250342571_Add Required in Entities.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806250421418_Names.resx">
-      <DependentUpon>201806250421418_Names.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806251123474_Add two tables Mark and TaskMark.resx">
-      <DependentUpon>201806251123474_Add two tables Mark and TaskMark.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250440061_DepartmentOnRegistration.resx">
       <DependentUpon>201806250440061_DepartmentOnRegistration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806250907296_Id.resx">
       <DependentUpon>201806250907296_Id.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806260309265_OneToOneRelationship.resx">
-      <DependentUpon>201806260309265_OneToOneRelationship.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806290936037_delete Tables Marks TaskMark.resx">
+      <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807040252248_NullableEmployeeId.resx">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050246576_EditedModels.resx">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050439194_AddedInexes.resx">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

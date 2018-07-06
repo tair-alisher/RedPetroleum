@@ -11,9 +11,12 @@ using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 using X.PagedList;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         private UnitOfWork unitOfWork;
@@ -28,7 +31,8 @@ namespace RedPetroleum.Controllers.CRUD
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var employees = unitOfWork.Employees.GetAllIndex(pageNumber, pageSize, searching);
-            return View(employees.ToPagedList(pageNumber, pageSize));
+            ViewBag.Message = TempData["Message"];
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -43,6 +47,8 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
+            ViewBag.Position = unitOfWork.Employees.GetPositionName(employee);
+            ViewBag.Department = unitOfWork.Employees.GetDepartmentName(employee);
             return View(employee);
         }
 
@@ -129,9 +135,39 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            unitOfWork.Employees.Delete(id);
-            await unitOfWork.SaveAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                unitOfWork.Employees.Delete(id);
+                await unitOfWork.SaveAsync();
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 547:
+                                TempData["Message"] = "Имеется привязка, удалите пожалуйста записи связанные с данным сотрудником!";
+                                return RedirectToAction("Index", "Employees");
+                            default:
+                                return View();
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
         }
 
         protected override void Dispose(bool disposing)
