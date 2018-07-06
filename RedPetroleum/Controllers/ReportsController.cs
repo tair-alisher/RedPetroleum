@@ -11,6 +11,7 @@ using RedPetroleum.Services;
 
 namespace RedPetroleum.Controllers
 {
+    [Authorize]
     public class ReportsController : Controller
     {
         UnitOfWork unit;
@@ -185,6 +186,7 @@ namespace RedPetroleum.Controllers
 
                 employeeList.Add(model);
             }
+            ViewBag.Marks = employeeList;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return View(employeeList);
         }
@@ -211,6 +213,7 @@ namespace RedPetroleum.Controllers
 
                 employeeList.Add(model);
             }
+            ViewBag.Marks = employeeList;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return PartialView(employeeList);
         }
@@ -352,6 +355,11 @@ namespace RedPetroleum.Controllers
             return PartialView(taskList);
         }
 
+        public ActionResult GetEmployeeChart(string departmentId)
+        {
+            ViewBag.Departments = new SelectList(unit.Departments.GetAll(), "DepartmentId", "Name");
+            return View();
+        }
 
         public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
         {

@@ -45,6 +45,18 @@ namespace RedPetroleum.Models.Repositories
             return db.Employees.Include(p => p.Position).Include(e => e.Department);
         }
 
+        public string GetPositionName(Employee employee)
+        {
+            var emp = db.Positions.Where(x=>x.PositionId == employee.PositionId).SingleOrDefault();
+            return emp == null ? "Нет" : emp.Name;
+        }
+
+        public string GetDepartmentName(Employee employee)
+        {
+            var emp = db.Departments.Where(x => x.DepartmentId == employee.DepartmentId).SingleOrDefault();
+            return emp == null ? "Нет" : emp.Name;
+        }
+
         public IEnumerable<Employee> GetEmployeesByDepartmentId(Guid id, DateTime? taskDate)
         {
             return db.Employees

@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize]
     public class TaskListsController : Controller
     {
         UnitOfWork unitOfWork;

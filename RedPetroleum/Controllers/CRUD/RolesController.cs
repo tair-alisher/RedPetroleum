@@ -15,6 +15,7 @@ using X.PagedList;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
@@ -39,6 +40,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 return HttpNotFound();
             }
+            
             return View(role);
         }
 
