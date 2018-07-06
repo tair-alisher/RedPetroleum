@@ -28,6 +28,8 @@ namespace RedPetroleum.Models
     {
         public Department Department;
         public List<CustomDepartment> Children;
+        public double? AverageMark;
+        public double? AverageMarkDepartment;
     }
 
     public class CustomDepartment
@@ -36,5 +38,6 @@ namespace RedPetroleum.Models
         public string Name;
         public Guid? ParentId;
         public double? AverageMark;
+        public double? AverageMarkDepartment;
     }
 }

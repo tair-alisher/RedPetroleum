@@ -46,7 +46,7 @@
                         <td>@item.Department</td>
                         <td>@item.Position</td>
                         <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
-                        <td class="text-center">@item.AverageMark %</td>
+                        <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark),2) %</td>
                         <td></td>
                         <td></td>
                     </tr>
