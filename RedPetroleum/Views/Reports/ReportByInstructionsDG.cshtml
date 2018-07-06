@@ -49,7 +49,7 @@
                     <tr>
                         <td>@(i++)</td>
                         <td>@item.TaskName</td>
-                        <td class="text-center">@item.AverageMark %</td>
+                        <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
                         <td>@item.CommentEmployees</td>
                     </tr>
                 }

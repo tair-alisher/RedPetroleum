@@ -170,12 +170,13 @@ function downloadReport(reportType) {
     var token = $('input[name="__RequestVerificationToken"]').val();
     var dateValue = $("#taskDate").val();
     var departmentId;
+    var parentId;
     if ($("#departmentsDropdown").length > 0) {
         departmentId = $("#departmentsDropdown").val();
     } else {
         departmentId = "*";
     }
-    window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue;
+    window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue + "&parentId=" + parentId;
 }
 
 

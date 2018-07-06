@@ -37,9 +37,17 @@
             {
                 <tr>
                     <td class="text-center">@(i++)</td>
-                        <td class="department" id="department">@item.Department</td>
-                        <td>@item.Position</td>
-                        <td class="text-center mark">@item.AverageMark %</td>
+                    <td class="department">@department.Name</td>
+                    @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
+                    {
+                        <td class="text-center">+</td>
+                        <td class="text-center mark">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
                 </tr>
             }
             @if (Model != null)
@@ -49,16 +57,32 @@
                     <tr>
                         <td></td>
                         <td style="font-weight:bold">@item.Department.Name</td>
-                        <td></td>
-                        <td></td>
+                        @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
+                        {
+                            <td class="text-center">+</td>
+                            <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
                     </tr>
                     foreach (var child in item.Children)
                     {
                         <tr>
                             <td class="text-center">@(i++)</td>
-                            <td class="department" >@child.Name</td>
-                            <td class="text-center">+</td>
-                            <td class="text-center mark">@child.AverageMark %</td>
+                            <td>@child.Name</td>
+                            @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
+                            {
+                                <td class="text-center">+</td>
+                                <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
                         </tr>
                     }
                 }
