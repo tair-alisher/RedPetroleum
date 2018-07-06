@@ -3433,7 +3433,7 @@
     <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />
     <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
     <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
-    <Content Include="Views\Reports\GetEmployeeChart.cshtml" />
+    <Content Include="Views\TaskLists\EditDepartmentTask.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

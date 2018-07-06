@@ -76,5 +76,22 @@ namespace RedPetroleum.Models.Repositories
                     ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate
                 );
         }
+        public IEnumerable<Department> GetDepartmentsWithoutParentAndChildren()
+        {
+            var parentIdList = db.Departments.Where(d => d.ParentId != null).Select(x=>x.ParentId).ToList();
+            return db.Departments.Where(d => d.ParentId == null).Where(x=>!parentIdList.Contains(x.DepartmentId));
+        }
+        public IEnumerable<Department> GetDepartmentsWithoutParentWithChildren()
+        {
+            Guid?[] parentIds = db.Departments.Where(x => x.ParentId != null).Select(x => x.ParentId).ToArray();
+            return db.Departments.Where(d => d.ParentId == null && parentIds.Any(x => x == d.DepartmentId));
+        }
+
+        public IEnumerable<Department> GetDepartmentsByParentId(Guid? parentId)
+        {
+            return db.Departments
+                .Where(d => d.ParentId == parentId);
+        }
+
     }
 }
