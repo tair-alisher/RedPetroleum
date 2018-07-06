@@ -37,11 +37,11 @@
             {
                 <tr>
                     <td class="text-center">@(i++)</td>
-                    <td>@department.Name</td>
+                    <td class="department">@department.Name</td>
                     @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
                     {
                         <td class="text-center">+</td>
-                        <td class="text-center">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+                        <td class="text-center mark">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
                     }
                     else
                     {
@@ -91,5 +91,45 @@
     </table>
     @Html.AntiForgeryToken()
     <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartmentAverageMark')">Скачать отчет</button>
+    <button type="button" class="btn btn-info" onclick="ShowChart()">Показать График</button>
 </div>
+<script>
+    function ShowChart() {
+        $("#chartContainer").css("visibility", "visible");
+        var dataPoints = [];
+        var i = @i;
+        console.log(i);
+        var num = 10;
+        var marks = document.getElementsByClassName("mark");
+        var departments = document.getElementsByClassName("department");
+        for (var j = 0; j < i-1; j++) {
+            let str = marks[j].textContent.split("").reverse().join("").slice(2);
+            let reversed = str.substring().split("").reverse().join("");
+
+            dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
+
+            console.log(parseFloat(reversed));
+            console.log(departments[j].textContent);
+            num += 10;
+        }
+        console.log(dataPoints);
+        var chart = new CanvasJS.Chart("chartContainer", {
+			theme: "theme2",
+			animationEnabled: true,
+			title: {
+				text: "График эффективности отделов"
+			},
+			data: [
+			{
+                    type: "column", //change type to bar, line, area, pie, etc
+                    dataPoints: dataPoints
+			}
+			]
+		});
+		chart.render();
+
+    }
+</script>
+<div id="chartContainer" style="height: 370px; width: 100%; visibility:hidden;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="~/Scripts/app.js"></script>

@@ -36,6 +36,11 @@ namespace RedPetroleum.Models.Repositories
 
         public async Task<IEnumerable<Department>> GetAllAsync() => await db.Departments.Include(d => d.Departments).ToListAsync();
 
+        public string GetParentId(Department department)
+        {
+            var parent = db.Departments.Where(x => department.ParentId == x.DepartmentId).SingleOrDefault();
+            return parent == null ? "Нет" : parent.Name;
+        }
         public string GetDepartmentNameById(Guid id)
         {
             return db.Departments
