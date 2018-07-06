@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize]
     public class DepartmentsController : Controller
     {
         UnitOfWork unitOfWork;
@@ -30,6 +31,7 @@ namespace RedPetroleum.Controllers.CRUD
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var departments = unitOfWork.Departments.GetAllIndex(pageNumber, pageSize, searching);
+            ViewBag.Message = TempData["Message"];
             return View(departments);
         }
 
@@ -41,10 +43,13 @@ namespace RedPetroleum.Controllers.CRUD
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Department department = await unitOfWork.Departments.GetAsync(id);
+
+
             if (department == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Parent = unitOfWork.Departments.GetParentId(department);
             return View(department);
         }
 
@@ -189,9 +194,40 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            unitOfWork.Departments.Delete(id);
-            await unitOfWork.SaveAsync();
-            return RedirectToAction("Index");
+            try
+            {
+
+                unitOfWork.Departments.Delete(id);
+                await unitOfWork.SaveAsync();
+                return RedirectToAction("Index");
+            }
+
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 547:
+                                TempData["Message"] = "Имеется привязка, удалите пожалуйста записи связанные с данным отделом!";
+                                return RedirectToAction("Index", "Departments");
+                            default:
+                                return View();
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)

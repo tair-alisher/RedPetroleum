@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Подробно";
+    
 }
 
 <h2>Подробная информация</h2>
@@ -20,7 +21,7 @@
            Имя управляющего отдела
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Departments.Name)
+            @ViewBag.Parent
         </dd>
 
     </dl>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,10 +13,10 @@ namespace RedPetroleum
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
+                
                 defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
             );
         }
