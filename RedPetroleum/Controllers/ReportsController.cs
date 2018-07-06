@@ -415,7 +415,6 @@ namespace RedPetroleum.Controllers
             }
             return PartialView(taskList);
         }
-        
         public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
         {
             Guid? department;
