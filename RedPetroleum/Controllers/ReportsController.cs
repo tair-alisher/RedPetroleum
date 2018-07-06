@@ -355,12 +355,6 @@ namespace RedPetroleum.Controllers
             return PartialView(taskList);
         }
 
-        public ActionResult GetEmployeeChart(string departmentId)
-        {
-            ViewBag.Departments = new SelectList(unit.Departments.GetAll(), "DepartmentId", "Name");
-            return View();
-        }
-
         public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
         {
             Guid? department;
