@@ -24,6 +24,7 @@ namespace RedPetroleum.Controllers
             this.unit = new UnitOfWork();
         }
 
+        [HttpGet]
         public ActionResult ReportByDepartment(string departmentId, DateTime? dateValue)
         {
             IEnumerable<Employee> emplist = unit.Employees.GetEmployeesWithRelations();
@@ -114,6 +115,7 @@ namespace RedPetroleum.Controllers
             return PartialView(empList);
         }
 
+        [HttpGet]
         public ActionResult ReportByCompany(DateTime? dateValue)
         {
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
@@ -165,59 +167,117 @@ namespace RedPetroleum.Controllers
             return PartialView(employeeList);
         }
 
+        [HttpGet]
         public ActionResult ReportByDepartmentAverageMark(DateTime? dateValue)
         {
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
-
-            var employeeList = new List<ReportByCompanyViewModel>();
-
-            ReportByCompanyViewModel model;
-            foreach (Employee employee in employees)
+            List<CustomDepartment> DepartmentsWithoutParentAndChildren = new List<CustomDepartment>();
+            List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
+            foreach (var department in DepsWithoutParentAndChildren)
             {
-                model = new ReportByCompanyViewModel
-                {
-                    EmployeeId = employee.EmployeeId,
-                    EmployeeName = employee.EFullName,
-                    Department = employee.Department.Name,
-                    Position = employee.Position.Name,
-                    AdoptionDate = employee.AdoptionDate,
-                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
-                };
+                DepartmentsWithoutParentAndChildren.Add(
+                    new CustomDepartment
+                    {
+                        DepartmentId = department.DepartmentId,
+                        Name = department.Name,
+                        AverageMark = unit
+                                .Employees
+                                .GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dateValue ?? DateTime.Today)
+                    }
+                    );
+            }
+            ViewBag.DepartmentsWithoutParentAndChildren = DepartmentsWithoutParentAndChildren;
 
-                employeeList.Add(model);
+            List<Department> DepartmentsWithoutParentWithChildren = unit.Departments.GetDepartmentsWithoutParentWithChildren().ToList();
+            List<DepartmentsWithChildren> result = new List<DepartmentsWithChildren>();
+            DepartmentsWithChildren item = null;
+            List<Department> children = null;
+
+            foreach (Department parent in DepartmentsWithoutParentWithChildren)
+            {
+                item = new DepartmentsWithChildren
+                {
+                    Department = parent,
+                    Children = new List<CustomDepartment>()                  
+                };
+                children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
+                foreach (Department child in children)
+                {
+                    item.Children.Add(
+                        new CustomDepartment
+                        {
+                            DepartmentId = child.DepartmentId,
+                            Name = child.Name,
+                            ParentId = child.ParentId,
+                            AverageMark = unit
+                                .Employees
+                                .GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dateValue ?? DateTime.Today)
+                        }
+                        );
+                }
+                result.Add(item);
             }
             ViewBag.Marks = employeeList;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-            return View(employeeList);
+            
+            return View(result);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PartialReportByDepartmentAverageMark(DateTime? dateValue)
         {
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
-
-            var employeeList = new List<ReportByCompanyViewModel>();
-
-            ReportByCompanyViewModel model;
-            foreach (Employee employee in employees)
+            List<CustomDepartment> DepartmentsWithoutParentAndChildren = new List<CustomDepartment>();
+            List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
+            foreach (var department in DepsWithoutParentAndChildren)
             {
-                model = new ReportByCompanyViewModel
-                {
-                    EmployeeId = employee.EmployeeId,
-                    EmployeeName = employee.EFullName,
-                    Department = employee.Department.Name,
-                    Position = employee.Position.Name,
-                    AdoptionDate = employee.AdoptionDate,
-                    AverageMark = employee.TaskLists.Select(t => t.AverageMark).Average()
-                };
+                DepartmentsWithoutParentAndChildren.Add(
+                    new CustomDepartment
+                    {
+                        DepartmentId = department.DepartmentId,
+                        Name = department.Name,
+                        AverageMark = unit
+                                .Employees
+                                .GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dateValue ?? DateTime.Today)
+                    }
+                    );
+            }
+            ViewBag.DepartmentsWithoutParentAndChildren = DepartmentsWithoutParentAndChildren;
 
-                employeeList.Add(model);
+            List<Department> DepartmentsWithoutParentWithChildren = unit.Departments.GetDepartmentsWithoutParentWithChildren().ToList();
+            List<DepartmentsWithChildren> result = new List<DepartmentsWithChildren>();
+            DepartmentsWithChildren item = null;
+            List<Department> children = null;
+
+            foreach (Department parent in DepartmentsWithoutParentWithChildren)
+            {
+                item = new DepartmentsWithChildren
+                {
+                    Department = parent,
+                    Children = new List<CustomDepartment>()
+                };
+                children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
+                foreach (Department child in children)
+                {
+                    item.Children.Add(
+                        new CustomDepartment
+                        {
+                            DepartmentId = child.DepartmentId,
+                            Name = child.Name,
+                            ParentId = child.ParentId,
+                            AverageMark = unit
+                                .Employees
+                                .GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dateValue ?? DateTime.Today)
+                        }
+                        );
+                }
+                result.Add(item);
             }
             ViewBag.Marks = employeeList;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-            return PartialView(employeeList);
+
+            return PartialView(result);
         }
 
+        [HttpGet]
         public ActionResult ReportByConsolidated(DateTime? dateValue)
         {
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dateValue);
@@ -269,6 +329,7 @@ namespace RedPetroleum.Controllers
             return PartialView(employeeList);
         }
 
+        [HttpGet]
         public ActionResult ReportByInstructionsDG(string departmentId, DateTime? dateValue)
         {
             IEnumerable<TaskList> taskLists = unit.TaskLists.GetTaskListsWithRelations();
@@ -354,7 +415,6 @@ namespace RedPetroleum.Controllers
             }
             return PartialView(taskList);
         }
-
         public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue)
         {
             Guid? department;

@@ -273,7 +273,7 @@ function submitTask(forDepartment = null) {
         success: function (createdTask) {
             removeGeneratedHtml();
             $("#taskList").append(createdTask);
-            addTask();
+            addTask(forDepartment);
             $("#TaskName").focus();
         },
         error: function (XMLHttpRequest) {

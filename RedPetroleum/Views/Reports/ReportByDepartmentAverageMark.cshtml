@@ -1,4 +1,5 @@
-﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
+﻿@using RedPetroleum.Models;
+@model List<RedPetroleum.Models.DepartmentsWithChildren>
 
 @{
     ViewBag.Title = "Главная";
@@ -32,16 +33,34 @@
             </tr>
         </thead>
         <tbody id="tableContent">
+            @foreach (CustomDepartment department in ViewBag.DepartmentsWithoutParentAndChildren)
+            {
+                <tr>
+                    <td class="text-center">@(i++)</td>
+                        <td class="department" id="department">@item.Department</td>
+                        <td>@item.Position</td>
+                        <td class="text-center mark">@item.AverageMark %</td>
+                </tr>
+            }
             @if (Model != null)
             {
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td class="text-center">@(i++)</td>
-                        <td class="department" id="department">@item.Department</td>
-                        <td>@item.Position</td>
-                        <td class="text-center mark">@item.AverageMark %</td>
+                        <td></td>
+                        <td style="font-weight:bold">@item.Department.Name</td>
+                        <td></td>
+                        <td></td>
                     </tr>
+                    foreach (var child in item.Children)
+                    {
+                        <tr>
+                            <td class="text-center">@(i++)</td>
+                            <td class="department" >@child.Name</td>
+                            <td class="text-center">+</td>
+                            <td class="text-center mark">@child.AverageMark %</td>
+                        </tr>
+                    }
                 }
             }
         </tbody>
