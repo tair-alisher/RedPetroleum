@@ -12,7 +12,7 @@
             <td>@employee.Department</td>
             <td>@employee.Position</td>
             <td class="text-center">@employee.AdoptionDate.ToString("dd.MM.yyyy")</td>
-            <td class="text-center">@employee.AverageMark</td>
+            <td class="text-center">@Math.Round(Convert.ToDouble(employee.AverageMark), 2) %</td>
             <td></td>
             <td></td>
         </tr>

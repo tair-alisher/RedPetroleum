@@ -9,9 +9,12 @@ using X.PagedList;
 using RedPetroleum.Models.Entities;
 using System.Threading.Tasks;
 using System.Net;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize]
     public class PositionsController : Controller
     {
         UnitOfWork unitOfWork;
@@ -30,7 +33,7 @@ namespace RedPetroleum.Controllers.CRUD
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            
+            ViewBag.Message = TempData["Message"];
             var position = unitOfWork.Positions.GetAllIndex(pageNumber, pageSize, searching);
             return View(position);
         }
@@ -69,10 +72,31 @@ namespace RedPetroleum.Controllers.CRUD
                 }
                 return View(position);
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(position);
+                            default:
+                                return View(position);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
 
         }
@@ -106,10 +130,31 @@ namespace RedPetroleum.Controllers.CRUD
                 return View(position);
 
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
-                ViewBag.Message = "Такая запись уже существует!";
-                return View(position);
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(position);
+                            default:
+                                return View(position);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
         
@@ -131,9 +176,40 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            unitOfWork.Positions.Delete(id);
-            await unitOfWork.SaveAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                unitOfWork.Positions.Delete(id);
+                await unitOfWork.SaveAsync();
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 547:
+                                TempData["Message"] = "Имеется привязка, удалите пожалуйста записи связанные с этой должностью!";
+                                return RedirectToAction("Index", "Positions");
+                            default:
+                                return View();
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
+
         }
 
         protected override void Dispose(bool disposing)

@@ -11,7 +11,7 @@
             <td class="text-center">@(i++)</td>
             <td>@employee.EmployeeName</td>
             <td>@employee.Position</td>
-            <td class="text-center">@employee.AverageMark</td>
+            <td class="text-center">@Math.Round(Convert.ToDouble(employee.AverageMark), 2) %</td>
             <td></td>
         </tr>
     }

@@ -67,7 +67,7 @@ namespace RedPetroleum.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Name = c.String(nullable: false, maxLength: 256),
-                    })
+                })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
@@ -100,7 +100,6 @@ namespace RedPetroleum.Migrations
                     LockoutEnabled = c.Boolean(nullable: false),
                     AccessFailedCount = c.Int(nullable: false),
                     UserName = c.String(nullable: false, maxLength: 256)
-
                 })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
@@ -144,7 +143,6 @@ namespace RedPetroleum.Migrations
             DropForeignKey("dbo.Departments", "ParentId", "dbo.Departments");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "Employees_EmployeeId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });

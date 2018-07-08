@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace RedPetroleum.Models.Entities
 {
@@ -7,7 +8,7 @@ namespace RedPetroleum.Models.Entities
     {
         public Guid TaskListId { get; set; }
 
-        public Guid EmployeeId { get; set; }
+        public Guid? EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         public Guid? DepartmentId { get; set; }

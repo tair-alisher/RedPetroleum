@@ -317,6 +317,18 @@
     <Compile Include="Migrations\201806290936037_delete Tables Marks TaskMark.Designer.cs">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.cs" />
+    <Compile Include="Migrations\201807040252248_NullableEmployeeId.Designer.cs">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807050246576_EditedModels.cs" />
+    <Compile Include="Migrations\201807050246576_EditedModels.Designer.cs">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807050439194_AddedInexes.cs" />
+    <Compile Include="Migrations\201807050439194_AddedInexes.Designer.cs">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -3387,7 +3399,7 @@
     <Content Include="Views\TaskLists\Details.cshtml" />
     <Content Include="Views\TaskLists\Edit.cshtml" />
     <Content Include="Views\TaskLists\Index.cshtml" />
-    <Content Include="Views\Reports\GetEmployeesByDepartment.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByDepartment.cshtml" />
     <Content Include="Views\Reports\ReportByCompany.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
@@ -3410,7 +3422,18 @@
     <Content Include="Views\TaskLists\CreateTask.cshtml" />
     <Content Include="Views\TaskLists\GetFilteredTaskList.cshtml" />
     <Content Include="Views\Roles\Details.cshtml" />
-    <Content Include="Views\Reports\GetEmployeesByCompany.cshtml" />
+    <Content Include="Views\Reports\PartialReportByCompany.cshtml" />
+    <Content Include="Views\Reports\ReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\Reports\ReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\ReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByConsolidated.cshtml" />
+    <Content Include="Views\Reports\PartialReportByInstructionsDG.cshtml" />
+    <Content Include="Views\Reports\PartialReportByDepartmentAverageMark.cshtml" />
+    <Content Include="Views\TaskLists\DepartmentTasks.cshtml" />
+    <Content Include="Views\TaskLists\GetFilteredDepartmentTaskList.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTask.cshtml" />
+    <Content Include="Views\TaskLists\CreateDepartmentTaskPost.cshtml" />
+    <Content Include="Views\TaskLists\EditDepartmentTask.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -3439,6 +3462,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806290936037_delete Tables Marks TaskMark.resx">
       <DependentUpon>201806290936037_delete Tables Marks TaskMark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807040252248_NullableEmployeeId.resx">
+      <DependentUpon>201807040252248_NullableEmployeeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050246576_EditedModels.resx">
+      <DependentUpon>201807050246576_EditedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807050439194_AddedInexes.resx">
+      <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
