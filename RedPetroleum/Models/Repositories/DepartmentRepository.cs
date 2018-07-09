@@ -36,6 +36,11 @@ namespace RedPetroleum.Models.Repositories
 
         public async Task<IEnumerable<Department>> GetAllAsync() => await db.Departments.Include(d => d.Departments).ToListAsync();
 
+        public string GetParentId(Department department)
+        {
+            var parent = db.Departments.Where(x => department.ParentId == x.DepartmentId).SingleOrDefault();
+            return parent == null ? "Нет" : parent.Name;
+        }
         public string GetDepartmentNameById(Guid id)
         {
             return db.Departments
@@ -68,13 +73,13 @@ namespace RedPetroleum.Models.Repositories
                 )
                 : db.Departments.Include(e => e.Employees).Include(t => t.TaskLists)
                 .Where(d =>
-                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate
-                );
+                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate).Where(d =>
+                  ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate);
         }
         public IEnumerable<Department> GetDepartmentsWithoutParentAndChildren()
         {
-            var parentIdList = db.Departments.Where(d => d.ParentId != null).Select(x=>x.ParentId).ToList();
-            return db.Departments.Where(d => d.ParentId == null).Where(x=>!parentIdList.Contains(x.DepartmentId));
+            var parentIdList = db.Departments.Where(d => d.ParentId != null).Select(x => x.ParentId).ToList();
+            return db.Departments.Where(d => d.ParentId == null).Where(x => !parentIdList.Contains(x.DepartmentId));
         }
         public IEnumerable<Department> GetDepartmentsWithoutParentWithChildren()
         {
@@ -87,6 +92,5 @@ namespace RedPetroleum.Models.Repositories
             return db.Departments
                 .Where(d => d.ParentId == parentId);
         }
-
     }
 }

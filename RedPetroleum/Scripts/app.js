@@ -6,7 +6,7 @@ function updateDepartmentTable() {
 
     var dateValue = $("#taskDate").val();
     var dateFormat = new Date(dateValue);
-    
+
     var options = { month: 'long', year: 'numeric' };
     //Check if DropDown is empty disabled button. 
     if (departmentId === "") {
@@ -170,12 +170,13 @@ function downloadReport(reportType) {
     var token = $('input[name="__RequestVerificationToken"]').val();
     var dateValue = $("#taskDate").val();
     var departmentId;
+    var parentId;
     if ($("#departmentsDropdown").length > 0) {
         departmentId = $("#departmentsDropdown").val();
     } else {
         departmentId = "*";
     }
-    window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue;
+    window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue + "&parentId=" + parentId;
 }
 
 
@@ -183,7 +184,7 @@ function addTask(forDepartment = null) {
     $("#emptyTaskList").remove();
 
     var createArea = $("#createArea");
-    
+
     if ($("#submitTask").length > 0) {
         var warningMessage = `
     <div class="alert alert-warning  alert-dismissible" role="alert">
@@ -362,7 +363,7 @@ function taskComment(taskId) {
     var saveBtnTemplate = `
     <button type="button" class="btn btn-success" onclick="submitComment('${taskId}')" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
 `;
-    
+
     submitButton.html(saveBtnTemplate);
     commentField.html(commentFieldTemplate);
 
