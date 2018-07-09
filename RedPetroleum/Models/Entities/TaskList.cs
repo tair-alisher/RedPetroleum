@@ -14,12 +14,16 @@ namespace RedPetroleum.Models.Entities
         public Guid? DepartmentId { get; set; }
         public Department Department { get; set; }
 
+        [Display(Name = "Наименование задачи")]
         public string TaskName { get; set; }
 
+        [Display(Name = "Продолжительность задачи")]
         public string TaskDuration { get; set; }
 
+        [Display(Name = "Дата задачи")]
         public DateTime? TaskDate { get; set; }
 
+        [Display(Name = "Комментарий сотрудника")]
         public string CommentEmployees { get; set; }
 
         public double? SkillMark { get; set; }

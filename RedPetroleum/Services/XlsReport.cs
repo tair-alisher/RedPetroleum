@@ -442,7 +442,7 @@ namespace RedPetroleum.Services
                 if (Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) != 0)
                 {
                     worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) + "%";
-                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) + Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2)) / 2 + "%";
+                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)))) / 2, 2)) + "%";
                 }
                 else
                 {
@@ -477,7 +477,7 @@ namespace RedPetroleum.Services
                 if (Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) != 0)
                 {
                     worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) + "%";
-                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) + Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2)) / 2 + "%";
+                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)))) / 2, 2)) + "%";
                 }
                 else
                 {
@@ -507,7 +507,7 @@ namespace RedPetroleum.Services
                     if (Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) != 0)
                     {
                         worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) + "%";
-                        worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) + Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2)) / 2 + "%";
+                        worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)))) / 2, 2)) + "%";
                     }
                     else
                     {
