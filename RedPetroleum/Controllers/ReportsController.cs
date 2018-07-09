@@ -219,7 +219,7 @@ namespace RedPetroleum.Controllers
                 }
                 result.Add(item);
             }
-            ViewBag.Marks = employeeList;
+            ViewBag.Marks = result;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             
             return View(result);
@@ -279,7 +279,7 @@ namespace RedPetroleum.Controllers
                 }
                 result.Add(item);
             }
-            ViewBag.Marks = employeeList;
+            ViewBag.Marks = result;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return PartialView(result);
         }

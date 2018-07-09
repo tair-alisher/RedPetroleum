@@ -9,9 +9,9 @@
     {
         <tr>
             <td class="text-center">@(i++)</td>
-            <td>@employee.EmployeeName</td>
-            <td>@employee.Position</td>
-            <td class="text-center">@Math.Round(Convert.ToDouble(employee.AverageMark), 2) %</td>
+            <td class="text-center employee">@employee.EmployeeName</td>
+            <td class="text-center">@employee.Position</td>
+            <td class="text-center mark">@Math.Round(Convert.ToDouble(employee.AverageMark), 2) %</td>
             <td></td>
         </tr>
     }
