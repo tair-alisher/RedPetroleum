@@ -187,15 +187,19 @@ namespace RedPetroleum.Controllers.CRUD
         public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             TaskList taskList = await unitOfWork.TaskLists.GetAsync(id);
             if (taskList == null)
-            {
                 return HttpNotFound();
-            }
+
             ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
+
+            if (User.IsInRole("admin"))
+                ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAll(), "EmployeeId", "EFullName", taskList.EmployeeId);
+            else
+                ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName", taskList.EmployeeId);
+
             ViewBag.TaskDate = ((DateTime)taskList.TaskDate).ToString("yyyy-MM");
             return View(taskList);
         }
