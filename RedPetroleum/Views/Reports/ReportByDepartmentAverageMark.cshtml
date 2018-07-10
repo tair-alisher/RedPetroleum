@@ -102,15 +102,15 @@
         var num = 10;
         var marks = document.getElementsByClassName("mark");
         var departments = document.getElementsByClassName("department");
-        for (var j = 0; j < i-1; j++) {
-            let str = marks[j].textContent.split("").reverse().join("").slice(2);
-            let reversed = str.substring().split("").reverse().join("");
+        for (var j = 0; j < i - 1; j++) {
+                let str = marks[j].textContent.split("").reverse().join("").slice(2);
+                let reversed = str.substring().split("").reverse().join("");
 
-            dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
+                dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
 
-            console.log(parseFloat(reversed));
-            console.log(departments[j].textContent);
-            num += 10;
+                console.log(parseFloat(reversed));
+                console.log(departments[j].textContent);
+                num += 10;
         }
         console.log(dataPoints);
         var chart = new CanvasJS.Chart("chartContainer", {
