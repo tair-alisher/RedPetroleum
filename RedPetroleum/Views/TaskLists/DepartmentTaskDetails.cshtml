@@ -1,20 +1,21 @@
 ﻿@model RedPetroleum.Models.Entities.TaskList
-
 @{
     ViewBag.Title = "Подробно";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Подробная информация</h2>
+
 
 <div>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Employee.EFullName)
+            @Html.DisplayNameFor(model => model.Department.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Employee.EFullName)
+            @Html.DisplayFor(model => model.Department.Name)
         </dd>
 
         <dt>
@@ -53,7 +54,7 @@
 </div>
 <div class="form-group">
     <div class="btn-group" role="group">
-        <a href="@Url.Action("Edit", "TaskLists", new { id = Model.TaskListId})" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Редактировать</span></i></a>
-        <a href="@Url.Action("Index", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+        <a href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = Model.TaskListId})" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Редактировать</span></i></a>
+        <a href="@Url.Action("DepartmentTasks", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
     </div>
 </div>
