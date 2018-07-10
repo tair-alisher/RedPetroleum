@@ -9,11 +9,11 @@
     {
         <tr>
             <td class="text-center">@(i++)</td>
-            <td>@department.Name</td>
+            <td class="department">@department.Name</td>
             @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
             {
                 <td class="text-center">+</td>
-                <td class="text-center">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+                <td class="text-center mark">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
             }
             else
             {
@@ -26,11 +26,11 @@
     {
         <tr>
             <td></td>
-            <td style="font-weight:bold">@item.Department.Name</td>
+            <td class="department" style="font-weight:bold">@item.Department.Name</td>
             @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
             {
                 <td class="text-center">+</td>
-                <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+                <td class="text-center mark">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
             }
             else
             {
@@ -42,11 +42,11 @@
         {
             <tr>
                 <td class="text-center">@(i++)</td>
-                <td>@child.Name</td>
+                <td class="department">@child.Name</td>
                 @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
                 {
                     <td class="text-center">+</td>
-                    <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                    <td class="text-center mark">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
                 }
                 else
                 {

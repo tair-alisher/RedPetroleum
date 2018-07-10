@@ -24,7 +24,7 @@
             @if (@Math.Round(Convert.ToDouble(department.AverageMarkDepartment), 2) != 0)
             {
                 <td class="text-center">@Math.Round(Convert.ToDouble(department.AverageMarkDepartment), 2) %</td>
-                <td class="text-center">@((@Math.Round(Convert.ToDouble(department.AverageMark), 2) + @Math.Round(Convert.ToDouble(department.AverageMarkDepartment), 2)) / 2) %</td>
+                <td class="text-center">@(Math.Round(((Convert.ToDouble(department.AverageMark)) + (Convert.ToDouble(department.AverageMarkDepartment))) / 2, 2)) %</td>
             }
             else
             {
@@ -51,7 +51,8 @@
             @if (@Math.Round(Convert.ToDouble(item.AverageMarkDepartment), 2) != 0)
             {
                 <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMarkDepartment), 2) %</td>
-                <td class="text-center">@((@Math.Round(Convert.ToDouble(item.AverageMark), 2) + @Math.Round(Convert.ToDouble(item.AverageMarkDepartment), 2)) / 2) %</td>
+                <td class="text-center">@(Math.Round(((Convert.ToDouble(item.AverageMark)) + (Convert.ToDouble(item.AverageMarkDepartment))) / 2, 2)) %</td>
+
             }
             else
             {
@@ -77,7 +78,7 @@
                 @if (@Math.Round(Convert.ToDouble(child.AverageMarkDepartment), 2) != 0)
                 {
                     <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMarkDepartment), 2) %</td>
-                    <td class="text-center">@((@Math.Round(Convert.ToDouble(child.AverageMark), 2) + @Math.Round(Convert.ToDouble(child.AverageMarkDepartment), 2)) / 2) %</td>
+                    <td class="text-center">@(Math.Round(((Convert.ToDouble(child.AverageMark)) + (Convert.ToDouble(child.AverageMarkDepartment))) / 2, 2)) %</td>
                 }
                 else
                 {

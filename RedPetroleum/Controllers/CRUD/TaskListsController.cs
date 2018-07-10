@@ -24,11 +24,11 @@ namespace RedPetroleum.Controllers.CRUD
         public TaskListsController(UnitOfWork unit) => this.unitOfWork = unit;
 
         // GET: TaskLists
-        [Authorize(Roles ="admin, manager, employee")]
+        [Authorize(Roles = "admin, manager, employee")]
         public ActionResult Index(int? page, string searching)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
-            
+
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             IPagedList<TaskList> taskLists;
@@ -38,7 +38,7 @@ namespace RedPetroleum.Controllers.CRUD
                     .TaskLists
                     .GetEmployeesAdmin(pageNumber, pageSize, searching);
 
-                
+
                 ViewBag.EmployeeId = CreateEmployeeSelectList(
                     unitOfWork
                         .Employees
@@ -99,7 +99,7 @@ namespace RedPetroleum.Controllers.CRUD
             {
                 ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
             }
-            
+
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
 
             return View();
@@ -107,6 +107,7 @@ namespace RedPetroleum.Controllers.CRUD
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="admin, manager")]
         public ActionResult CreateTask(string employeeId, string taskName, string taskDuration, DateTime taskDate)
         {
             // TODO: сделать проверку,

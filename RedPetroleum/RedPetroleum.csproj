@@ -329,6 +329,10 @@
     <Compile Include="Migrations\201807050439194_AddedInexes.Designer.cs">
       <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807090456259_Add_displayName_TaskList.cs" />
+    <Compile Include="Migrations\201807090456259_Add_displayName_TaskList.Designer.cs">
+      <DependentUpon>201807090456259_Add_displayName_TaskList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -3471,6 +3475,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807050439194_AddedInexes.resx">
       <DependentUpon>201807050439194_AddedInexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807090456259_Add_displayName_TaskList.resx">
+      <DependentUpon>201807090456259_Add_displayName_TaskList.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -56,11 +56,11 @@
                 {
                     <tr>
                         <td></td>
-                        <td style="font-weight:bold">@item.Department.Name</td>
+                        <td class="department" style="font-weight:bold">@item.Department.Name</td>
                         @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
                         {
                             <td class="text-center">+</td>
-                            <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+                            <td class="text-center mark">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
                         }
                         else
                         {
@@ -72,11 +72,11 @@
                     {
                         <tr>
                             <td class="text-center">@(i++)</td>
-                            <td>@child.Name</td>
+                            <td class="department">@child.Name</td>
                             @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
                             {
                                 <td class="text-center">+</td>
-                                <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                                <td class="text-center mark">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
                             }
                             else
                             {
@@ -102,15 +102,17 @@
         var num = 10;
         var marks = document.getElementsByClassName("mark");
         var departments = document.getElementsByClassName("department");
-        for (var j = 0; j < i-1; j++) {
-            let str = marks[j].textContent.split("").reverse().join("").slice(2);
-            let reversed = str.substring().split("").reverse().join("");
+        for (var j = 0; j < i - 1; j++) {
+            if (marks[j].textContent != "" || marks[j].textContent == null) {
+                let str = marks[j].textContent.split("").reverse().join("").slice(2);
+                let reversed = str.substring().split("").reverse().join("");
 
-            dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
+                dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
 
-            console.log(parseFloat(reversed));
-            console.log(departments[j].textContent);
-            num += 10;
+                console.log(parseFloat(reversed));
+                console.log(departments[j].textContent);
+                num += 10;
+            }
         }
         console.log(dataPoints);
         var chart = new CanvasJS.Chart("chartContainer", {

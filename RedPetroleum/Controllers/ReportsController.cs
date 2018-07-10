@@ -219,9 +219,9 @@ namespace RedPetroleum.Controllers
                 }
                 result.Add(item);
             }
-            //ViewBag.Marks = employeeList;
+            ViewBag.Marks = result;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-            
+
             return View(result);
         }
         [HttpPost]
@@ -279,7 +279,7 @@ namespace RedPetroleum.Controllers
                 }
                 result.Add(item);
             }
-            //ViewBag.Marks = employeeList;
+            ViewBag.Marks = result;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return PartialView(result);
         }
@@ -524,4 +524,4 @@ namespace RedPetroleum.Controllers
             Response.End();
         }
     }
-}         
+}
