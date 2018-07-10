@@ -221,7 +221,7 @@ namespace RedPetroleum.Controllers
             }
             ViewBag.Marks = result;
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-            
+
             return View(result);
         }
         [HttpPost]
@@ -524,4 +524,4 @@ namespace RedPetroleum.Controllers
             Response.End();
         }
     }
-}         
+}
