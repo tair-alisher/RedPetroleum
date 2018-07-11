@@ -15,6 +15,7 @@ namespace RedPetroleum.Services
         Guid? departmentId;
         string reportType;
         DateTime? dt;
+        DateTime[] dt2;
         Guid? parentId;
         public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt, Guid? parentId)
         {
@@ -22,6 +23,15 @@ namespace RedPetroleum.Services
             this.departmentId = departmentId;
             this.reportType = reportType;
             this.dt = dt;
+            this.parentId = parentId;
+        }
+
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType,  DateTime[] dt2, Guid? parentId)
+        {
+            this.unit = unit;
+            this.departmentId = departmentId;
+            this.reportType = reportType;
+            this.dt2 = dt2;
             this.parentId = parentId;
         }
 
@@ -257,9 +267,10 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["A1:D1"].Merge = true;
 
-            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt);
+            worksheet.Cells["A1"].Value = dt2[0].Month == dt2[1].Month ? String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt2[0])
+                : String.Format("{0} - {1:MMMM yyyy} г. - {2:MMMM yyyy} г.", ReportTitle, dt2[0], dt2[1]);
             worksheet.Cells["A1"].Style.Font.Bold = true;
-            worksheet.Cells["A1"].Style.Font.Size = 16;
+            worksheet.Cells["A1"].Style.Font.Size = dt2[0].Month == dt2[1].Month ? 16 : 14;
 
             worksheet.Cells["A2"].Value = "№";
             worksheet.Cells["A2"].Style.Font.Bold = true;
@@ -289,10 +300,10 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"A{rowStart}"].Value = i++;
                 worksheet.Cells[$"B{rowStart}"].Value = department.Name;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) != 0)
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dt2)), 2) != 0)
                 {
                     worksheet.Cells[$"C{rowStart}"].Value = "+";
-                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) + "%";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dt2)), 2) + "%";
                 }
                 else
                 {
@@ -314,10 +325,10 @@ namespace RedPetroleum.Services
                 worksheet.Cells[$"B{rowStart}"].Value = parent.Name;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
                 worksheet.Cells[$"B{rowStart}"].Style.Font.Bold = true;
-                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) != 0)
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dt2)), 2) != 0)
                 {
                     worksheet.Cells[$"C{rowStart}"].Value = "+";
-                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) + "%";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dt2)), 2) + "%";
                 }
                 else
                 {
@@ -334,10 +345,10 @@ namespace RedPetroleum.Services
                     worksheet.Cells[$"A{rowStart}"].Value = i++;
                     worksheet.Cells[$"B{rowStart}"].Value = child.Name;
                     worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                    if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) != 0)
+                    if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dt2)), 2) != 0)
                     {
                         worksheet.Cells[$"C{rowStart}"].Value = "+";
-                        worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) + "%";
+                        worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dt2)), 2) + "%";
                     }
                     else
                     {
