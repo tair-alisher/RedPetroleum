@@ -6,7 +6,6 @@ function updateDepartmentTable() {
 
     var dateValue = $("#taskDate").val();
     var dateFormat = new Date(dateValue);
-
     var options = { month: 'long', year: 'numeric' };
     //Check if DropDown is empty disabled button. 
     if (departmentId === "") {
@@ -72,26 +71,42 @@ function updateCompanyTable() {
 //This function for show and update DataTable ReportByDepartmentAverageMarkTable on View
 function updateDepartmentAverageMarkTable() {
     var options = { month: 'long', year: 'numeric' };
-    var dateValue = $("#taskDate").val();
-    var dateFormat = new Date(dateValue);
     var token = $('input[name="__RequestVerificationToken"]').val();
+    var dateValue = $("#taskDate").val().split(' ');
+    var startDate = new Date(dateValue[0]);
+    var endDate = new Date(dateValue[2]);
+
+    if (startDate.getMonth() == endDate.getMonth()) {
+        var dateParams = [dateValue[0], dateValue[0]];
+        var onSuccessRes = function () {
+            $("#dt").text("Отчет средних показателей по отделам - " + startDate.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + startDate.toLocaleString("ru-RU", options).slice(1));
+        }
+    } else {
+        var dateParams = [dateValue[0], dateValue[2]];
+        var onSuccessRes = function () {
+            $("#dt").text("Отчет средних показателей по отделам - " + startDate.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + startDate.toLocaleString("ru-RU", options).slice(1)
+                + " - " + endDate.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + endDate.toLocaleString("ru-RU", options).slice(1));
+        }
+    }
+
     $.ajax({
         url: "/Reports/PartialReportByDepartmentAverageMark",
         type: "POST",
         data: {
+
             __RequestVerificationToken: token,
-            "dateValue": dateValue
+            "dateValue": dateParams
         },
         cache: false,
         success: function (result) {
-            $("#dt").text("Отчет средних показателей по отделам - " + dateFormat.toLocaleDateString("ru-RU", options).charAt(0).toUpperCase() + dateFormat.toLocaleString("ru-RU", options).slice(1));
+            onSuccessRes();
             var tableContent = $("#tableContent");
             tableContent.html(result);
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
         }
-    });
+    });    
     return false;
 }
 //This function for show and update DataTable ReportByConsolidated on View
