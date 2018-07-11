@@ -1,0 +1,128 @@
+﻿@using RedPetroleum.Models;
+@model List<RedPetroleum.Models.DepartmentsWithChildren>
+
+@{
+    ViewBag.Title = "Главная";
+    int i = 1;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateConsolidatedTable()">
+        </div>
+    </div>
+    <br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="8" class="text-center" id="dt">
+                    Консолидированный анализ по оценке эффективности - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="text-center">№</th>
+                <th class="w-50">Отдел</th>
+                <th>Наличие оценки</th>
+                <th class="w-25 text-center">Средние показатели по отделу</th>
+                <th class="text-center">Показатели по Протоколу</th>
+                <th class="w-50 text-center">Общие показатели в % соотношении по выполнению</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @foreach (CustomDepartment department in ViewBag.DepartmentsWithoutParentAndChildren)
+            {
+                <tr>
+                    <td class="text-center">@(i++)</td>
+                    <td>@department.Name</td>
+                    @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
+                    {
+                        <td class="text-center">+</td>
+                        <td class="text-center">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+
+                    @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0 && @Math.Round(Convert.ToDouble(department.AverageMarkDepartment), 2) != 0)
+                    {
+                        <td class="text-center">@Math.Round(Convert.ToDouble(department.AverageMarkDepartment), 2) %</td>
+                        <td class="text-center">@(Math.Round(((Convert.ToDouble(department.AverageMark)) + (Convert.ToDouble(department.AverageMarkDepartment))) / 2, 2)) %</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                </tr>
+            }
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td style="font-weight:bold">@item.Department.Name</td>
+                        @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
+                        {
+                            <td class="text-center">+</td>
+                            <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
+                        @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0 && @Math.Round(Convert.ToDouble(item.AverageMarkDepartment), 2) != 0)
+                        {
+                            <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMarkDepartment), 2) %</td>
+                            <td class="text-center">@(Math.Round(((Convert.ToDouble(item.AverageMark)) + (Convert.ToDouble(item.AverageMarkDepartment))) / 2, 2)) %</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
+                    </tr>
+                    foreach (var child in item.Children)
+                    {
+                        <tr>
+                            <td class="text-center">@(i++)</td>
+                            <td>@child.Name</td>
+                            @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
+                            {
+                                <td class="text-center">+</td>
+                                <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+                            @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0 && @Math.Round(Convert.ToDouble(child.AverageMarkDepartment), 2) != 0)
+                            {
+                                <td class="text-center">@Math.Round(Convert.ToDouble(child.AverageMarkDepartment), 2) %</td>
+                                <td class="text-center">@(Math.Round(((Convert.ToDouble(child.AverageMark)) + (Convert.ToDouble(child.AverageMarkDepartment))) / 2, 2)) %</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByConsolidated')">Скачать отчет</button>
+</div>
+<script src="~/Scripts/app.js"></script>

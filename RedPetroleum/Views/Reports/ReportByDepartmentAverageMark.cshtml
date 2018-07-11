@@ -1,0 +1,165 @@
+﻿@using RedPetroleum.Models;
+@model List<RedPetroleum.Models.DepartmentsWithChildren>
+
+@{
+    ViewBag.Title = "Главная";
+    int i = 1;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <label for="taskDate" class="control-label">Выберите месяц</label>
+        </div>
+        <div class="col-md-3 form-control">
+            <input id="taskDate" name="taskDate" value="@ViewBag.Today" onchange="updateDepartmentAverageMarkTable()"
+                   style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        </div>        
+    </div>
+    <br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="8" class="text-center" id="dt">
+                    Отчет средних показателей по отделам - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="text-center">№</th>
+                <th class="w-50">Отдел</th>
+                <th>Наличие оценки</th>
+                <th class="w-25 text-center">Средние показатели по отделу</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @foreach (CustomDepartment department in ViewBag.DepartmentsWithoutParentAndChildren)
+            {
+                <tr>
+                    <td class="text-center">@(i++)</td>
+                    <td class="department">@department.Name</td>
+                    @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
+                    {
+                        <td class="text-center">+</td>
+                        <td class="text-center mark">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                </tr>
+            }
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td class="department" style="font-weight:bold">@item.Department.Name</td>
+                        @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
+                        {
+                            <td class="text-center">+</td>
+                            <td class="text-center mark">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
+                    </tr>
+                    foreach (var child in item.Children)
+                    {
+                        <tr>
+                            <td class="text-center">@(i++)</td>
+                            <td class="department">@child.Name</td>
+                            @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
+                            {
+                                <td class="text-center">+</td>
+                                <td class="text-center mark">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartmentAverageMark')">Скачать отчет</button>
+    <button type="button" class="btn btn-info" onclick="ShowChart()">Показать График</button>
+</div>
+<script>
+    function ShowChart() {
+        $("#chartContainer").css("visibility", "visible");
+        var dataPoints = [];
+        var i = @i;
+        console.log(i);
+        var num = 10;
+        var marks = document.getElementsByClassName("mark");
+        var departments = document.getElementsByClassName("department");
+        for (var j = 0; j < i - 1; j++) {
+            if (marks[j].textContent != "" || marks[j].textContent == null) {
+                let str = marks[j].textContent.split("").reverse().join("").slice(2);
+                let reversed = str.substring().split("").reverse().join("");
+
+                dataPoints.push({ y: parseFloat(reversed), x: num, label: departments[j].textContent });
+
+                console.log(parseFloat(reversed));
+                console.log(departments[j].textContent);
+                num += 10;
+            }
+        }
+        console.log(dataPoints);
+        var chart = new CanvasJS.Chart("chartContainer", {
+			theme: "theme2",
+			animationEnabled: true,
+			title: {
+				text: "График эффективности отделов"
+			},
+			data: [
+			{
+                    type: "column", //change type to bar, line, area, pie, etc
+                    dataPoints: dataPoints
+			}
+			]
+		});
+		chart.render();
+
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        var start = moment().locale('ru-RU');
+        var end = moment().locale('ru-RU');
+        function cb(start, end) {
+            $('#taskDate').html(start.format('ll') + ' - ' + end.format('ll'));
+        }
+
+        $('#taskDate').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Текущий месяц': [moment().startOf('month'), moment().endOf('month')],
+                'Прошлый месяц': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                '1-й квартал': [moment(1, "M").startOf('month'), moment(3, "M").endOf('month')],
+                '2-й квартал': [moment(4, "M").startOf('month'), moment(6, "M").endOf('month')],
+                '3-й квартал': [moment(7, "M").startOf('month'), moment(9, "M").endOf('month')],
+                '4-й квартал': [moment(10, "M").startOf('month'), moment(12, "M").endOf('month')],
+                '1-е полугодие': [moment(1, "M").startOf('month'), moment(6, "M").endOf('month')],
+                '2-е полугодие': [moment(7, "M").startOf('month'), moment(12, "M").endOf('month')],
+                'Год': [moment().subtract('year').startOf('year'), moment().subtract('year').endOf('year')]
+            }
+        }, cb);
+
+        cb(start, end);
+    });
+</script>
+<div id="chartContainer" style="height: 370px; width: 100%; visibility:hidden;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="~/Scripts/app.js"></script>
