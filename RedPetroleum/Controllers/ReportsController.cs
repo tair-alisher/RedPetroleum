@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
@@ -166,10 +167,10 @@ namespace RedPetroleum.Controllers
         }
 
         [HttpGet]
-        public ActionResult ReportByDepartmentAverageMark(DateTime? dateValue)
+        public ActionResult ReportByDepartmentAverageMark()
         {
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-
+            DateTime[] dateValues = new DateTime[] { DateTime.Now, DateTime.Now };
             List<CustomDepartment> DepartmentsWithoutParentAndChildren = new List<CustomDepartment>();
             List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
             foreach (var department in DepsWithoutParentAndChildren)
@@ -181,7 +182,7 @@ namespace RedPetroleum.Controllers
                         Name = department.Name,
                         AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dateValues)
                     }
                     );
             }
@@ -200,7 +201,7 @@ namespace RedPetroleum.Controllers
                     Children = new List<CustomDepartment>(),
                     AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dateValues)
                 };
                 children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
                 foreach (Department child in children)
@@ -213,7 +214,7 @@ namespace RedPetroleum.Controllers
                             ParentId = child.ParentId,
                             AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dateValues)
                         }
                         );
                 }
@@ -226,10 +227,13 @@ namespace RedPetroleum.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PartialReportByDepartmentAverageMark(DateTime? dateValue)
+        public ActionResult PartialReportByDepartmentAverageMark(string[] dateValue)
         {
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-
+            DateTime[] dateValues = new DateTime[] {
+                DateTime.ParseExact(dateValue[0], "MM/dd/yyyy", CultureInfo.InvariantCulture),
+                DateTime.ParseExact(dateValue[1], "MM/dd/yyyy", CultureInfo.InvariantCulture)
+           };
             List<CustomDepartment> DepartmentsWithoutParentAndChildren = new List<CustomDepartment>();
             List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
             foreach (var department in DepsWithoutParentAndChildren)
@@ -241,7 +245,7 @@ namespace RedPetroleum.Controllers
                         Name = department.Name,
                         AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dateValues)
                     }
                     );
             }
@@ -260,7 +264,7 @@ namespace RedPetroleum.Controllers
                     Children = new List<CustomDepartment>(),
                        AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dateValues)
                 };
                 children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
                 foreach (Department child in children)
@@ -273,7 +277,7 @@ namespace RedPetroleum.Controllers
                             ParentId = child.ParentId,
                             AverageMark = unit
                                 .Employees
-                                .GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dateValue)
+                                .GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dateValues)
                         }
                         );
                 }

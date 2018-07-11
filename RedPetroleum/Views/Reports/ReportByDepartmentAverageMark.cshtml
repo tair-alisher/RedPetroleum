@@ -8,13 +8,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
-            <label for="taskDate">Выберите месяц</label>
+        <div class="col-md-2 text-center">
+            <label for="taskDate" class="control-label">Выберите месяц</label>
         </div>
-        <div class="form-control">
-            <input id="taskDate"  name="taskDate" value="@ViewBag.Today" onchange="updateDepartmentAverageMarkTable()"
+        <div class="col-md-3 form-control">
+            <input id="taskDate" name="taskDate" value="@ViewBag.Today" onchange="updateDepartmentAverageMarkTable()"
                    style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-        </div>       
+        </div>        
     </div>
     <br />
     <table class="table table-striped">
@@ -135,10 +135,10 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        var start = moment().subtract(29, 'days').locale('ru-RU');
+        var start = moment().locale('ru-RU');
         var end = moment().locale('ru-RU');
         function cb(start, end) {
-            $('#taskDate span').html(start.format('ll') + ' - ' + end.format('ll'));
+            $('#taskDate').html(start.format('ll') + ' - ' + end.format('ll'));
         }
 
         $('#taskDate').daterangepicker({

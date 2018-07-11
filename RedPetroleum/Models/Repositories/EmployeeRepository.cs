@@ -119,6 +119,18 @@ namespace RedPetroleum.Models.Repositories
                     ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) == taskDate).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();               
         }
 
+        public double? GetEmployeesAverageMarkByDepartmentIdAndTwoDate(Guid? departmentId, DateTime[] taskDate)
+        {
+            var startDate = taskDate[0];
+            var endDate = taskDate[1];
+            return db.Employees.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
+                 .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) >= startDate)
+                    .Where(e=>((DateTime)e.TaskLists.FirstOrDefault().TaskDate) <= endDate).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();
+
+
+        }
+
         public double? GetDepartmentsAverageMarkByDepartmentIdAndDate(Guid? departmentId, DateTime? taskDate)
         {
             return taskDate == null

@@ -71,13 +71,12 @@
         var i = @i;
         var marks = document.getElementsByClassName("mark");
         var employees = document.getElementsByClassName("employee");
-        for (var j = 0; j < i; j++) {
+        for (var j = 0; j <= i; j++) {
+
             let str = marks[j].textContent.split("").reverse().join("").slice(2);
             let reversed = str.substring().split("").reverse().join("");
-            dataPoints.push({ y: parseFloat(reversed), label: employees[j].textContent });
-            
+            dataPoints.push({ y: parseFloat(reversed.replace(',','.')), label: employees[j].textContent });
         }
-        
         var chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
 

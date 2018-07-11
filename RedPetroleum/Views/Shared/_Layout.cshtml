@@ -43,11 +43,11 @@
                     @if (User.IsInRole("admin"))
                     {
                         <li class="nav-item active"><a class="nav-link" href="@Url.Action("Index", "Roles")">Роли</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
-
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Departments")">Отделы</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Positions")">Должности</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Задачи</a>
                             <div class="dropdown-menu">
