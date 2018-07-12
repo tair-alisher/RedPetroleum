@@ -10,7 +10,7 @@
 <h2>Список задач</h2>
 
 <p>
-    <a type="button" class="btn btn-primary" href="@Url.Action("Create", "TaskLists")">
+    <a href="/TaskLists/Create@(ViewBag.SelectedDate != null ? "?taskDate="+ViewBag.SelectedDate : null)" type="button" id="addTaskBtn" class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Добавить задачу
     </a>
@@ -38,9 +38,8 @@
     </div>
 }
 <hr />
-@using (Html.BeginForm("GetFilteredTaskList", "TaskLists", FormMethod.Post))
+@using (Html.BeginForm("GetFilteredTaskList", "TaskLists", FormMethod.Get))
 {
-    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-1">Фильтры</div>
         <div class="col-md-3">
@@ -59,7 +58,7 @@
             @Html.DropDownList("EmployeeId", ViewBag.EmployeeId as SelectList, "Выберите сотрудника", htmlAttributes: new { @class = "form-control", @id = "employeesDropdown" })
         </div>
         <div class="col-md-2">
-            <input class="form-control" id="taskDate" type="month" name="taskDate" @(ViewBag.Month != null ? "value=" + ViewBag.Month : null)>
+            <input class="form-control" id="taskDate" type="month" name="taskDate" @(ViewBag.SelectedDate != null ? "value=" + ViewBag.SelectedDate : null) onchange="updateAddTaskUrl(false)">
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
@@ -156,7 +155,10 @@
     </tbody>
 
 </table>
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+@if (!(Model.Count() <= 0))
+{
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+}
 <script src="~/Scripts/app.js"></script>
 <script>
     submitCommentOnEnter()
