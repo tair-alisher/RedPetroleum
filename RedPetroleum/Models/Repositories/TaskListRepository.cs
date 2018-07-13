@@ -151,6 +151,15 @@ namespace RedPetroleum.Models.Repositories
             db.SaveChanges();
         }
 
+        public void RateDepartmentTask(string taskId, double average)
+        {
+            TaskList task = db.TaskLists.Find(Guid.Parse(taskId));
+            task.AverageMark = average;
+
+            db.Entry(task).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
         public IPagedList<TaskList> GetAllDepartmentsTasks(int pageNumber, int pageSize, string search)
         {
             return db.TaskLists
