@@ -225,7 +225,6 @@ namespace RedPetroleum.Controllers
                 result.Add(item);
             }
             ViewBag.Marks = result;
-
             return View(result);
         }
         [HttpPost]
