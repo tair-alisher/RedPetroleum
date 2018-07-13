@@ -208,12 +208,12 @@ function downloadReportByDepartmentAverageMark(reportType) {
 }
 
 
-function addTask(forDepartment = null) {
+function addTask(forDepartment = null, inputHtml = null) {
     $("#emptyTaskList").remove();
 
     var createArea = $("#createArea");
 
-    if ($("#submitTask").length > 0) {
+    if ($("#removeGeneratedHtml").length > 0) {
         var warningMessage = `
     <div class="alert alert-warning  alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -224,7 +224,8 @@ function addTask(forDepartment = null) {
         $("#submitTask").focus();
     }
     else {
-        var generatedHtml = `
+        if (inputHtml == null) {
+            var generatedHtml = `
     <div class="generatedHtml form-group row" id="generatedHtml">
         <div class="col-md-5">
             <div class="row">
@@ -248,12 +249,17 @@ function addTask(forDepartment = null) {
         </div>
     </div>
 `;
+        } else {
+            var generatedHtml = inputHtml;
+        }
+        
         createArea.append(generatedHtml);
     }
 }
 
 function removeGeneratedHtml() {
     $("#generatedHtml").remove();
+    $(".alert-warning").remove();
 }
 
 function submitTask(forDepartment = null) {
@@ -312,10 +318,82 @@ function submitTask(forDepartment = null) {
     return false;
 }
 
+function submitEditTask(forDepartment = null) {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+
+    var taskId = $("#generatedHtml").attr("data-taskid");
+    var taskName = $("#TaskName").val();
+    var taskDuration = $("#TaskDuration").val();
+    var taskDate = $("#taskDate").val();
+    var createArea = $("#createArea");
+
+    var warningMessageOnEmptyFields = `
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Все поля для задачи обязательны к заполнению!
+    </div>
+`;
+    if (taskName == "" || taskDuration == "") {
+        createArea.prepend(warningMessageOnEmptyFields);
+        return false;
+    }
+    var sendData = {
+        __RequestVerificationToken: token,
+        "TaskListId": taskId,
+        "TaskName": taskName,
+        "TaskDuration": taskDuration,
+        "TaskDate": taskDate,
+        "CommentEmployees": ""
+    };
+
+    if (forDepartment != null) {
+        var departmentId = $("#departmentsDropdown").val();
+        var targetUrl = "/TaskLists/EditDepartmentTask";
+        sendData["DepartmentId"] = departmentId;
+    }
+    else {
+        var employeeId = $("#employeesDropdown").val();
+        var targetUrl = "/TaskLists/Edit";
+        sendData["EmployeeId"] = employeeId;
+    }
+
+    $.ajax({
+        url: targetUrl,
+        type: "POST",
+        data: sendData,
+        cache: false,
+        success: function (createdTask) {
+            var taskRow = $("#" + taskId);
+
+            taskRow.find(".taskName").text(taskName);
+            taskRow.find(".taskDuration").text(taskDuration);
+            taskRow.find(".taskDate").text(taskDate);
+            if ($("#employeesDropdown").length > 0) {
+                var performerName = $("#employeesDropdown option:selected").text();                
+            } else if ($("#departmentsDropdown").length > 0) {
+                var performerName = $("#departmentsDropdown option:selected").text();
+            }
+            taskRow.find(".taskPerformer").text(performerName);
+
+            removeGeneratedHtml();
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+
 function saveOnEnter(forDepartment = null) {
     $("#createArea").keypress(function (e) {
-        if (e.keyCode === 13 && $("#submitTask").length > 0) {
-            submitTask(forDepartment);
+        if (e.keyCode === 13) {
+            if ($("#submitTask").length > 0) {
+                submitTask(forDepartment);
+            } else if ($("#editTask").length > 0) {
+                submitEditTask(forDepartment);
+            }
         }
     });
 }
@@ -338,6 +416,41 @@ function removeTask(taskId) {
         }
     });
     return false;
+}
+
+function editTask(forDepartment = null, taskId) {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+
+    var taskRow = $("#" + taskId);
+    var taskName = taskRow.find(".taskName").text();
+    var taskDuration = taskRow.find(".taskDuration").text();
+
+    var generatedHtml = `
+    <div class="generatedHtml form-group row" id="generatedHtml" data-taskid="${taskId}">
+        <div class="col-md-5">
+            <div class="row">
+                <label class="control-label col-md-4" for="TaskName">Задача</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control text-box single-line" id="TaskName" name="TaskName" value="${taskName}" required />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="row">
+                <label class="control-label col-md-4" for="TaskDuration">Продолжительность</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control text-box single-line" id="TaskDuration" name="TaskDuration" value="${taskDuration}" required />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-success" id="editTask" onclick="submitEditTask(${forDepartment})" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-danger" id="removeGeneratedHtml" onclick="removeGeneratedHtml()"><span class="oi oi-x" title="Удалить" aria-hidden="true"></span></button>
+        </div>
+    </div>
+`;
+
+    addTask(forDepartment, generatedHtml);
 }
 
 function rate(id) {
@@ -430,4 +543,17 @@ function submitCommentOnEnter() {
             submitComment(this.id.split('_')[1]);
         }
     });
+}
+
+function updateAddTaskUrl(forDepartment) {
+    var selectedDate = $("#taskDate").val();
+    
+
+    if (forDepartment) {
+        $("#addTaskBtn")
+            .attr("href", "/TaskLists/CreateDepartmentTask?taskDate=" + selectedDate);
+    } else {
+        $("#addTaskBtn")
+            .attr("href", "/TaskLists/Create?taskDate=" + selectedDate);
+    }
 }

@@ -9,7 +9,7 @@
 
 <h2>Список задач</h2>
 <p>
-    <a href="@Url.Action("CreateDepartmentTask", "TaskLists")" class="btn btn-primary" type="button">
+    <a href="/TaskLists/CreateDepartmentTask@(ViewBag.SelectedDate != null ? "?taskDate="+ViewBag.SelectedDate : null)" id="addTaskBtn" class="btn btn-primary" type="button">
         <i class="fa fa-plus"></i> Добавить задачу
     </a>
 </p>
@@ -33,9 +33,8 @@
     </div>
 }
 <hr />
-@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Post))
+@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Get))
 {
-    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-1">Фильтры</div>
         <div class="col-md-4">
@@ -51,7 +50,7 @@
             }
         </div>
         <div class="col-md-4">
-            <input class="form-control" id="taskDate" type="month" name="TaskDate" @(ViewBag.Month != null ? "value=" + ViewBag.Month : null)>
+            <input class="form-control" id="taskDate" type="month" name="TaskDate" @(ViewBag.SelectedDate != null ? "value=" + ViewBag.SelectedDate : null) onchange="updateAddTaskUrl(true)">
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
@@ -144,7 +143,10 @@
         }
     </tbody>
 </table>
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+@if (!(Model.Count() <= 0))
+{
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+}
 
 <script src="~/Scripts/app.js"></script>
 <script>
