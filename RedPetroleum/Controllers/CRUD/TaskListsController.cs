@@ -28,17 +28,9 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult Index(int? page, string searching)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
-
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            IPagedList<TaskList> taskLists;
+            
             if (User.IsInRole("admin"))
             {
-                taskLists = unitOfWork
-                    .TaskLists
-                    .GetEmployeesAdmin(pageNumber, pageSize, searching);
-
-
                 ViewBag.EmployeeId = CreateEmployeeSelectList(
                     unitOfWork
                         .Employees
@@ -48,10 +40,6 @@ namespace RedPetroleum.Controllers.CRUD
             }
             else
             {
-                taskLists = unitOfWork
-                .TaskLists
-                .GetEmployeeTasksByDepartmentId(pageNumber, pageSize, searching, currentUser.DepartmentId);
-
                 ViewBag.EmployeeId = CreateEmployeeSelectList(
                     unitOfWork
                         .Employees
@@ -64,8 +52,8 @@ namespace RedPetroleum.Controllers.CRUD
 
 
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-
-            return View(taskLists.ToPagedList(pageNumber, pageSize));
+            
+            return View();
         }
 
         [HttpPost]
@@ -90,7 +78,7 @@ namespace RedPetroleum.Controllers.CRUD
         }
 
         // GET: TaskLists/Create
-        public ActionResult Create()
+        public ActionResult Create(string taskDate = null)
         {
             if (User.IsInRole("admin"))
             {
@@ -100,7 +88,7 @@ namespace RedPetroleum.Controllers.CRUD
                 ViewBag.EmployeeId = new SelectList(unitOfWork.Employees.GetAvailableEmployees(User.Identity.GetUserId()), "EmployeeId", "EFullName");
             }
 
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.SelectedDate = taskDate ?? DateTime.Now.ToString("yyyy-MM");
 
             return View();
         }
@@ -121,12 +109,12 @@ namespace RedPetroleum.Controllers.CRUD
 
             ViewBag.Task = task;
             ViewBag.EmployeeName = taskEmployeeName;
+            ViewBag.TaskDate = ((DateTime)task.TaskDate).ToString("yyyy-MM");
 
             return PartialView(task);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public ActionResult GetFilteredTaskList(int? page, DateTime? TaskDate, string DepartmentId, string EmployeeId)
         {
             int pageSize = 10;
@@ -160,7 +148,7 @@ namespace RedPetroleum.Controllers.CRUD
             }
 
             if (TaskDate != null)
-                ViewBag.Month = ((DateTime)TaskDate).ToString("yyyy-MM");
+                ViewBag.SelectedDate = ((DateTime)TaskDate).ToString("yyyy-MM");
 
             return View(taskList.ToPagedList(pageNumber, pageSize));
         }
@@ -305,36 +293,24 @@ namespace RedPetroleum.Controllers.CRUD
         public ActionResult DepartmentTasks(int? page, string searching)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
-
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            IPagedList<TaskList> taskLists;
+            
             if (User.IsInRole("admin"))
             {
-                taskLists = unitOfWork
-                    .TaskLists
-                    .GetAllDepartmentsTasks(pageNumber, pageSize, searching);
-
                 ViewBag.DepartmentId = CreateDepartmentSelectList();
             }
             else
             {
-                taskLists = unitOfWork
-                .TaskLists
-                .GetDepartmentTasksByDepartmentId(pageNumber, pageSize, searching, currentUser.DepartmentId);
-
                 ViewBag.Department = unitOfWork
                     .Departments
                     .GetDepartmentByUserId(User.Identity.GetUserId());
             }
 
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-
-            return View(taskLists.ToPagedList(pageNumber, pageSize));
+            
+            return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public ActionResult GetFilteredDepartmentTaskList(int? page, DateTime? TaskDate, string DepartmentId)
         {
             int pageSize = 10;
@@ -352,12 +328,12 @@ namespace RedPetroleum.Controllers.CRUD
                     .GetDepartmentByUserId(User.Identity.GetUserId());
 
             if (TaskDate != null)
-                ViewBag.Month = ((DateTime)TaskDate).ToString("yyyy-MM");
+                ViewBag.SelectedDate = ((DateTime)TaskDate).ToString("yyyy-MM");
 
             return View(taskList.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult CreateDepartmentTask()
+        public ActionResult CreateDepartmentTask(string taskDate = null)
         {
             if (User.IsInRole("admin"))
                 ViewBag.DepartmentId = CreateDepartmentSelectList();
@@ -366,7 +342,7 @@ namespace RedPetroleum.Controllers.CRUD
                     .Departments
                     .GetDepartmentByUserId(User.Identity.GetUserId());
 
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.SelectedDate = taskDate ?? DateTime.Now.ToString("yyyy-MM");
 
             return View();
         }
@@ -386,6 +362,7 @@ namespace RedPetroleum.Controllers.CRUD
 
             ViewBag.Task = task;
             ViewBag.DepartmentName = taskDepartmentName;
+            ViewBag.TaskDate = ((DateTime)task.TaskDate).ToString("yyyy-MM");
 
             return PartialView(task);
         }

@@ -31,7 +31,7 @@
             <label for="taskDate">Выберите месяц</label>
         </div>
         <div class="col-md-3">
-            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.SelectedDate">
         </div>
     </div>
 </div>
@@ -40,10 +40,11 @@
 <table class="table table-hover">
     <thead>
         <tr>
+            <th>Назначен</th>
             <th>Задача</th>
             <th>Продолжительность</th>
-            <th>Назначен</th>
-            <th>Удалить</th>
+            <th>Дата</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody id="taskList">
