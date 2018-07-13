@@ -441,8 +441,6 @@ function editTask(forDepartment = null, taskId) {
 }
 
 function rate(id) {
-    var button = $("#" + id).find(button);
-    button.prop('disabled', true);
     var skillMark = $("#" + id).find(".SkillMark").val();
     var effectivenessMark = $("#" + id).find(".EffectivenessMark").val();
     var disciplineMark = $("#" + id).find(".DisciplineMark").val();
@@ -462,7 +460,6 @@ function rate(id) {
         cache: false,
         success: function (average) {
             averageMark.val(average);
-            button.prop('disabled', false);
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
@@ -471,8 +468,42 @@ function rate(id) {
     return false;
 }
 
-function taskComment(taskId) {
+function rateDepartmentTask(taskId) {
+    var averageMark = $("#" + taskId).find(".AverageMark").val();
+
+    $.ajax({
+        url: "/TaskLists/RateDepartmentTask",
+        type: "POST",
+        data: {
+            "taskId": taskId,
+            "averageMark": averageMark
+        },
+        cache: false,
+        success: function (message) {
+            $("#successMessage").text(message);
+            $('#onSuccessModal').modal({
+                show: true
+            });
+        },
+        error: function (XMLHttpRequest) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    return false;
+}
+
+function taskComment(taskId, forDepartment = false) {
     var taskRow = $("#comment_" + taskId);
+    var saveBtnTemplate = `
+    <button type="button" class="btn btn-success" onclick="submitComment('${taskId}')" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+`;
+
+    if (forDepartment) {
+        taskRow = $("#" + taskId);
+        saveBtnTemplate = `
+    <button type="button" class="btn btn-primary" onclick="submitComment('${taskId}', true)" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
+`;
+    }
     var commentField = taskRow.find(".comment-field");
     var oldCommentFieldText = commentField.text().trim();
 
@@ -487,23 +518,28 @@ function taskComment(taskId) {
         </div>
     </div>
 `;
-
-    var saveBtnTemplate = `
-    <button type="button" class="btn btn-success" onclick="submitComment('${taskId}')" title="Сохранить"><span class="oi oi-check" title="Сохранить" aria-hidden="true"></span></button>
-`;
-
+    
     submitButton.html(saveBtnTemplate);
     commentField.html(commentFieldTemplate);
 
     taskRow.find('.comment-input').focus();
 }
 
-function submitComment(taskId) {
+function submitComment(taskId, forDepartment = false) {
     var taskRow = $("#comment_" + taskId);
-    var commentMessage = taskRow.find(".comment-input").val();
     var commentBtnTemplate = `
     <button type="button" class="btn btn-primary" onclick="taskComment('${taskId}')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button>
 `;
+
+    if (forDepartment) {
+        taskRow = $("#" + taskId);
+        var commentBtnTemplate = `
+    <button type="button" class="btn btn-primary" onclick="taskComment('${taskId}', true)">Комментарий</button>
+`;
+    }
+
+    var commentMessage = taskRow.find(".comment-input").val();
+    
 
     $.ajax({
         url: "/TaskLists/CommentTask",
@@ -524,10 +560,26 @@ function submitComment(taskId) {
     return false;
 }
 
-function submitCommentOnEnter() {
-    $(".task-row").keypress(function (e) {
+function submitCommentOnEnter(forDepartment = false) {
+    if (forDepartment) {
+        $(".comment-field").keypress(function (e) {
+            if (e.keyCode === 13) {
+                submitComment($(this).attr("data-taskid"), true);
+            }
+        });
+    } else {
+        $(".task-row").keypress(function (e) {
+            if (e.keyCode === 13) {
+                submitComment(this.id.split('_')[1]);
+            }
+        });
+    }
+}
+
+function submitMarkOnEnter() {
+    $(".mark-field").keypress(function (e) {
         if (e.keyCode === 13) {
-            submitComment(this.id.split('_')[1]);
+            rateDepartmentTask($(this).parent().attr('id'));
         }
     });
 }
