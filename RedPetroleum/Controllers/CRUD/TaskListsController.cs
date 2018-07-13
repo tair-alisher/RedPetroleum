@@ -282,6 +282,15 @@ namespace RedPetroleum.Controllers.CRUD
             return average;
         }
 
+        public void RateDepartmentTask(string taskId, string averageMark)
+        {
+            double average = ConvertMarkToDouble(averageMark);
+
+            unitOfWork
+                .TaskLists
+                .RateDepartmentTask(taskId, average);
+        }
+
         private double ConvertMarkToDouble(string mark)
         {
             return double.Parse(mark.Replace(".", ","));
