@@ -66,7 +66,6 @@
             <th>Задача</th>
             <th>Длительность</th>
             <th>Дата задачи</th>
-            <th>Комментарии(?)</th>
             <th></th>
         </tr>
     </thead>
@@ -81,9 +80,9 @@
                 <td><b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b></td>
                 <td style="text-align:right;">
                     <div class="btn-group" role="group">
-                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("DepartmentTaskDetails", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","TaskLists", new {id = item.TaskListId})" data-toggle="modal" data-target="#@myModal"
+                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = item.TaskListId })"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("DepartmentTaskDetails", "TaskLists", new { id = item.TaskListId })"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete", "TaskLists", new { id = item.TaskListId })" data-toggle="modal" data-target="#@myModal"
                            data-whatever="@item.TaskListId"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"></i></a>
                     </div>
                     <!-- Confirmation modal -->
@@ -113,17 +112,20 @@
                     </div>
                 </td>
             </tr>
-            <tr id="@item.TaskListId">
-                <td class="mark-field">
-                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" />
-                    <small class="form-text text-muted">Оценка</small>
-                </td>
-                <td class="comment-field" data-taskid="@item.TaskListId" colspan="3">@Html.DisplayFor(modelItem => item.CommentEmployees)</td>
-                <td style="text-align:right;">
-                    <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId', true)">Комментарий</button></span>
-                    <button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('@item.TaskListId')">Оценить</button>
-                </td>
-            </tr>
+            if (User.IsInRole("admin") || User.IsInRole("manager"))
+            {
+                <tr id="@item.TaskListId">
+                    <td class="mark-field">
+                        <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" />
+                        <small class="form-text text-muted">Оценка</small>
+                    </td>
+                    <td class="comment-field" data-taskid="@item.TaskListId" colspan="3">@Html.DisplayFor(modelItem => item.CommentEmployees)</td>
+                    <td style="text-align:right;">
+                        <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId', true)">Комментарий</button></span>
+                        <button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('@item.TaskListId')">Оценить</button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

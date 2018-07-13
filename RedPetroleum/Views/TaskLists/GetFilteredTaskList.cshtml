@@ -75,7 +75,7 @@
             <th>Задача</th>
             <th>Длительность</th>
             <th>Дата задачи</th>
-            <th>Комментарии сотрудника(?)</th>
+            <th>Комментарии сотрудника</th>
             <th></th>
         </tr>
     </thead>
@@ -125,32 +125,34 @@
                     </div>
                 </td>
             </tr>
-            <tr id="@item.TaskListId">
-                <td>
-                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
-                    <small class="form-text text-muted">Компетентность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
-                    <small class="form-text text-muted">Результативность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
-                    <small class="form-text text-muted">Дисциплинированность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
-                    <small class="form-text text-muted">Своевременность</small>
-                </td>
-                <td>
-                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
-                    <small class="form-text text-muted">Среднее</small>
-                </td>
-                <td>
-                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
-                </td>
-            </tr>
-
+            if (User.IsInRole("admin") || User.IsInRole("manager"))
+            {
+                <tr id="@item.TaskListId">
+                    <td>
+                        <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
+                        <small class="form-text text-muted">Компетентность</small>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
+                        <small class="form-text text-muted">Результативность</small>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
+                        <small class="form-text text-muted">Дисциплинированность</small>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
+                        <small class="form-text text-muted">Своевременность</small>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
+                        <small class="form-text text-muted">Среднее</small>
+                    </td>
+                    <td>
+                        <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 
