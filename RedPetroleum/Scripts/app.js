@@ -479,7 +479,8 @@ function rateDepartmentTask(taskId) {
             "averageMark": averageMark
         },
         cache: false,
-        success: function (average) {
+        success: function (message) {
+            $("#successMessage").text(message);
             $('#onSuccessModal').modal({
                 show: true
             });

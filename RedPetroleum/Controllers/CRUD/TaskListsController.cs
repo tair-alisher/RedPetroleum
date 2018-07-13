@@ -282,18 +282,29 @@ namespace RedPetroleum.Controllers.CRUD
             return average;
         }
 
-        public void RateDepartmentTask(string taskId, string averageMark)
+        public string RateDepartmentTask(string taskId, string averageMark)
         {
-            double average = ConvertMarkToDouble(averageMark);
-
-            unitOfWork
+            try
+            {
+                double average = ConvertMarkToDouble(averageMark);
+                unitOfWork
                 .TaskLists
                 .RateDepartmentTask(taskId, average);
+
+                return "Оценка сохранена!";
+            } catch (FormatException)
+            {
+                return "Ошибка! Проверьте вводимые данные.";
+            }
         }
 
         private double ConvertMarkToDouble(string mark)
         {
-            return double.Parse(mark.Replace(".", ","));
+            double number;
+            if (double.TryParse(mark, out number))
+                return number;
+
+            throw new FormatException();
         }
 
         /************ Department Tasks ************/
