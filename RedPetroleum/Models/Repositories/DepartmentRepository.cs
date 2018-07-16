@@ -73,13 +73,13 @@ namespace RedPetroleum.Models.Repositories
                 )
                 : db.Departments.Include(e => e.Employees).Include(t => t.TaskLists)
                 .Where(d =>
-                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate
-                );
+                    ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate).Where(d =>
+                  ((DateTime)d.TaskLists.FirstOrDefault().TaskDate) == taskDate);
         }
         public IEnumerable<Department> GetDepartmentsWithoutParentAndChildren()
         {
-            var parentIdList = db.Departments.Where(d => d.ParentId != null).Select(x=>x.ParentId).ToList();
-            return db.Departments.Where(d => d.ParentId == null).Where(x=>!parentIdList.Contains(x.DepartmentId));
+            var parentIdList = db.Departments.Where(d => d.ParentId != null).Select(x => x.ParentId).ToList();
+            return db.Departments.Where(d => d.ParentId == null).Where(x => !parentIdList.Contains(x.DepartmentId));
         }
         public IEnumerable<Department> GetDepartmentsWithoutParentWithChildren()
         {
@@ -92,6 +92,5 @@ namespace RedPetroleum.Models.Repositories
             return db.Departments
                 .Where(d => d.ParentId == parentId);
         }
-
     }
 }

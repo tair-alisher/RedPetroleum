@@ -109,14 +109,38 @@ namespace RedPetroleum.Models.Repositories
 
         public double? GetEmployeesAverageMarkByDepartmentIdAndDate(Guid? departmentId, DateTime? taskDate)
         {
-            return db.Employees
-                .Include(t => t.TaskLists)
-                .Where(e => e.DepartmentId == departmentId)
+            return taskDate == null
+                ? db.Employees.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
                 .Where(e =>
-                    (((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Month == DateTime.Now.Month &&
-                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Year == DateTime.Now.Year) ||
-                    taskDate == null)
-                 .Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();
+                    (((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Month == DateTime.Now.Month) &&
+                    (((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Year == DateTime.Now.Year)).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average()
+                : db.Employees.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
+                 .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) == taskDate).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();               
+        }
+
+        public double? GetEmployeesAverageMarkByDepartmentIdAndTwoDate(Guid? departmentId, DateTime[] taskDate)
+        {
+            var startDate = taskDate[0];
+            var endDate = taskDate[1];
+            return db.Employees.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
+                 .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) >= startDate)
+                    .Where(e=>((DateTime)e.TaskLists.FirstOrDefault().TaskDate) <= endDate).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();
+
+
+        }
+
+        public double? GetDepartmentsAverageMarkByDepartmentIdAndDate(Guid? departmentId, DateTime? taskDate)
+        {
+            return taskDate == null
+                ? db.Departments.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
+                .Where(e =>
+                    (((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Month == DateTime.Now.Month) &&
+                    (((DateTime)e.TaskLists.FirstOrDefault().TaskDate).Year == DateTime.Now.Year)).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average()
+                : db.Departments.Include(t => t.TaskLists).Where(e => e.DepartmentId == departmentId)
+                 .Where(e =>
+                    ((DateTime)e.TaskLists.FirstOrDefault().TaskDate) == taskDate).Select(e => e.TaskLists.Select(t => t.AverageMark).Average()).Average();
         }
     }
 }

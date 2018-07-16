@@ -15,12 +15,24 @@ namespace RedPetroleum.Services
         Guid? departmentId;
         string reportType;
         DateTime? dt;
-        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt)
+        DateTime[] dt2;
+        Guid? parentId;
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType, DateTime? dt, Guid? parentId)
         {
             this.unit = unit;
             this.departmentId = departmentId;
             this.reportType = reportType;
             this.dt = dt;
+            this.parentId = parentId;
+        }
+
+        public XlsReport(UnitOfWork unit, Guid? departmentId, string reportType,  DateTime[] dt2, Guid? parentId)
+        {
+            this.unit = unit;
+            this.departmentId = departmentId;
+            this.reportType = reportType;
+            this.dt2 = dt2;
+            this.parentId = parentId;
         }
 
         public ExcelPackage FormReport()
@@ -85,7 +97,7 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["B3"].Value = "Ф.И.О";
             worksheet.Cells["B3"].Style.Font.Bold = true;
-            
+
             worksheet.Cells["C3"].Value = "Должность";
             worksheet.Cells["C3"].Style.Font.Bold = true;
 
@@ -94,34 +106,40 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["E3"].Value = "Подпись";
             worksheet.Cells["E3"].Style.Font.Bold = true;
-          
+    
             for (int k = 1; k <= 3; k++)
             {
-                BorderLinesForReportByDepartment(worksheet,k);
+                BorderLinesForReportByDepartment(worksheet, k);
             }
-            
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId,dt);
+
+            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId, dt);
             int rowStart = 4;
+            int cellIndex = 3;
             int i = 1;
-            int j = 4;
             foreach (Employee employee in employees)
             {
-                BorderLinesForReportByDepartment(worksheet,j);
+                BorderLinesForReportByDepartment(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = employee.Position.Name;
-                worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"D{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average() + "%";
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = employee.EFullName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Value = employee.Position.Name;
+                worksheet.Cells[$"C{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"D{cellIndex}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) / 100;
+
             }
+            worksheet.Cells[$"A{++cellIndex}:C{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средний показатель по отделу:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"D{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"D{cellIndex}"].Formula = $"AVERAGE(D{rowStart}:D{cellIndex-1})";
 
             return xlsPack;
         }
         public void BorderLinesForReportByDepartment(ExcelWorksheet worksheet, int a)
-        {          
+        {
             worksheet.Cells[$"A{a}:E{a}"].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
             worksheet.Cells[$"A{a}:E{a}"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
             worksheet.Cells[$"A{a}:E{a}"].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
@@ -190,6 +208,7 @@ namespace RedPetroleum.Services
             worksheet.Cells["H2"].Value = "Сводный показатель";
             worksheet.Cells["H2"].Style.Font.Bold = true;
 
+
             for (int k = 1; k <= 2; k++)
             {
                 BorderLinesForReportByCompany(worksheet, k);
@@ -197,26 +216,32 @@ namespace RedPetroleum.Services
 
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
             int rowStart = 3;
+            int cellIndex = 2;
             int i = 1;
-            int j = 3;
+
             foreach (Employee employee in employees)
             {
-                BorderLinesForReportByCompany(worksheet, j);
+                BorderLinesForReportByCompany(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = employee.Department.Name;
-                worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
-                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
-                worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
-                worksheet.Cells[$"F{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average() + "%";
-
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = employee.EFullName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Value = employee.Department.Name;
+                worksheet.Cells[$"C{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{cellIndex}"].Value = employee.Position.Name;
+                worksheet.Cells[$"D{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"E{cellIndex}"].Value = employee.AdoptionDate;
+                worksheet.Cells[$"E{cellIndex}"].Style.Numberformat.Format = "dd.mm.yyyy";
+                worksheet.Cells[$"F{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"F{cellIndex}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) / 100;
             }
+
+            worksheet.Cells[$"A{++cellIndex}:E{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средний показатель по отделу:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"F{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"F{cellIndex}"].Formula = $"AVERAGE(F{rowStart}:F{cellIndex - 1})";
             return xlsPack;
         }
         public void BorderLinesForReportByCompany(ExcelWorksheet worksheet, int a)
@@ -254,9 +279,10 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["A1:D1"].Merge = true;
 
-            worksheet.Cells["A1"].Value = String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt);
+            worksheet.Cells["A1"].Value = dt2[0].Month == dt2[1].Month ? String.Format("{0} - {1:MMMM yyyy} г.", ReportTitle, dt2[0])
+                : String.Format("{0} - {1:MMMM yyyy} г. - {2:MMMM yyyy} г.", ReportTitle, dt2[0], dt2[1]);
             worksheet.Cells["A1"].Style.Font.Bold = true;
-            worksheet.Cells["A1"].Style.Font.Size = 16;
+            worksheet.Cells["A1"].Style.Font.Size = dt2[0].Month == dt2[1].Month ? 16 : 14;
 
             worksheet.Cells["A2"].Value = "№";
             worksheet.Cells["A2"].Style.Font.Bold = true;
@@ -274,22 +300,77 @@ namespace RedPetroleum.Services
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, k);
             }
-            IEnumerable<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren();
 
-            IEnumerable<Department> d = unit.Departments.GetDepartmentsWithoutParentWithChildren();
-           // IEnumerable<Department> s = unit.Departments.GetDepartmentsByParentId(Guid? parentId);
-
-           
             int rowStart = 3;
             int i = 1;
             int j = 3;
-            foreach (Department item in d)
+
+            List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
+            foreach (Department department in DepsWithoutParentAndChildren)
             {
                 BorderLinesForReportByDepartmentAverageMark(worksheet, j);
-                worksheet.Cells[$"B{rowStart}"].Value = item.Name;
+                worksheet.Cells[$"A{rowStart}"].Value = i++;
+                worksheet.Cells[$"B{rowStart}"].Value = department.Name;
                 worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dt2)), 2) != 0)
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "+";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(department.DepartmentId, dt2)), 2) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "";
+                    worksheet.Cells[$"D{rowStart}"].Value = "";
+                }
+
                 rowStart++;
                 j++;
+            }
+
+            List<Department> DepartmentsWithoutParentWithChildren = unit.Departments.GetDepartmentsWithoutParentWithChildren().ToList();
+            List<DepartmentsWithChildren> result = new List<DepartmentsWithChildren>();
+            List<Department> children = null;
+
+            foreach (Department parent in DepartmentsWithoutParentWithChildren)
+            {
+                BorderLinesForReportByDepartmentAverageMark(worksheet, j);
+                worksheet.Cells[$"B{rowStart}"].Value = parent.Name;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"B{rowStart}"].Style.Font.Bold = true;
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dt2)), 2) != 0)
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "+";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(parent.DepartmentId, dt2)), 2) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "";
+                    worksheet.Cells[$"D{rowStart}"].Value = "";
+                }
+
+                rowStart++;
+                j++;
+                children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
+                foreach (Department child in children)
+                {
+                    BorderLinesForReportByDepartmentAverageMark(worksheet, j);
+                    worksheet.Cells[$"A{rowStart}"].Value = i++;
+                    worksheet.Cells[$"B{rowStart}"].Value = child.Name;
+                    worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dt2)), 2) != 0)
+                    {
+                        worksheet.Cells[$"C{rowStart}"].Value = "+";
+                        worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndTwoDate(child.DepartmentId, dt2)), 2) + "%";
+                    }
+                    else
+                    {
+                        worksheet.Cells[$"C{rowStart}"].Value = "";
+                        worksheet.Cells[$"D{rowStart}"].Value = "";
+                    }
+
+                    rowStart++;
+                    j++;
+                }
             }
             return xlsPack;
         }
@@ -359,28 +440,106 @@ namespace RedPetroleum.Services
             {
                 BorderLinesForReportByConsolidated(worksheet, k);
             }
-
-            IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
             int rowStart = 3;
             int i = 1;
             int j = 3;
-            foreach (Employee employee in employees)
+
+            List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
+            foreach (Department department in DepsWithoutParentAndChildren)
             {
                 BorderLinesForReportByConsolidated(worksheet, j);
-
                 worksheet.Cells[$"A{rowStart}"].Value = i++;
-                //worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                //worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"C{rowStart}"].Value = employee.Department.Name;
-                //worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
-                //worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                //worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
-                //worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
-                //worksheet.Cells[$"F{rowStart}"].Value = employee.TaskLists.Select(t => t.AverageMark).Average() + "%";
+                worksheet.Cells[$"B{rowStart}"].Value = department.Name;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) != 0)
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "+";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "";
+                    worksheet.Cells[$"D{rowStart}"].Value = "";
+                }
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) != 0 && Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) != 0)
+                {
+                    worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)), 2) + "%";
+                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(department.DepartmentId, dt)))) / 2, 2)) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"E{rowStart}"].Value = "";
+                    worksheet.Cells[$"F{rowStart}"].Value = "";
+                }
+                rowStart++;
+                j++;
+            }
+
+            List<Department> DepartmentsWithoutParentWithChildren = unit.Departments.GetDepartmentsWithoutParentWithChildren().ToList();
+            List<DepartmentsWithChildren> result = new List<DepartmentsWithChildren>();
+            List<Department> children = null;
+
+            foreach (Department parent in DepartmentsWithoutParentWithChildren)
+            {
+                BorderLinesForReportByConsolidated(worksheet, j);
+                worksheet.Cells[$"B{rowStart}"].Value = parent.Name;
+                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"B{rowStart}"].Style.Font.Bold = true;
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) != 0)
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "+";
+                    worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"C{rowStart}"].Value = "";
+                    worksheet.Cells[$"D{rowStart}"].Value = "";
+                }
+
+                if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) != 0 && Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) != 0)
+                {
+                    worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)), 2) + "%";
+                    worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(parent.DepartmentId, dt)))) / 2, 2)) + "%";
+                }
+                else
+                {
+                    worksheet.Cells[$"E{rowStart}"].Value = "";
+                    worksheet.Cells[$"F{rowStart}"].Value = "";
+                }
 
                 rowStart++;
                 j++;
+                children = unit.Departments.GetDepartmentsByParentId(parent.DepartmentId).ToList();
+                foreach (Department child in children)
+                {
+                    BorderLinesForReportByConsolidated(worksheet, j);
+                    worksheet.Cells[$"A{rowStart}"].Value = i++;
+                    worksheet.Cells[$"B{rowStart}"].Value = child.Name;
+                    worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) != 0)
+                    {
+                        worksheet.Cells[$"C{rowStart}"].Value = "+";
+                        worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) + "%";
+                    }
+                    else
+                    {
+                        worksheet.Cells[$"C{rowStart}"].Value = "";
+                        worksheet.Cells[$"D{rowStart}"].Value = "";                      
+                    }
+                    if (Math.Round(Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) != 0 && Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) != 0)
+                    {
+                        worksheet.Cells[$"E{rowStart}"].Value = Math.Round(Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)), 2) + "%";
+                        worksheet.Cells[$"F{rowStart}"].Value = (Math.Round(((Convert.ToDouble(unit.Employees.GetEmployeesAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt))) + (Convert.ToDouble(unit.Employees.GetDepartmentsAverageMarkByDepartmentIdAndDate(child.DepartmentId, dt)))) / 2, 2)) + "%";
+                    }
+                    else
+                    {
+                        worksheet.Cells[$"E{rowStart}"].Value = "";
+                        worksheet.Cells[$"F{rowStart}"].Value = "";
+                    }
+                    rowStart++;
+                    j++;
+                }
             }
             return xlsPack;
         }
@@ -459,22 +618,28 @@ namespace RedPetroleum.Services
 
             IEnumerable<TaskList> taskLists = unit.TaskLists.GetTaskListsByDepartmentId((Guid)departmentId, dt);
             int rowStart = 5;
+            int cellIndex = 4;
             int i = 1;
-            int j = 5;
             foreach (TaskList item in taskLists)
             {
-                BorderLinesForReportByInstructionsDG(worksheet, j);
+                BorderLinesForReportByInstructionsDG(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = item.TaskName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = item.AverageMark + "%";
-                worksheet.Cells[$"D{rowStart}"].Value = item.CommentEmployees;
-                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = item.TaskName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"C{cellIndex}"].Value = Math.Round(Convert.ToDouble(item.AverageMark), 2) / 100;
+                worksheet.Cells[$"D{cellIndex}"].Value = item.CommentEmployees;
+                worksheet.Cells[$"D{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
             }
+
+            worksheet.Cells[$"A{++cellIndex}:B{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средняя оценка:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"C{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"C{cellIndex}"].Formula = $"AVERAGE(C{rowStart}:C{cellIndex - 1})";
+
 
             return xlsPack;
         }

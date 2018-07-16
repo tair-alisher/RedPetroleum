@@ -120,14 +120,21 @@ namespace RedPetroleum.Models.Repositories
             return taskList
                 .OrderBy(t => t.TaskName);
         }
+
         public TaskList GetTaskWithEmployeeById(Guid id)
         {
-            return
-                db.TaskLists
+            return db.TaskLists
                  .Include(e => e.Employee)
                  .Where(t => t.TaskListId == id).FirstOrDefault();
-                 
         }
+
+        public TaskList GetTaskWithDepartmentById(Guid id)
+        {
+            return db.TaskLists
+                .Include(d => d.Department)
+                .Where(t => t.TaskListId == id).FirstOrDefault();
+        }
+
         public void RateTask(
             string taskId, double skill, double effectiveness,
             double discipline, double timeliness, double average
@@ -138,6 +145,15 @@ namespace RedPetroleum.Models.Repositories
             task.EffectivenessMark = effectiveness;
             task.DisciplineMark = discipline;
             task.TimelinessMark = timeliness;
+            task.AverageMark = average;
+
+            db.Entry(task).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public void RateDepartmentTask(string taskId, double average)
+        {
+            TaskList task = db.TaskLists.Find(Guid.Parse(taskId));
             task.AverageMark = average;
 
             db.Entry(task).State = EntityState.Modified;

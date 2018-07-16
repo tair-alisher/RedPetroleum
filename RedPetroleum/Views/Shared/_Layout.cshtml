@@ -20,7 +20,9 @@
     <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>
     <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
@@ -41,17 +43,17 @@
                     @if (User.IsInRole("admin"))
                     {
                         <li class="nav-item active"><a class="nav-link" href="@Url.Action("Index", "Roles")">Роли</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
-
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Departments")">Отделы</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Positions")">Должности</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")">Сотрудники</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("UserList", "Account")">Пользователи</a></li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Задачи</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">... для сотрудников</a>
+                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">Задачи для сотрудников</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
+                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">Задачи ГД</a>
                             </div>
                         </li>
                        
@@ -75,9 +77,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Задачи</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">... для сотрудников</a>
+                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">Задачи для сотрудников</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
+                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">Задачи ГД</a>
                             </div>
                         </li>
 
@@ -101,9 +103,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Задачи</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">... для сотрудников</a>
+                                <a class="dropdown-item" href="@Url.Action("Index", "TaskLists")">Задачи для сотрудников</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">... для отделов</a>
+                                <a class="dropdown-item" href="@Url.Action("DepartmentTasks", "TaskLists")">Задачи ГД</a>
                             </div>
                         </li>
                     }

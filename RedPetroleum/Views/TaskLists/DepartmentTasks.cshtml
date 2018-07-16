@@ -1,17 +1,14 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.TaskList>
-@using X.PagedList
-@using X.PagedList.Mvc
-@using X.PagedList.Mvc.Bootstrap4
+﻿@using X.PagedList.Mvc.Bootstrap4
 
 @{
     ViewBag.Title = "Задачи Отделов";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Список задач</h2>
+<h2>Задачи ГД</h2>
 
 <p>
-    <a href="@Url.Action("CreateDepartmentTask", "TaskLists")" class="btn btn-primary" type="button">
+    <a href="/TaskLists/CreateDepartmentTask?taskDate=@ViewBag.Today" id="addTaskBtn" class="btn btn-primary" type="button">
         <i class="fa fa-plus"></i> Добавить задачу
     </a>
 </p>
@@ -32,9 +29,8 @@
     </div>
 }
 <hr />
-@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Post))
+@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Get))
 {
-    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-1">Фильтры</div>
         <div class="col-md-4">
@@ -50,7 +46,7 @@
             }
         </div>
         <div class="col-md-4">
-            <input class="form-control" id="taskDate" type="month" name="TaskDate">
+            <input class="form-control" id="taskDate" type="month" name="TaskDate" value="@ViewBag.Today" onchange="updateAddTaskUrl(true)">
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
@@ -59,92 +55,6 @@
     </div>
 }
 <hr />
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Отдел</th>
-            <th>Задача</th>
-            <th>Длительность</th>
-            <th>Дата задачи</th>
-            <th>Комментарии(?)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody id="tableContent">
-        @foreach (var item in Model)
-        {
-            var myModal = "myModal" + item.TaskListId;
-            <tr id="comment_@item.TaskListId" class="task-row">
-                <td><b>@Html.DisplayFor(modelItem => item.Department.Name)</b></td>
-                <td><b>@Html.DisplayFor(modelItem => item.TaskName)</b></td>
-                <td><b>@Html.DisplayFor(modelItem => item.TaskDuration)</b></td>
-                <td><b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b></td>
-                <td class="comment-field"><b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b></td>
-                <td style="text-align:right;">
-                    <div class="btn-group" role="group">
-                        <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button></span>
-                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","TaskLists", new {id = item.TaskListId})" data-toggle="modal" data-target="#@myModal"
-                           data-whatever="@item.TaskListId"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"></i></a>
-                    </div>
-                    <!-- Confirmation modal -->
-                    <div class="modal fade" id="@myModal" tabindex="-1" role="dialog" aria-labelledby="confirmdelete" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="confirmdelete">Удаление</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Вы действительно хотите удалить: <span><b>@item.TaskName</b></span>
-                                </div>
-                                @using (Html.BeginForm("Delete", "TaskLists", FormMethod.Post, new { enctype = "multipart/form-data", @class = "delete-form" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@item.TaskListId" />
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                                        <input type="submit" value="Удалить" class="btn btn-danger" />
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr id="@item.TaskListId">
-                <td>
-                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
-                    <small class="form-text text-muted">Компетентность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
-                    <small class="form-text text-muted">Результативность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
-                    <small class="form-text text-muted">Дисциплинированность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
-                    <small class="form-text text-muted">Своевременность</small>
-                </td>
-                <td>
-                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
-                    <small class="form-text text-muted">Среднее</small>
-                </td>
-                <td>
-                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
 
 <script src="~/Scripts/app.js"></script>
 <script>

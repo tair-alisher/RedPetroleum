@@ -9,26 +9,50 @@
     {
         <tr>
             <td class="text-center">@(i++)</td>
-            <td>@department.Name</td>
-            <td class="text-center">+</td>
-            <td class="text-center">@department.AverageMark %</td>
+            <td class="department">@department.Name</td>
+            @if (@Math.Round(Convert.ToDouble(department.AverageMark), 2) != 0)
+            {
+                <td class="text-center">+</td>
+                <td class="text-center mark">@Math.Round(Convert.ToDouble(department.AverageMark), 2) %</td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+            }
         </tr>
     }
     foreach (var item in Model)
     {
         <tr>
             <td></td>
-            <td style="font-weight:bold">@item.Department.Name</td>
-            <td></td>
-            <td></td>
+            <td class="department" style="font-weight:bold">@item.Department.Name</td>
+            @if (@Math.Round(Convert.ToDouble(item.AverageMark), 2) != 0)
+            {
+                <td class="text-center">+</td>
+                <td class="text-center mark">@Math.Round(Convert.ToDouble(item.AverageMark), 2) %</td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+            }
         </tr>
         foreach (var child in item.Children)
         {
             <tr>
                 <td class="text-center">@(i++)</td>
-                <td>@child.Name</td>
-                <td class="text-center">+</td>
-                <td class="text-center">@child.AverageMark %</td>
+                <td class="department">@child.Name</td>
+                @if (@Math.Round(Convert.ToDouble(child.AverageMark), 2) != 0)
+                {
+                    <td class="text-center">+</td>
+                    <td class="text-center mark">@Math.Round(Convert.ToDouble(child.AverageMark), 2) %</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
             </tr>
         }
     }

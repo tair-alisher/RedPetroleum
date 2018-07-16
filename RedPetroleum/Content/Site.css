@@ -5,3 +5,6 @@
     padding-left: 0px;
 }
 
+mark, .mark {
+    background-color: transparent;
+}

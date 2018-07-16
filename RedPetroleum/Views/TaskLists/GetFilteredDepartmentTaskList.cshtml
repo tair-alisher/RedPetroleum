@@ -7,9 +7,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Список задач</h2>
+<h2>Задачи ГД</h2>
 <p>
-    <a href="@Url.Action("CreateDepartmentTask", "TaskLists")" class="btn btn-primary" type="button">
+    <a href="/TaskLists/CreateDepartmentTask@(ViewBag.SelectedDate != null ? "?taskDate="+ViewBag.SelectedDate : null)" id="addTaskBtn" class="btn btn-primary" type="button">
         <i class="fa fa-plus"></i> Добавить задачу
     </a>
 </p>
@@ -33,9 +33,8 @@
     </div>
 }
 <hr />
-@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Post))
+@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Get))
 {
-    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-1">Фильтры</div>
         <div class="col-md-4">
@@ -51,7 +50,7 @@
             }
         </div>
         <div class="col-md-4">
-            <input class="form-control" id="taskDate" type="month" name="TaskDate" @(ViewBag.Month != null ? "value=" + ViewBag.Month : null)>
+            <input class="form-control" id="taskDate" type="month" name="TaskDate" @(ViewBag.SelectedDate != null ? "value=" + ViewBag.SelectedDate : null) onchange="updateAddTaskUrl(true)">
         </div>
         <div class="col-md-3">
             <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
@@ -67,7 +66,6 @@
             <th>Задача</th>
             <th>Длительность</th>
             <th>Дата задачи</th>
-            <th>Комментарии(?)</th>
             <th></th>
         </tr>
     </thead>
@@ -80,13 +78,11 @@
                 <td><b>@Html.DisplayFor(modelItem => item.TaskName)</b></td>
                 <td><b>@Html.DisplayFor(motelItem => item.TaskDuration)</b></td>
                 <td><b>@(((DateTime)item.TaskDate).ToString("MM.yyyy"))</b></td>
-                <td class="comment-field"><b>@Html.DisplayFor(modelItem => item.CommentEmployees)</b></td>
                 <td style="text-align:right;">
                     <div class="btn-group" role="group">
-                        <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId')"><i class="fa fa-comment" aria-hidden="true" title="Комментировать" data-toggle="tooltip" data-placement="top"></i></button></span>
-                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "TaskLists", new { id = item.TaskListId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
-                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","TaskLists", new {id = item.TaskListId})" data-toggle="modal" data-target="#@myModal"
+                        <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("EditDepartmentTask", "TaskLists", new { id = item.TaskListId })"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("DepartmentTaskDetails", "TaskLists", new { id = item.TaskListId })"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"></i></a>
+                        <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete", "TaskLists", new { id = item.TaskListId })" data-toggle="modal" data-target="#@myModal"
                            data-whatever="@item.TaskListId"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"></i></a>
                     </div>
                     <!-- Confirmation modal -->
@@ -116,37 +112,46 @@
                     </div>
                 </td>
             </tr>
-            <tr id="@item.TaskListId">
-                <td>
-                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
-                    <small class="form-text text-muted">Компетентность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
-                    <small class="form-text text-muted">Результативность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
-                    <small class="form-text text-muted">Дисциплинированность</small>
-                </td>
-                <td>
-                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
-                    <small class="form-text text-muted">Своевременность</small>
-                </td>
-                <td>
-                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
-                    <small class="form-text text-muted">Среднее</small>
-                </td>
-                <td>
-                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
-                </td>
-            </tr>
+            if (User.IsInRole("admin") || User.IsInRole("manager"))
+            {
+                <tr id="@item.TaskListId">
+                    <td class="mark-field">
+                        <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" />
+                        <small class="form-text text-muted">Оценка</small>
+                    </td>
+                    <td class="comment-field" data-taskid="@item.TaskListId" colspan="3">@Html.DisplayFor(modelItem => item.CommentEmployees)</td>
+                    <td style="text-align:right;">
+                        <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId', true)">Комментарий</button></span>
+                        <button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('@item.TaskListId')">Оценить</button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+
+<div class="modal fade bd-example-modal-sm" id="onSuccessModal" tabindex="-1" role="dialog" aria-labelledby="successMessage" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successMessage">Оценка сохранена!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button id="closeModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+@if (!(Model.Count() <= 0))
+{
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+}
 
 <script src="~/Scripts/app.js"></script>
 <script>
-    submitCommentOnEnter()
+    submitCommentOnEnter(true)
+    submitMarkOnEnter()
 </script>
