@@ -91,7 +91,7 @@
         </tbody>
     </table>
     @Html.AntiForgeryToken()
-    <button type="button" class="btn btn-success" onclick="downloadReport('ReportByDepartmentAverageMark')">Скачать отчет</button>
+    <button type="button" class="btn btn-success" onclick="downloadReportByDepartmentAverageMark('ReportByDepartmentAverageMark')">Скачать отчет</button>
     <button type="button" class="btn btn-info" onclick="ShowChart()">Показать График</button>
 </div>
 <script>
@@ -135,8 +135,8 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        var start = moment().locale('ru-RU');
-        var end = moment().locale('ru-RU');
+        var start = moment().startOf('month').locale('ru-RU');
+        var end = moment().endOf('month').locale('ru-RU');
         function cb(start, end) {
             $('#taskDate').html(start.format('ll') + ' - ' + end.format('ll'));
         }

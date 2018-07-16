@@ -194,6 +194,19 @@ function downloadReport(reportType) {
     window.location.href = "/Reports/ExportToExcel?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + dateValue + "&parentId=" + parentId;
 }
 
+function downloadReportByDepartmentAverageMark(reportType) {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var dateValue = $("#taskDate").val().split(" ");
+    var departmentId;
+    var parentId;
+    if ($("#departmentsDropdown").length > 0) {
+        departmentId = $("#departmentsDropdown").val();
+    } else {
+        departmentId = "*";
+    }
+    window.location.href = "/Reports/ExportToExcelDepartmentAverageMark?departmentId=" + departmentId + "&reportType=" + reportType + "&dateValue=" + [dateValue[0], dateValue[2]] + "&parentId=" + parentId;
+}
+
 
 function addTask(forDepartment = null, inputHtml = null) {
     $("#emptyTaskList").remove();

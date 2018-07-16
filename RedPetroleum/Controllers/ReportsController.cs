@@ -169,8 +169,12 @@ namespace RedPetroleum.Controllers
         [HttpGet]
         public ActionResult ReportByDepartmentAverageMark()
         {
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-            DateTime[] dateValues = new DateTime[] { DateTime.Now, DateTime.Now };
+            var firstDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var lastDayOfMonth = firstDate.AddMonths(1).AddDays(-1);
+            DateTime[] dateValues = new DateTime[] {
+                firstDate,
+                lastDayOfMonth,
+            };
             List<CustomDepartment> DepartmentsWithoutParentAndChildren = new List<CustomDepartment>();
             List<Department> DepsWithoutParentAndChildren = unit.Departments.GetDepartmentsWithoutParentAndChildren().ToList();
             foreach (var department in DepsWithoutParentAndChildren)
@@ -221,15 +225,13 @@ namespace RedPetroleum.Controllers
                 result.Add(item);
             }
             ViewBag.Marks = result;
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
-
             return View(result);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PartialReportByDepartmentAverageMark(string[] dateValue)
         {
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.Today = DateTime.Now.Month;
             DateTime[] dateValues = new DateTime[] {
                 DateTime.ParseExact(dateValue[0], "MM/dd/yyyy", CultureInfo.InvariantCulture),
                 DateTime.ParseExact(dateValue[1], "MM/dd/yyyy", CultureInfo.InvariantCulture)
@@ -284,7 +286,6 @@ namespace RedPetroleum.Controllers
                 result.Add(item);
             }
             ViewBag.Marks = result;
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
             return PartialView(result);
         }
 
@@ -508,7 +509,7 @@ namespace RedPetroleum.Controllers
             return PartialView(taskList);
         }
 
-        public void ExportToExcel(string departmentId, string reportType, DateTime? dateValue, Guid? parentId)
+        public void ExportToExcel(string departmentId, string reportType, DateTime dateValue, Guid? parentId)
         {
             Guid? department;
 
@@ -521,6 +522,33 @@ namespace RedPetroleum.Controllers
                 department = Guid.Parse(departmentId);
             }
             XlsReport report = new XlsReport(unit, department, reportType, dateValue, parentId);
+            ExcelPackage package = report.FormReport();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment: filename=ExcelReport.xlsx");
+            Response.BinaryWrite(package.GetAsByteArray());
+            Response.End();
+        }
+
+        public void ExportToExcelDepartmentAverageMark(string departmentId, string reportType, string dateValue, Guid? parentId)
+        {
+            Guid? department;
+
+            if (departmentId == "*")
+            {
+                department = null;
+            }
+            else
+            {
+                department = Guid.Parse(departmentId);
+            }
+            var dates = dateValue.Split(',').ToArray();
+            DateTime[] dateValues = new DateTime[] {
+                DateTime.ParseExact(dates[0], "MM/dd/yyyy", CultureInfo.InvariantCulture),
+                DateTime.ParseExact(dates[1], "MM/dd/yyyy", CultureInfo.InvariantCulture)
+           };
+
+            XlsReport report = new XlsReport(unit, department, reportType, dateValues, parentId);
             ExcelPackage package = report.FormReport();
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
