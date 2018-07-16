@@ -25,7 +25,7 @@ namespace RedPetroleum.Controllers.CRUD
 
         // GET: TaskLists
         [Authorize(Roles = "admin, manager, employee")]
-        public ActionResult Index(int? page, string searching)
+        public ActionResult Index(int? page, string searching, string taskDate = null)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
             
@@ -51,7 +51,7 @@ namespace RedPetroleum.Controllers.CRUD
             }
 
 
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.Today = taskDate == null ? DateTime.Now.ToString("yyyy-MM") : taskDate;
             
             return View();
         }
@@ -310,7 +310,7 @@ namespace RedPetroleum.Controllers.CRUD
         /************ Department Tasks ************/
 
         [Authorize(Roles = "admin, manager, employee")]
-        public ActionResult DepartmentTasks(int? page, string searching)
+        public ActionResult DepartmentTasks(int? page, string searching, string taskDate = null)
         {
             var currentUser = unitOfWork.TaskLists.GetUser(User.Identity.GetUserId());
             
@@ -325,7 +325,7 @@ namespace RedPetroleum.Controllers.CRUD
                     .GetDepartmentByUserId(User.Identity.GetUserId());
             }
 
-            ViewBag.Today = DateTime.Now.ToString("yyyy-MM");
+            ViewBag.Today = taskDate == null ? DateTime.Now.ToString("yyyy-MM") : taskDate;
             
             return View();
         }
