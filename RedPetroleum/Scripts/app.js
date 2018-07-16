@@ -454,11 +454,30 @@ function editTask(forDepartment = null, taskId) {
 }
 
 function rate(id) {
-    var skillMark = $("#" + id).find(".SkillMark").val();
-    var effectivenessMark = $("#" + id).find(".EffectivenessMark").val();
-    var disciplineMark = $("#" + id).find(".DisciplineMark").val();
-    var timelinessMark = $("#" + id).find(".TimelinessMark").val();
-    var averageMark = $("#" + id).find(".AverageMark");
+    var taskMarksRow = $("#" + id);
+    taskMarksRow.find('.SkillMark').attr('disabled', false);
+    taskMarksRow.find('.EffectivenessMark').attr('disabled', false);
+    taskMarksRow.find('.DisciplineMark').attr('disabled', false);
+    taskMarksRow.find('.TimelinessMark').attr('disabled', false);
+
+    var submitMarksBtn = `
+    <button id="saveMarks" class="btn btn-success" type="button" onclick="submitRate('${id}')">Сохранить</button>
+`;
+
+    taskMarksRow.find(".markBtnTd").html(submitMarksBtn);
+}
+
+function submitRate(id) {
+    var taskMarksRow = $("#" + id);
+
+    var skillMark = taskMarksRow.find(".SkillMark").val();
+    var effectivenessMark = taskMarksRow.find(".EffectivenessMark").val();
+    var disciplineMark = taskMarksRow.find(".DisciplineMark").val();
+    var timelinessMark = taskMarksRow.find(".TimelinessMark").val();
+
+    var rateTaskBtn = `
+    <button id="saveMarks" class="btn btn-primary" type="button" onclick="rate('${id}')">Оценить</button>
+`;
 
     $.ajax({
         url: "/TaskLists/RateTask",
@@ -472,7 +491,13 @@ function rate(id) {
         },
         cache: false,
         success: function (average) {
-            averageMark.val(average);
+            taskMarksRow.find(".SkillMark").attr('disabled', true);
+            taskMarksRow.find(".EffectivenessMark").attr('disabled', true);
+            taskMarksRow.find(".DisciplineMark").attr('disabled', true);
+            taskMarksRow.find(".TimelinessMark").attr('disabled', true);
+
+            taskMarksRow.find(".markBtnTd").html(rateTaskBtn);
+            taskMarksRow.find(".AverageMark").val(average);
         },
         error: function (XMLHttpRequest) {
             console.log(XMLHttpRequest);
@@ -482,7 +507,22 @@ function rate(id) {
 }
 
 function rateDepartmentTask(taskId) {
-    var averageMark = $("#" + taskId).find(".AverageMark").val();
+    var submitMarksBtn = `
+    <button id="saveMarks" class="btn btn-success" type="button" onclick="submitDepartmentRate('${taskId}')">Сохранить</button>
+`;
+    var taskMarksRow = $("#" + taskId);
+
+    taskMarksRow.find('.AverageMark').attr('disabled', false);
+    taskMarksRow.find(".markBtnTd").html(submitMarksBtn);
+}
+
+function submitDepartmentRate(taskId) {
+    var taskMarksRow = $("#" + taskId);
+    var averageMark = taskMarksRow.find(".AverageMark").val();
+
+    var rateTaskBtn = `
+    <button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('${taskId}')">Оценить</button>
+`;
 
     $.ajax({
         url: "/TaskLists/RateDepartmentTask",
@@ -493,6 +533,8 @@ function rateDepartmentTask(taskId) {
         },
         cache: false,
         success: function (message) {
+            taskMarksRow.find('.AverageMark').attr('disabled', true);
+            taskMarksRow.find(".markBtnTd").html(rateTaskBtn);
             $("#successMessage").text(message);
             $('#onSuccessModal').modal({
                 show: true
@@ -592,7 +634,7 @@ function submitCommentOnEnter(forDepartment = false) {
 function submitMarkOnEnter() {
     $(".mark-field").keypress(function (e) {
         if (e.keyCode === 13) {
-            rateDepartmentTask($(this).parent().attr('id'));
+            submitDepartmentRate($(this).parent().attr('id'));
         }
     });
 }
@@ -607,5 +649,18 @@ function updateAddTaskUrl(forDepartment) {
     } else {
         $("#addTaskBtn")
             .attr("href", "/TaskLists/Create?taskDate=" + selectedDate);
+    }
+}
+
+function submitDateToIndexPage(forDepartment) {
+    var selectedDate = $("#taskDate").val();
+
+
+    if (forDepartment) {
+        $("#getIndex")
+            .attr("href", "/TaskLists/DepartmentTasks?taskDate=" + selectedDate);
+    } else {
+        $("#getIndex")
+            .attr("href", "/TaskLists/Index?taskDate=" + selectedDate);
     }
 }
