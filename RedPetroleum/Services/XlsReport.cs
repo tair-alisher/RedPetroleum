@@ -106,7 +106,7 @@ namespace RedPetroleum.Services
 
             worksheet.Cells["E3"].Value = "Подпись";
             worksheet.Cells["E3"].Style.Font.Bold = true;
-
+    
             for (int k = 1; k <= 3; k++)
             {
                 BorderLinesForReportByDepartment(worksheet, k);
@@ -114,21 +114,27 @@ namespace RedPetroleum.Services
 
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByDepartmentId((Guid)departmentId, dt);
             int rowStart = 4;
+            int cellIndex = 3;
             int i = 1;
-            int j = 4;
             foreach (Employee employee in employees)
             {
-                BorderLinesForReportByDepartment(worksheet, j);
+                BorderLinesForReportByDepartment(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = employee.Position.Name;
-                worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"D{rowStart}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) + "%";
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = employee.EFullName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Value = employee.Position.Name;
+                worksheet.Cells[$"C{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"D{cellIndex}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) / 100;
+
             }
+            worksheet.Cells[$"A{++cellIndex}:C{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средний показатель по отделу:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"D{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"D{cellIndex}"].Formula = $"AVERAGE(D{rowStart}:D{cellIndex-1})";
 
             return xlsPack;
         }
@@ -202,6 +208,7 @@ namespace RedPetroleum.Services
             worksheet.Cells["H2"].Value = "Сводный показатель";
             worksheet.Cells["H2"].Style.Font.Bold = true;
 
+
             for (int k = 1; k <= 2; k++)
             {
                 BorderLinesForReportByCompany(worksheet, k);
@@ -209,27 +216,32 @@ namespace RedPetroleum.Services
 
             IEnumerable<Employee> employees = unit.Employees.GetEmployeesByTaskDate(dt);
             int rowStart = 3;
+            int cellIndex = 2;
             int i = 1;
-            int j = 3;
 
             foreach (Employee employee in employees)
             {
-                BorderLinesForReportByCompany(worksheet, j);
+                BorderLinesForReportByCompany(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = employee.EFullName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = employee.Department.Name;
-                worksheet.Cells[$"C{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"D{rowStart}"].Value = employee.Position.Name;
-                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"E{rowStart}"].Value = employee.AdoptionDate;
-                worksheet.Cells[$"E{rowStart}"].Style.Numberformat.Format = "dd.mm.yyyy";
-                worksheet.Cells[$"F{rowStart}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) + "%";
-
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = employee.EFullName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Value = employee.Department.Name;
+                worksheet.Cells[$"C{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"D{cellIndex}"].Value = employee.Position.Name;
+                worksheet.Cells[$"D{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"E{cellIndex}"].Value = employee.AdoptionDate;
+                worksheet.Cells[$"E{cellIndex}"].Style.Numberformat.Format = "dd.mm.yyyy";
+                worksheet.Cells[$"F{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"F{cellIndex}"].Value = Math.Round(Convert.ToDouble(employee.TaskLists.Select(t => t.AverageMark).Average()), 2) / 100;
             }
+
+            worksheet.Cells[$"A{++cellIndex}:E{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средний показатель по отделу:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"F{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"F{cellIndex}"].Formula = $"AVERAGE(F{rowStart}:F{cellIndex - 1})";
             return xlsPack;
         }
         public void BorderLinesForReportByCompany(ExcelWorksheet worksheet, int a)
@@ -606,22 +618,28 @@ namespace RedPetroleum.Services
 
             IEnumerable<TaskList> taskLists = unit.TaskLists.GetTaskListsByDepartmentId((Guid)departmentId, dt);
             int rowStart = 5;
+            int cellIndex = 4;
             int i = 1;
-            int j = 5;
             foreach (TaskList item in taskLists)
             {
-                BorderLinesForReportByInstructionsDG(worksheet, j);
+                BorderLinesForReportByInstructionsDG(worksheet, ++cellIndex);
 
-                worksheet.Cells[$"A{rowStart}"].Value = i++;
-                worksheet.Cells[$"B{rowStart}"].Value = item.TaskName;
-                worksheet.Cells[$"B{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                worksheet.Cells[$"C{rowStart}"].Value = Math.Round(Convert.ToDouble(item.AverageMark), 2) + "%";
-                worksheet.Cells[$"D{rowStart}"].Value = item.CommentEmployees;
-                worksheet.Cells[$"D{rowStart}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
-                rowStart++;
-                j++;
+                worksheet.Cells[$"A{cellIndex}"].Value = i++;
+                worksheet.Cells[$"B{cellIndex}"].Value = item.TaskName;
+                worksheet.Cells[$"B{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                worksheet.Cells[$"C{cellIndex}"].Style.Numberformat.Format = "0.00%";
+                worksheet.Cells[$"C{cellIndex}"].Value = Math.Round(Convert.ToDouble(item.AverageMark), 2) / 100;
+                worksheet.Cells[$"D{cellIndex}"].Value = item.CommentEmployees;
+                worksheet.Cells[$"D{cellIndex}"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
             }
+
+            worksheet.Cells[$"A{++cellIndex}:B{cellIndex}"].Merge = true;
+            worksheet.Cells[$"A{cellIndex}"].Value = "Средняя оценка:";
+            worksheet.Cells[$"A{cellIndex}"].Style.Font.Bold = true;
+
+            worksheet.Cells[$"C{cellIndex}"].Style.Numberformat.Format = "0.00%";
+            worksheet.Cells[$"C{cellIndex}"].Formula = $"AVERAGE(C{rowStart}:C{cellIndex - 1})";
+
 
             return xlsPack;
         }
