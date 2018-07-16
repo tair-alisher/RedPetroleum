@@ -127,27 +127,27 @@
             </tr>
             <tr id="@item.TaskListId">
                 <td>
-                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" />
+                    <input type="number" class="form-control SkillMark" name="SkillMark" value="@item.SkillMark" disabled />
                     <small class="form-text text-muted">Компетентность</small>
                 </td>
                 <td>
-                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" />
+                    <input type="number" class="form-control EffectivenessMark" name="EffectivenessMark" value="@item.EffectivenessMark" disabled />
                     <small class="form-text text-muted">Результативность</small>
                 </td>
                 <td>
-                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" />
+                    <input type="number" class="form-control DisciplineMark" name="DisciplineMark" value="@item.DisciplineMark" disabled />
                     <small class="form-text text-muted">Дисциплинированность</small>
                 </td>
                 <td>
-                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" />
+                    <input type="number" class="form-control TimelinessMark" name="TimelinessMark" value="@item.TimelinessMark" disabled />
                     <small class="form-text text-muted">Своевременность</small>
                 </td>
                 <td>
                     <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
                     <small class="form-text text-muted">Среднее</small>
                 </td>
-                <td>
-                    <button id="saveMarks" class="btn btn-link" type="button" onclick="rate('@item.TaskListId')">Сохранить</button>
+                <td class="markBtnTd">
+                    <button id="saveMarks" class="btn btn-primary" type="button" onclick="rate('@item.TaskListId')">Оценить</button>
                 </td>
             </tr>
 
