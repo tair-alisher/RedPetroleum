@@ -596,3 +596,16 @@ function updateAddTaskUrl(forDepartment) {
             .attr("href", "/TaskLists/Create?taskDate=" + selectedDate);
     }
 }
+
+function submitDateToIndexPage(forDepartment) {
+    var selectedDate = $("#taskDate").val();
+
+
+    if (forDepartment) {
+        $("#getIndex")
+            .attr("href", "/TaskLists/DepartmentTasks?taskDate=" + selectedDate);
+    } else {
+        $("#getIndex")
+            .attr("href", "/TaskLists/Index?taskDate=" + selectedDate);
+    }
+}
