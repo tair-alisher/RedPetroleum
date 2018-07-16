@@ -115,13 +115,13 @@
             </tr>
             <tr id="@item.TaskListId">
                 <td class="mark-field">
-                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" />
+                    <input type="text" class="form-control AverageMark" name="AverageMark" value="@item.AverageMark" disabled />
                     <small class="form-text text-muted">Оценка</small>
                 </td>
                 <td class="comment-field" data-taskid="@item.TaskListId" colspan="3">@Html.DisplayFor(modelItem => item.CommentEmployees)</td>
                 <td style="text-align:right;">
                     <span class="submit-button"><button type="button" class="btn btn-primary" onclick="taskComment('@item.TaskListId', true)">Комментарий</button></span>
-                    <button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('@item.TaskListId')">Оценить</button>
+                    <span class="markBtnTd"><button id="saveMarks" class="btn btn-success" type="button" onclick="rateDepartmentTask('@item.TaskListId')">Оценить</button></span>
                 </td>
             </tr>
         }
@@ -138,7 +138,7 @@
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button id="closeModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>

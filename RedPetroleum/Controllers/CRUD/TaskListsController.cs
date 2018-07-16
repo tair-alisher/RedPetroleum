@@ -300,6 +300,7 @@ namespace RedPetroleum.Controllers.CRUD
 
         private double ConvertMarkToDouble(string mark)
         {
+            if (String.IsNullOrEmpty(mark)) return 0;
             double number;
             if (double.TryParse(mark, out number))
                 return number;
