@@ -1,13 +1,12 @@
 ﻿@model RedPetroleum.Models.Entities.TaskList
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Подробно";
 }
 
-<h2>Details</h2>
+<h2>Подробная информация</h2>
 
 <div>
-    <h4>TaskList</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -19,7 +18,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TaskName)
+            Задача
         </dt>
 
         <dd>
@@ -27,7 +26,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TaskDuration)
+            Продолжительность задачи
         </dt>
 
         <dd>
@@ -35,7 +34,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TaskDate)
+            Месяц задачи
         </dt>
 
         <dd>
@@ -43,24 +42,18 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CommentEmployees)
+            Комментарии
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.CommentEmployees)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Mark)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Mark)
-        </dd>
-
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TaskListId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <a href="@Url.Action("Edit", "TaskLists", new { id = Model.TaskListId})" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Редактировать</span></i></a>
+        <a href="@Url.Action("Index", "TaskLists")" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+    </div>
+</div>

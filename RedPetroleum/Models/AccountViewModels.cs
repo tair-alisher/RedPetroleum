@@ -52,11 +52,9 @@ namespace RedPetroleum.Models
 
     public class LoginViewModel
     {
-        [Required]
         [Display(Name = "Логин")]
         public string UserName { get; set; }
-
-        [Required]
+        
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
@@ -67,16 +65,13 @@ namespace RedPetroleum.Models
 
     public class RegisterViewModel
     {
-        [Required]
         [StringLength(100, ErrorMessage = "Логин не может содержать больше {0} символов")]
         [Display(Name = "Логин")]
         public string UserName { get; set; }
-        [Required]
         [EmailAddress]
         [Display(Name = "Адрес электронной почты")]
         public string Email { get; set; }
-
-        [Required]
+        
         [StringLength(100, ErrorMessage = "Значение {0} должно содержать не менее {2} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
@@ -95,7 +90,6 @@ namespace RedPetroleum.Models
         public string SelectedRole { get; set; }
         public IEnumerable<SelectList> Roles { get; set; }
     }
-  
 
     public class ResetPasswordViewModel
     {

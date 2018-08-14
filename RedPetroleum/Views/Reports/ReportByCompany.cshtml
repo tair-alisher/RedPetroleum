@@ -1,15 +1,38 @@
-﻿@model IEnumerable<RedPetroleum.Models.Entities.Employee>
+﻿@model List<RedPetroleum.Models.ReportByCompanyViewModel>
 
 @{
     ViewBag.Title = "Главная";
+    int i = 1;
 }
 
 <div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.Today" onchange="updateCompanyTable()">
+        </div>
+    </div>
+    <br/>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>EFullName</th>
-                <th>Position</th>
+                <th colspan="8" class="text-center" id="dt">
+                    ОЦЕНКА ЭФФЕКТИВНОСТИ ПЕРСОНАЛА - @DateTime.Now.ToString("MMMM yyyy г.")
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th class="w-10 text-center">№</th>
+                <th class="w-25 text-center">Ф.И.О</th>
+                <th class="w-25 text-center">Отдел</th>
+                <th class="w-25 text-center">Должность</th>
+                <th class="col text-center">Дата приема</th>
+                <th class="col text-center">Средний показатель</th>
+                <th class="col text-center">Посещаемость и опоздания</th>
+                <th class="col text-center">Сводный показатель</th>
             </tr>
         </thead>
         <tbody id="tableContent">
@@ -18,8 +41,14 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.EFullName</td>
-                        <td>@item.Position.Name</td>
+                        <td>@(i++)</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.Department</td>
+                        <td>@item.Position</td>
+                        <td class="text-center">@item.AdoptionDate.ToString("dd.MM.yyyy")</td>
+                        <td class="text-center">@Math.Round(Convert.ToDouble(item.AverageMark),2) %</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 }
             }
@@ -27,13 +56,5 @@
     </table>
     @Html.AntiForgeryToken()
     <button type="button" class="btn btn-success" onclick="downloadReport('ReportByCompany')">Скачать отчет</button>
-
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/Scripts/app.js")
-
-    <script>
-
-    </script>
-}
+<script src="~/Scripts/app.js"></script>

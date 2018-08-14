@@ -1,14 +1,10 @@
 ﻿<tr class="createdTask" id="@ViewBag.Task.TaskListId">
+    <td class="taskPerformer">@ViewBag.EmployeeName</td>
+    <td class="taskName">@ViewBag.Task.TaskName</td>
+    <td class="taskDuration">@ViewBag.Task.TaskDuration</td>
+    <td class="taskDate">@ViewBag.TaskDate</td>
     <td>
-        @ViewBag.Task.TaskName
-    </td>
-    <td>
-        @ViewBag.Task.TaskDuration
-    </td>
-    <td>
-        @ViewBag.EmployeeName
-    </td>
-    <td>
+        <button class="btn btn-primary" type="button" onclick="editTask(true, '@ViewBag.Task.TaskListId')"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></span></button>
         <button type="button" class="btn btn-danger removeTask" onclick="removeTask('@ViewBag.Task.TaskListId')"><span class="oi oi-x" title="Удалить" aria-hidden="true"></span></button>
     </td>
 </tr>

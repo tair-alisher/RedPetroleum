@@ -1,0 +1,72 @@
+﻿@model RedPetroleum.Models.Entities.TaskList
+@{
+    ViewBag.Title = "Задачи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Добавление задачи</h2>
+@Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <label for="department">Выберите отдел</label>
+        </div>
+        <div class="col-md-3">
+            @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
+            {
+                @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
+            }
+            else
+            {
+                <select class="form-control" id="departmentsDropdown" name="DepartmentId">
+                    <option value="@ViewBag.Department.DepartmentId">@ViewBag.Department.Name</option>
+                </select>
+            }
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <label for="taskDate">Выберите месяц</label>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" id="taskDate" type="month" name="taskDate" value="@ViewBag.SelectedDate" onchange="submitDateToIndexPage(true)">
+        </div>
+    </div>
+</div>
+<hr />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Назначен</th>
+            <th>Задача</th>
+            <th>Продолжительность</th>
+            <th>Дата</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody id="taskList">
+        <span class="text-center" id="emptyTaskList"><b><i>Добавьте задачу</i></b></span>
+    </tbody>
+</table>
+<div id="createArea">
+
+</div>
+<hr />
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success col-md-12" onclick="addTask(true)"><i class="fa fa-plus" aria-hidden="true" title="Добавить задачу</" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Добавить задачу</</span></i></button>
+    </div>
+</div>
+<div class="form-group">
+    <div class="btn-group" role="group">
+        <a href="/TaskLists/DepartmentTask?taskDate=@ViewBag.SelectedDate" id="getIndex" class="btn btn-info"><i class="fa fa-arrow-left" aria-hidden="true" title="Назад" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Назад</span></i></a>
+    </div>
+</div>
+<br /><br />
+<script src="~/Scripts/app.js"></script>
+<script>
+    saveOnEnter(true);
+</script>

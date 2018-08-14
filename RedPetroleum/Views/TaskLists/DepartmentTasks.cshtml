@@ -1,0 +1,62 @@
+﻿@using X.PagedList.Mvc.Bootstrap4
+
+@{
+    ViewBag.Title = "Задачи Отделов";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Задачи ГД</h2>
+
+<p>
+    <a href="/TaskLists/CreateDepartmentTask?taskDate=@ViewBag.Today" id="addTaskBtn" class="btn btn-primary" type="button">
+        <i class="fa fa-plus"></i> Добавить задачу
+    </a>
+</p>
+@using (Html.BeginForm("DepartmentTasks", "TaskLists", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-11 search-div">
+            <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование задачи" onchange="form.submit();"
+                   style="border: 1px solid; border-color: #008cba;" />
+        </div>
+        <div class="col-md-1 search-div-btn">
+            <button type="submit" class="btn btn-default default-btn">
+                <i class="fa fa-search"></i>
+                Поиск
+            </button>
+        </div>
+    </div>
+}
+<hr />
+@using (Html.BeginForm("GetFilteredDepartmentTaskList", "TaskLists", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-1">Фильтры</div>
+        <div class="col-md-4">
+            @if (ViewBag.DepartmentId != null && ViewBag.DepartmentId is SelectList)
+            {
+                @Html.DropDownList("DepartmentId", ViewBag.DepartmentId as SelectList, "Выберите отдел", htmlAttributes: new { @class = "form-control", @id = "departmentsDropdown" })
+            }
+            else
+            {
+                <select class="form-control" id="departmentsDropdown" name="DepartmentId">
+                    <option value="@ViewBag.Department.DepartmentId">@ViewBag.Department.Name</option>
+                </select>
+            }
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" id="taskDate" type="month" name="TaskDate" value="@ViewBag.Today" onchange="updateAddTaskUrl(true)">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" id="FilterBtn" class="btn btn-default">Показать</button>
+            <a href="@Url.Action("DepartmentTasks", "TaskLists")" id="resetFilter" class="btn btn-default">Сбросить</a>
+        </div>
+    </div>
+}
+<hr />
+
+<script src="~/Scripts/app.js"></script>
+<script>
+    submitCommentOnEnter()
+</script>

@@ -3,52 +3,111 @@
 @using X.PagedList.Mvc
 @using X.PagedList.Mvc.Bootstrap4
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Должности";
 }
 
-<h2>Index</h2>
+<h2>Должности</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a type="button" class="btn btn-primary" href="@Url.Action("Create", "Positions")">
+        <i class="fa fa-plus"></i>
+        Добавить должность
+    </a>
 </p>
 @using (Html.BeginForm("Index", "Positions", FormMethod.Get))
 {
 
     @Html.AntiForgeryToken()
     <!-- Search  -->
-    <div class="col-md-11 search-div" style="margin-bottom: 2%;">
-        <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование компании" onchange="form.submit();"
-               style="border: 1px solid; border-color: #eb5e28;" />
-    </div>
-    <div class="col-md-1 search-div">
-        <button type="submit" class="btn btn-default default-btn">
-            <i class="fa fa-search"></i>
-            Поиск
-        </button>
+    <div class="row">
+        <div class="col-md-11 search-div">
+            <input type="text" id="searching" name="searching" class="form-control search" placeholder="Введите наименование должности" onchange="form.submit();"
+                   style="border: 1px solid; border-color: #008cba;" />
+        </div>
+        <div class="col-md-1 search-div-btn">
+            <button type="submit" class="btn btn-default default-btn">
+                <i class="fa fa-search"></i>
+                Поиск
+            </button>
 
+        </div>
     </div>
 }
 <table class="table">
     <tr>
         <th>
-            Должность
+            Наименование должности
         </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
+        var myModal = "myModal" + item.PositionId;
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PositionId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
+            <td style="text-align:right;">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-info" name="editButton" id="editButton" href="@Url.Action("Edit", "Positions", new { id = item.PositionId})"><i class="fa fa-pencil" aria-hidden="true" title="Редактировать" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Редактировать</span></i></a>
+                    <a class="btn btn-warning" name="detailsButton" id="detailsButton" href="@Url.Action("Details", "Positions", new { id = item.PositionId})"><i class="fa fa-eye" aria-hidden="true" title="Просмотреть" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Просмотреть</span></i></a>
+                    <a a class="btn btn-danger" name="deleteButton" id="deleteButton" href="@Url.Action("Delete","Positions", new {id = item.PositionId})" data-toggle="modal" data-target="#@myModal"
+                       data-whatever="@item.PositionId"><i class="fa fa-trash" aria-hidden="true" title="Удалить" data-toggle="tooltip" data-placement="top"><span style="padding: 5px;">Удалить</span></i></a>
+                </div>
+                <!-- Confirmation modal -->
+                <div class="modal fade" id="@myModal" tabindex="-1" role="dialog" aria-labelledby="confirmdelete" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmdelete">Удаление</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Вы действительно хотите удалить: <span><b>@item.Name</b></span>
+                            </div>
+                            @using (Html.BeginForm("Delete", "Positions", FormMethod.Post, new { enctype = "multipart/form-data", @class = "delete-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.PositionId" />
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                    <input type="submit" value="Удалить" class="btn btn-danger" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
     }
 
 </table>
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Default)
+<div class="modal fade" tabindex="-1" id="error" role="dialog" aria-labelledby="confirmdelete" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm">Удаление</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@ViewBag.Message</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var message = "@ViewBag.Message";
+    if (message !== "") {
+        $("#error").modal("show");
+    }
+</script>

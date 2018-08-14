@@ -11,9 +11,12 @@ using RedPetroleum.Models;
 using RedPetroleum.Models.Entities;
 using RedPetroleum.Models.UnitOfWork;
 using X.PagedList;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace RedPetroleum.Controllers.CRUD
 {
+    [Authorize]
     public class DepartmentsController : Controller
     {
         UnitOfWork unitOfWork;
@@ -28,7 +31,8 @@ namespace RedPetroleum.Controllers.CRUD
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             var departments = unitOfWork.Departments.GetAllIndex(pageNumber, pageSize, searching);
-            return View(departments.ToPagedList(pageNumber, pageSize));
+            ViewBag.Message = TempData["Message"];
+            return View(departments);
         }
 
         // GET: Departments/Details/5
@@ -39,10 +43,13 @@ namespace RedPetroleum.Controllers.CRUD
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Department department = await unitOfWork.Departments.GetAsync(id);
+
+
             if (department == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Parent = unitOfWork.Departments.GetParentId(department);
             return View(department);
         }
 
@@ -60,16 +67,47 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "DepartmentId,Name,ParentId")] Department department)
         {
-            if (ModelState.IsValid)
+            try
             {
-                department.DepartmentId = Guid.NewGuid();
-                unitOfWork.Departments.Create(department);
-                await unitOfWork.SaveAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    department.DepartmentId = Guid.NewGuid();
+                    unitOfWork.Departments.Create(department);
+                    await unitOfWork.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                return View(department);
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(department);
+                            default:
+                                return View(department);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
-            return View(department);
         }
 
         // GET: Departments/Edit/5
@@ -95,14 +133,45 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "DepartmentId,Name,ParentId")] Department department)
         {
-            if (ModelState.IsValid)
+            try
             {
-                unitOfWork.Departments.Update(department);
-                await unitOfWork.SaveAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Departments.Update(department);
+                    await unitOfWork.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                return View(department);
             }
-            ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
-            return View(department);
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 2601:
+                                ViewBag.ParentId = new SelectList(unitOfWork.Departments.GetAll(), "DepartmentId", "Name", department.ParentId);
+                                ViewBag.Message = "Такая запись уже существует!";
+                                return View(department);
+                            default:
+                                return View(department);
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
         }
 
         // GET: Departments/Delete/5
@@ -125,9 +194,40 @@ namespace RedPetroleum.Controllers.CRUD
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            unitOfWork.Departments.Delete(id);
-            await unitOfWork.SaveAsync();
-            return RedirectToAction("Index");
+            try
+            {
+
+                unitOfWork.Departments.Delete(id);
+                await unitOfWork.SaveAsync();
+                return RedirectToAction("Index");
+            }
+
+            catch (DbUpdateException ex)
+            {
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null)
+                {
+                    if (sqlException.Errors.Count > 0)
+                    {
+                        switch (sqlException.Errors[0].Number)
+                        {
+                            case 547:
+                                TempData["Message"] = "Имеется привязка, удалите пожалуйста записи связанные с данным отделом!";
+                                return RedirectToAction("Index", "Departments");
+                            default:
+                                return View();
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
